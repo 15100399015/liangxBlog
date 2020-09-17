@@ -1281,7 +1281,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #3e0da1;
+  background: #ff39ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1607,7 +1607,10 @@ pre .javascript .function {
   position: fixed;
   transition-property: bottom;
   z-index: 1300;
-  width: initial;
+  width: 24px;
+}
+.back-to-top span {
+  display: none;
 }
 .back-to-top:hover {
   color: #87daff;
@@ -1620,6 +1623,16 @@ pre .javascript .function {
     left: 20px;
     opacity: 0.8;
   }
+}
+.reading-progress-bar {
+  background: #333333;
+  display: block;
+  height: 3px;
+  left: 0;
+  position: fixed;
+  width: 0;
+  z-index: 1500;
+  top: 0;
 }
 .post-body {
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -2071,6 +2084,41 @@ pre .javascript .function {
 }
 #qr p {
   text-align: center;
+}
+#qr > div:hover p {
+  animation: roll 0.1s infinite linear;
+}
+@-moz-keyframes roll {
+  from {
+    transform: rotateZ(30deg);
+  }
+  to {
+    transform: rotateZ(-30deg);
+  }
+}
+@-webkit-keyframes roll {
+  from {
+    transform: rotateZ(30deg);
+  }
+  to {
+    transform: rotateZ(-30deg);
+  }
+}
+@-o-keyframes roll {
+  from {
+    transform: rotateZ(30deg);
+  }
+  to {
+    transform: rotateZ(-30deg);
+  }
+}
+@keyframes roll {
+  from {
+    transform: rotateZ(30deg);
+  }
+  to {
+    transform: rotateZ(-30deg);
+  }
 }
 .category-all-page .category-all-title {
   text-align: center;
