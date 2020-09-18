@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"blog.1950ys.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="记录凉寻的装逼生涯">
+  <meta name="description" content="爱前端、爱分享、爱互联网">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Liangx">
 <meta property="og:url" content="https://blog.1950ys.top/index.html">
 <meta property="og:site_name" content="Liangx">
-<meta property="og:description" content="记录凉寻的装逼生涯">
+<meta property="og:description" content="爱前端、爱分享、爱互联网">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="liangx">
 <meta name="twitter:card" content="summary">
@@ -194,12 +194,106 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="liangx">
+      <meta itemprop="description" content="爱前端、爱分享、爱互联网">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liangx">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-18 15:38:10 / 修改时间：16:53:11" itemprop="dateCreated datePublished" datetime="2020-09-18T15:38:10+08:00">2020-09-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">JavaScript设计模式与开发实践</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>单例模式的定义是：保证一个类仅有一个实例，并提供一个访问它的全局访问点</p>
+<p>单例模式是一种常用的模式，有一些对象我们往往只需要一个比如，线程池，全局缓存，浏览器中的 window 对象等，在 JavaScript 开发中，单例模式的用途同样非常广泛，试想一下，当我们点击登录按钮的时候，页面中会出现一个登录浮窗，而这个登录浮窗是唯一的，无论单击多少次登录按钮，这个浮窗只会被创建一次，那么这个登录浮窗就是和使用单例模式来创建</p>
+<h3 id="实现单例模式"><a href="#实现单例模式" class="headerlink" title="实现单例模式"></a>实现单例模式</h3><p>要实现一个单例模式其实并不复杂，无非是用一个变量来标指当前是否已经为某个类创建过对象，如果是，则在下一次获取该类的实例时，直接返回之前创建的对象，代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Stingleton = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Stingleton.prototype.instance = <span class="literal">null</span>;</span><br><span class="line">Stingleton.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line">Stingleton.getInstance = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="built_in">this</span>.instance)&#123;</span><br><span class="line">        <span class="built_in">this</span>.instance = <span class="keyword">new</span> Stingleton(name)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.instance</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = Stingleton.getInstance(<span class="string">&quot;sven1&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> b = Stingleton.getInstance(<span class="string">&quot;sven2&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a === b)</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/18/AletterToArthur/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="liangx">
-      <meta itemprop="description" content="记录凉寻的装逼生涯">
+      <meta itemprop="description" content="爱前端、爱分享、爱互联网">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -219,7 +313,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-18 14:28:35 / 修改时间：16:07:58" itemprop="dateCreated datePublished" datetime="2020-09-18T14:28:35+08:00">2020-09-18</time>
+              <time title="创建时间：2020-09-18 14:28:35 / 修改时间：16:44:22" itemprop="dateCreated datePublished" datetime="2020-09-18T14:28:35+08:00">2020-09-18</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -262,22 +356,14 @@
 <img data-src="https://s1.ax1x.com/2020/09/18/wh4280.jpg" width=100%/>
 
 <p>&emsp;&emsp;以前和你疾驰在西部的时候那得多狂野，在瓦伦丁酒吧那次枪战，可谓是一举成名啊杀的人可以排满整个瓦伦丁的铁路，抢的马可以堆满我们营地的那片草原了瓦伦丁的邮局甚至都不敢贴我们俩的悬赏名单，觊觎我们项上人头的赏金猎人可以从黑水镇排到安妮斯堡，可就是没人敢过来惹咱俩，毕竟你的死亡之眼可不是徒有虚名的，甚至于到了罗兹，咱们还特意跑回去瓦伦丁的银行，和比尔、凯伦、蓝尼他们狠狠地抢了一波，想起来那倒是痛快，毕竟谁能想到这居然是这段时间乃至以后最成功的一次抢银行，后来被赶到了罗兹，却被那该死的格雷家族和布雷斯维特家族利用，我们是谁？单凭神枪手—亚瑟摩根，你的项上人头就值 5000 美金，更何况还有我在，结果那自然是罗兹镇的格雷家族横尸遍野以及那让他们引以为傲的布雷斯维特庄园被烧成灰烬，</p>
-<p>&emsp;&emsp;但是逃亡的日子也总是不好过，尤其是西恩死后和小杰克被抢走后，那日子愈发的紧张了不过我们起码到了个不错的居所，你曾经的居所，一个可以遮风挡雨的地方，从黑水镇以后达奇确实是变了，大家也都变得紧张起来当小杰克回来时，他那句：这是我经历过最快乐的时光了，着实刺疼你和约翰看得出约翰和你都露出难堪的脸色，一群亡命之徒带着一个孩子，算什么亡命之徒，对吧你们想要着最为平静的生活，而达奇却依旧在幻想他的美好世界，直到被削了的脑袋的基兰被送回营地时，我们才意识到我们结下的梁子和麻烦有多少</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4WvT.jpg" width=100%/>
-
-<p>&emsp;&emsp;可那达奇被那该死的勃朗特洗了脑，被忽悠着抢了座分文不值的驿站，而后我们又在抢银行时被那平克顿侦探截了胡，何西亚和蓝尼就这样永久离开了我们。再然后你就和我们这群人就这样走散了而等到你们回来时，你的脸色就不太好了。而自打你从医生那回来，你就告诉我，你最近时常能梦到一匹鹿，在静谧的森林里的一头鹿</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4gCq.jpg" width=100%/>
-
-<p>&emsp;&emsp;我知道的，我早该知道，是肺结核，那该死的唐斯一家，那该死的放债人，尤其是那该死的西部幻想家，这他妈都做了多少事，总是不切实际地让我们干着干那，你这身体无论如何都会吃不消的。我说再去西部狂野一把，去狩猎，去抢银行，可是你却说算了算了，帮派还有那么多不安稳的人接着帮达奇干起了的肮脏的勾当，你还是相信着他的美梦，只是没那么蠢了后来你终于醒了看来是被那该死的唐斯太太给劝醒了也不知道该不该谢谢这位唐斯太太最后的那段时间，你简直换了个人，但又还是那个亚瑟以往对达奇言听计从的亚瑟背着他救出了约翰、飞鹰，以往视金钱如命的亚瑟居然散尽家财帮助其他人</p>
-<p>&emsp;&emsp;后来你还告诉我，你认识了一名老兵，一名和你很像的老兵，看清了生死；那印第安人的首领——落雨，是为数不多想帮你减轻痛苦的人，是他告诉了你人生的意义，他才是那位真正有远识的人在去和达奇见最后一面时，你告诉我，你因没有救下飞鹰而后悔，你甚至后悔没有告诉玛丽你的事情，你没有安排好所有人，只能把他们的命运托给沙迪夫人和我，</p>
-<p>&emsp;&emsp;我想你是想好好和他们道个别的，但总是少那么个机会毕竟西部的世界总是那么狂野，狂野到没有坐下来好好休息、聊天的时间听你说你喜欢能看见太阳的地方，查尔斯还特意选了个好位置给你呢，这下你可有时间坐下来好好休息了可这西部啊，少了你，就少了点味道少了那味道，我都不知道该干些什么了你知道吗，在你离开之后，帮派也散了。皮尔逊那家伙去当了个商店老板，这个脑袋少根筋的家伙居然还把我们的合照挂在了墙头，也不怕其他人闻起来，不知道这个自恋的家伙追到他喜欢的姑娘没？莎迪夫人还是老样子，雷厉风行，她说：像她这种人，在屋子被烧掉后，就注定没有归宿。于是一个人在狂野的西部当起了赏金猎人，虽然她的枪法很烂而且整个人还是鲁莽，但我还是希望她能活久一点，毕竟她骑马去打听迈卡消息的时候，我居然看到了一丝你的身影</p>
-<p>&emsp;&emsp;还记得那个被你赶走的放债人吗，那家伙最后一笔债放给一个叫做亚瑟的人。一路上听见的都是“亚瑟死了”，真他妈的难听。就是这样一个斯文败类又弱不禁风的德国人最后还是被平克顿侦探抓住了。只是没想到，这家伙即使是被折磨致死都不肯说出我们的下落，果然人就不能看那该死的行为，你看那杀千刀迈卡不就是一个 25 仔？噢，</p>
-<p>&emsp;&emsp;对了，怎么能忘了约翰·马斯顿这家伙？这家伙，正如你所说的：be a god damn man，这个开头被狼啃坏脑子的人居然真得开始了农场主的生活。虽然还是那幅牛仔样，还是那个一言不合就拔枪的人。说起来你还真狡猾，居然把全部东西给了马斯顿，你的帽子，枪，照片，日记甚至是戒指。不过也好，倘若是留给我那就是压箱底的宝物了，我可不像那马斯顿，拿起你的日记继续写着他的生活，甚至还拿起你的戒指在黑水镇的胡中心向阿比盖尔求起了婚，天晓得这对老夫老妻有多幸福。如果那天你逃出来了，是不是会拿着这枚戒指跑去找玛丽。不过，你应该不敢，在爱人这方面，你可比马斯顿逊色多了</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4R2V.jpg" width=100%/>
-
-<p>&emsp;&emsp;对了，说起马斯顿，这家伙居然不听阿比盖尔的劝和莎迪去找迈卡报仇了，带着你的帽子和你的枪。不得不说，这家伙功夫还是不到家啊，你喝醉酒的枪法都比清醒时的他强，甚至在最后差点被迈卡所杀，好在达奇那老糊涂总算是清醒了一次大家都过得很好，该成家立业都成家立业，即使是大叔和查尔斯在外流浪的人也都留在了马斯顿的身边经营着那新建的农场。如果你肯定会喜欢这种生活，毕竟你和马斯顿曾经在瓦伦丁一起赶过羊呢！玛丽，她说着和你永远不相见，却还是偷偷跑去你的墓旁哭泣，她大概是再也不会遇到一个那么傻的神枪手了，</p>
-<p>&emsp;&emsp;我至今还是无法回忆起你“血仇，血债，血偿”那条路，那条路上的你总是想起最后那段时间他们所说的话，但总得还是那句——“做你能做的”。那句对达奇说的：i gave you all i had，是我见过最无奈的话了我可太不同意查尔斯那句话了：“知道自己的死期比很多人幸运。”但我又太同意这句话了，西恩，何西亚，蓝尼甚至连话都没说就被这狂野的西部杀了，措手不及。于是在最后的时刻你尽力自己所能救了他们，也救了自己。至少在最后，你会说：in the end，i did it 最后我还是选择留在了之前有你的瓦伦丁镇，毕竟只有那时候，大家还是有退路，而你还是那个意气风发的神枪手</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/18/AletterToArthur/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -301,7 +387,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="liangx">
-      <meta itemprop="description" content="记录凉寻的装逼生涯">
+      <meta itemprop="description" content="爱前端、爱分享、爱互联网">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -327,7 +413,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-18 16:08:01" itemprop="dateModified" datetime="2020-09-18T16:08:01+08:00">2020-09-18</time>
+                <time title="修改时间：2020-09-18 16:44:43" itemprop="dateModified" datetime="2020-09-18T16:44:43+08:00">2020-09-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -367,39 +453,14 @@
           <h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
 <p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
-
-<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
-
-<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
-<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
-
-<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
-<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
-
-<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
-<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了让这段代码工作，我们需要使用类型断言</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用户自定义的类型保护</strong></p>
-<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
-<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
-<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -475,21 +536,21 @@
     <img class="site-author-image" itemprop="image" alt="liangx"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">liangx</p>
-  <div class="site-description" itemprop="description">记录凉寻的装逼生涯</div>
+  <div class="site-description" itemprop="description">爱前端、爱分享、爱互联网</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -634,7 +695,7 @@ window.addEventListener('pjax:success', () => {
 
 
   <script defer src="/lib/three/three.min.js"></script>
-    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
 
 
   
