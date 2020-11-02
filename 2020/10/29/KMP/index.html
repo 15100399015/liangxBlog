@@ -20,17 +20,21 @@
     var CONFIG = {"hostname":"blog.1950ys.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="爱前端、爱分享、爱互联网">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Liangx">
-<meta property="og:url" content="https://blog.1950ys.top/categories/JavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/index.html">
+  <meta name="description" content="有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但KMP算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构使什么，在搞清楚怎么用，最后为什么的问题就会由恍然大悟的感觉，我试着从这个思路介绍一下  KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解KMP的最大障碍就是PMT，有些人看了很多KMP的文章后仍然搞不懂PMT中的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP">
+<meta property="og:url" content="https://blog.1950ys.top/2020/10/29/KMP/index.html">
 <meta property="og:site_name" content="Liangx">
-<meta property="og:description" content="爱前端、爱分享、爱互联网">
+<meta property="og:description" content="有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但KMP算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构使什么，在搞清楚怎么用，最后为什么的问题就会由恍然大悟的感觉，我试着从这个思路介绍一下  KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解KMP的最大障碍就是PMT，有些人看了很多KMP的文章后仍然搞不懂PMT中的">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c">
+<meta property="article:published_time" content="2020-10-29T08:35:11.000Z">
+<meta property="article:modified_time" content="2020-11-02T06:42:07.987Z">
 <meta property="article:author" content="liangx">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c">
 
-<link rel="canonical" href="https://blog.1950ys.top/categories/JavaScript%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5/">
+<link rel="canonical" href="https://blog.1950ys.top/2020/10/29/KMP/">
 
 
 <script id="page-configurations">
@@ -38,12 +42,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: JavaScript设计模式与开发实践 | Liangx</title>
+  <title>KMP | Liangx</title>
   
 
 
@@ -188,57 +192,134 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/10/29/KMP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="liangx">
+      <meta itemprop="description" content="爱前端、爱分享、爱互联网">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liangx">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KMP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-29 16:35:11" itemprop="dateCreated datePublished" datetime="2020-10-29T16:35:11+08:00">2020-10-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-02 14:42:07" itemprop="dateModified" datetime="2020-11-02T14:42:07+08:00">2020-11-02</time>
+              </span>
+
+          
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">JavaScript设计模式与开发实践
-          <small>分类</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/29/KMP/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/29/KMP/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-09-18T15:38:10+08:00"
-              content="2020-09-18">
-          09-18
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="url">
-            <span itemprop="name">单例模式</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+        <p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但KMP算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构使什么，在搞清楚怎么用，最后为什么的问题就会由恍然大悟的感觉，我试着从这个思路介绍一下 </p>
+<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解KMP的最大障碍就是PMT，有些人看了很多KMP的文章后仍然搞不懂PMT中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
+<p>对于字符转 “abababca”，它的PMT如下表所示</p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
+<p>就像图中所示，如果待匹配的模式字符串有8个字符，那么PMT就会有8个值。</p>
+<p>我先解释下字符串的前缀后后缀，如果字符串A和B 存在A=BS，其中S是任意的非空字符串，那么就称B为A的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中S是任意非空字符，那就称B为A的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
+<p>有了这个定义，就可以说明PMT中的值的意义了，<strong>PMT中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长最长的元素就是字符串 “a” 了，长度为1，所以对于”abc”而言， 它在PMT表中对应值就是1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为3。</p>
+<p>好了，清楚这个表是什么之后，我们再来看看如何使用这个表来加速字符串的查找，以及这样用的道理是什么，如图</p>
 
     </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="liangx 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="liangx 支付宝">
+        <p>支付宝</p>
+      </div>
+
   </div>
-  
-  
-  
+</div>
 
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/" rel="prev" title="时间复杂度概念">
+      <i class="fa fa-chevron-left"></i> 时间复杂度概念
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/02/Proxy/" rel="next" title="Proxy">
+      Proxy <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {

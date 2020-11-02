@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.1950ys.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="先简要介绍一下 算法复杂度分为时间复杂度和空间复杂度，时间复杂度是指执行这个算法所需要的计算工作量，空间复杂度是指执行这个算法所需的内存空间 时间和空间都是计算机资源的重要体现，而算法的复杂性就是体现在该算法执行时计算机所需的资源多少 时间复杂度算法的时间复杂度反映了程序执行时间随输入规模增长而增长的量级，在很大程度上很好的反映出算法的优劣与否 算法的执行时间需要依据该算法编制的程序在计算机上执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间复杂度概念">
+<meta property="og:url" content="https://blog.1950ys.top/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/index.html">
+<meta property="og:site_name" content="Liangx">
+<meta property="og:description" content="先简要介绍一下 算法复杂度分为时间复杂度和空间复杂度，时间复杂度是指执行这个算法所需要的计算工作量，空间复杂度是指执行这个算法所需的内存空间 时间和空间都是计算机资源的重要体现，而算法的复杂性就是体现在该算法执行时计算机所需的资源多少 时间复杂度算法的时间复杂度反映了程序执行时间随输入规模增长而增长的量级，在很大程度上很好的反映出算法的优劣与否 算法的执行时间需要依据该算法编制的程序在计算机上执行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/D67peceibeITdVEicwQ7T05FPwkggMR2IiaRc88PpnacPKl4xapFBz28QSu6HyGU2zpYCiaayiaKia2T2cZzEicYyXAJw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaC8GtCYhYHhkZgbwSiaBvctaIZ9nZIurQMaQZyeyKKAnEh1fJ6p4vmtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawGKfic7qoiaxGt1wmZjDwlJksMAN2nvsMplZNbsa0DxKFKx1Gzo02HaA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiagPTZBricA32aLO0SKJwBxg9ADp81gE4micOalibyciahExK3AP5woZzmsw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaS8P0IxiarxvqcTwqc0SHBOzmnyGvQkXE8pticX5DDicu68ILLcopaSnvw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iiap3NSVdYcYMicDw1PpsuxY8qQacHM8cIMOt3oBya9UHFrmWypASsyXkA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia9S7ev0pwvhCLF5PbyWHVTXrDoJQ79xdSmf1H96AQo6l0A3ttnbaSVQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia7WpvIv6ibiaQibGibtSO0BvQyGSssye1sT7RmPOCsXB4e3xQPaicNbibJibqA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaocwzriaeqkOJQsorsR5Q0jqxRY9GhRbC7MYiaDKyAstD7v6plsHuHPPw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia0cnwqHXWTLZQO4dNl7hgE2g4iaibhJTqmRN12wTHFJiav5grgVCEyYNtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2IiaepCia27n7uxlH4ZuxKZTe7L6HypIkFLYHfoJ7xEBicoztf6nmeV43uhw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2Iia4hZdT7n7GAkmzCDNL9fweZm4RnRV8Or4cOmW1j1sqS1eeqvaecyW4A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="article:published_time" content="2020-10-28T08:52:31.000Z">
+<meta property="article:modified_time" content="2020-10-28T09:46:45.769Z">
+<meta property="article:author" content="liangx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/D67peceibeITdVEicwQ7T05FPwkggMR2IiaRc88PpnacPKl4xapFBz28QSu6HyGU2zpYCiaayiaKia2T2cZzEicYyXAJw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+
+<link rel="canonical" href="https://blog.1950ys.top/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>时间复杂度概念 | Liangx</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liangx</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">凉寻的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/15100399015" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="liangx">
+      <meta itemprop="description" content="爱前端、爱分享、爱互联网">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liangx">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          时间复杂度概念
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-10-28 16:52:31 / 修改时间：17:46:45" itemprop="dateCreated datePublished" datetime="2020-10-28T16:52:31+08:00">2020-10-28</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>先简要介绍一下</p>
+<p>算法复杂度分为时间复杂度和空间复杂度，时间复杂度是指执行这个算法所需要的计算工作量，空间复杂度是指执行这个算法所需的内存空间</p>
+<p>时间和空间都是计算机资源的重要体现，而算法的复杂性就是体现在该算法执行时计算机所需的资源多少</p>
+<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>算法的时间复杂度反映了程序执行时间随输入规模增长而增长的量级，在很大程度上很好的反映出算法的优劣与否</p>
+<p>算法的执行时间需要依据该算法编制的程序在计算机上执行运行所消耗的时间来度量，度量方法有两种，事后统计方法和事前分析估算方法，因为事后统计法更多的依赖计算机的硬件，软件等环境因素，有时容易掩盖算法本身的优劣，因此常常采用事后分析估算法</p>
+<p>一个算法由控制结构（顺序，分支，循环）和原操作（固有数据类型的操作）构成，而算法时间取决于两种的综合效率</p>
+<p>一个算法花费的时间与算法中语句的执行次数成正比，执行次数越多，花费的时间就越多，一个算法中的执行次数称为语句频度或时间频度，记为 T(n);</p>
+<p>在各种算法中，若算法中的语句执行次数为一个常数，则时间复杂度为 O(1), 同时若不同算法的时间频度不一样，但它们的时间复杂度可能时一样的<code>T(n)=n^2+2n+4 </code>与 <code>T（n）=4n^2+n+8</code> 它们的时间频度显然不一样，但他们的时间复杂度确是一样的，均为 O(n^2)  时间复杂度只关注最高数量级，且与之系数也没有关系，</p>
+<p>求解算法的时间复杂度的具体步骤是：</p>
+<ol>
+<li><p>找出算法中的基本语句；</p>
+<p>算法中执行次数最多的那条语句就是基本语句，通常是最内层循环的循环体</p>
+</li>
+<li><p>计算基本语句的执行次数的数量级</p>
+<p>只需计算基本语句执行次数的数量级，这就意味着只要保证基本语句执行次数的函数中的最高次幂正确即可，可以忽略所有低次幂和最高次幂，这样就能够简化算法分析，并且使注意力集中在最重要的一点上，增长率</p>
+</li>
+<li><p>用大O记号表示算法的时间性能</p>
+<p>将基本语句执行的数量放入大O记号中，如果算法中包含嵌套的循环，则基本语句通常使最内层的循环体，如果算法中包含并列循环，则将并列循环的时间复杂度相加</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    a++;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">    	a++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个 for 循环的时间复杂度为O(n)，第二个for循环时间复杂度为O(n^2)，则整个算法的时间复杂度为O(n^2+n)。</p>
+<p>O(1)表示基本语句的执行次数是一个常数，一般来说，只要算法中不存在循环语句，时间复杂度就为O(1)。</p>
+<hr>
+<p>算法（Algorithm）是指用来操作数据、解决程序问题的一组方法。对于同一个问题，使用不同的算法，也许最终得到的结果是一样的，比如排序就有前面的十大经典排序和几种奇葩排序，虽然结果相同，但在过程中消耗的资源和时间却会有很大的区别，比如快速排序与猴子排序：）。</p>
+<p>那么我们应该如何去衡量不同算法之间的优劣呢？</p>
+<p>主要还是从算法所占用的「时间」和「空间」两个维度去考量。</p>
+<ul>
+<li>时间维度：是指执行当前算法所消耗的时间，我们通常用「时间复杂度」来描述。</li>
+<li>空间维度：是指执行当前算法需要占用多少内存空间，我们通常用「空间复杂度」来描述。</li>
+</ul>
+<h2 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><h3 id="大O符号表示法"><a href="#大O符号表示法" class="headerlink" title="大O符号表示法"></a>大O符号表示法</h3><p>大O表示法：算法的时间复杂度通常用大O符号表述，定义为 **T[n] = O(f(n)) **。称函数T(n)以f(n)为界或者称T(n)受限于f(n)。</p>
+<p>如果一个问题的规模是n，解这一问题的某一算法所需要的时间为T(n)。T(n)称为这一算法的“时间复杂度”。</p>
+<blockquote>
+<p>上面公式中用到的 Landau符号是由德国数论学家保罗·巴赫曼（Paul Bachmann）在其1892年的著作《解析数论》首先引入，由另一位德国数论学家艾德蒙·朗道（Edmund Landau）推广。Landau符号的作用在于用简单的函数来描述复杂函数行为，给出一个上或下（确）界。在计算算法复杂度时一般只用到大O符号，Landau符号体系中的小o符号、Θ符号等等比较不常用。这里的O，最初是用大写希腊字母，但现在都用大写英语字母O；小o符号也是用小写英语字母o，Θ符号则维持大写希腊字母Θ。</p>
+</blockquote>
+<p>大O符号是一种算法「复杂度」的「相对」「表示」方式。</p>
+<p>这个句子里有一些重要而严谨的用词：</p>
+<ul>
+<li>相对(relative)：你只能比较相同的事物。你不能把一个做算数乘法的算法和排序整数列表的算法进行比较。但是，比较2个算法所做的算术操作（一个做乘法，一个做加法）将会告诉你一些有意义的东西；</li>
+<li>表示(representation)：大O(用它最简单的形式)把算法间的比较简化为了一个单一变量。这个变量的选择基于观察或假设。例如，排序算法之间的对比通常是基于比较操作(比较2个结点来决定这2个结点的相对顺序)。这里面就假设了比较操作的计算开销很大。但是，如果比较操作的计算开销不大，而交换操作的计算开销很大，又会怎么样呢？这就改变了先前的比较方式；</li>
+<li>复杂度(complexity)：如果排序10,000个元素花费了我1秒，那么排序1百万个元素会花多少时间？在这个例子里，复杂度就是相对其他东西的度量结果。</li>
+</ul>
+<h3 id="常见的时间复杂度量级"><a href="#常见的时间复杂度量级" class="headerlink" title="常见的时间复杂度量级"></a>常见的时间复杂度量级</h3><p>我们先从常见的时间复杂度量级进行大O的理解：</p>
+<ul>
+<li>常数阶O(1)</li>
+<li>线性阶O(n)</li>
+<li>平方阶O(n²)</li>
+<li>对数阶O(logn)</li>
+<li>线性对数阶O(nlogn)</li>
+</ul>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_jpg/D67peceibeITdVEicwQ7T05FPwkggMR2IiaRc88PpnacPKl4xapFBz28QSu6HyGU2zpYCiaayiaKia2T2cZzEicYyXAJw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h4 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaC8GtCYhYHhkZgbwSiaBvctaIZ9nZIurQMaQZyeyKKAnEh1fJ6p4vmtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>无论代码执行了多少行，其他区域不会影响到操作，这个代码的时间复杂度都是O(1)</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>void swapTwoInts(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">int</span> temp = a;</span><br><span class="line"><span class="symbol">3 </span> a = b;</span><br><span class="line"><span class="symbol">4 </span> b = temp;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawGKfic7qoiaxGt1wmZjDwlJksMAN2nvsMplZNbsa0DxKFKx1Gzo02HaA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>在下面这段代码，for循环里面的代码会执行 n 遍，因此它消耗的时间是随着 n 的变化而变化的，因此可以用O(n)来表示它的时间复杂度。</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum ( <span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span>  <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt;= n ; i ++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     ret += i;</span><br><span class="line"><span class="symbol">5 </span>  &#125;</span><br><span class="line"><span class="symbol">6 </span>  <span class="keyword">return</span> ret;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>特别一提的是 c * O(n) 中的 c 可能小于 1 ，比如下面这段代码：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>void reverse ( string &amp;s ) &#123;</span><br><span class="line"><span class="symbol">2 </span>   <span class="keyword">int</span> n = s.size();</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n/<span class="number">2</span> ; i++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     <span class="keyword">swap</span> ( s[i] , s[n-<span class="number">1</span>-i]);</span><br><span class="line"><span class="symbol">5 </span>   &#125;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-n²"><a href="#O-n²" class="headerlink" title="O(n²)"></a>O(n²)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiagPTZBricA32aLO0SKJwBxg9ADp81gE4micOalibyciahExK3AP5woZzmsw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>当存在双重循环的时候，即把 O(n) 的代码再嵌套循环一遍，它的时间复杂度就是 O(n²) 了。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span>void selectionSort(<span class="built_in">int</span> arr[],<span class="built_in">int</span> n)&#123;</span><br><span class="line"> <span class="number">2</span>   <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n ; i++)&#123;</span><br><span class="line"> <span class="number">3</span>     <span class="built_in">int</span> minIndex = i;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> j = i + <span class="number">1</span>; j &lt; n ; j++ )</span><br><span class="line"> <span class="number">5</span>       <span class="keyword">if</span> (arr[j] &lt; arr[minIndex])</span><br><span class="line"> <span class="number">6</span>           minIndex = j;</span><br><span class="line"> <span class="number">7</span></span><br><span class="line"> <span class="number">8</span>     swap ( arr[i], arr[minIndex]);</span><br><span class="line"> <span class="number">9</span>   &#125;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里简单的推导一下</p>
+<ul>
+<li>当 i = 0 时，第二重循环需要运行 (n - 1)  次</li>
+<li>当 i = 1 时，第二重循环需要运行 (n - 2)  次</li>
+<li>。。。。。。</li>
+</ul>
+<p>不难得到公式：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>(n - <span class="number">1</span>) + (n - <span class="number">2</span>) + (n - <span class="number">3</span>) + ... + <span class="number">0</span></span><br><span class="line"><span class="number">2</span>= (<span class="number">0</span> + n - <span class="number">1</span>) * n / <span class="number">2</span></span><br><span class="line"><span class="number">3</span>= O (n ^<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当然并不是所有的双重循环都是 O(n²)，比如下面这段输出 30n 次 <code>Hello,五分钟学算法：）</code>的代码。</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>void printInformation (<span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt;= n ; i++)</span><br><span class="line"><span class="symbol">3 </span>       <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span> ; j &lt;= <span class="number">30</span> ; j ++)</span><br><span class="line"><span class="symbol">4 </span>          cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-logn"><a href="#O-logn" class="headerlink" title="O(logn)"></a>O(logn)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch( <span class="built_in">int</span> arr[], <span class="built_in">int</span> n , <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>  <span class="built_in">int</span> l = <span class="number">0</span>, r = n - <span class="number">1</span>;</span><br><span class="line"> <span class="number">3</span>  <span class="keyword">while</span> ( l &lt;= r) &#123;</span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span> (arr[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line"> <span class="number">6</span>    <span class="keyword">if</span> (arr[mid] &gt; target ) r = mid - <span class="number">1</span>;</span><br><span class="line"> <span class="number">7</span>    <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line"> <span class="number">8</span>  &#125;</span><br><span class="line"> <span class="number">9</span>  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在二分查找法的代码中，通过while循环，成 2 倍数的缩减搜索范围，也就是说需要经过 log2^n 次即可跳出循环。</p>
+<p>同样的还有下面两段代码也是 O(logn) 级别的时间复杂度。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span>  <span class="comment">// 整形转成字符串</span></span><br><span class="line"> <span class="number">2</span>  <span class="built_in">string</span> <span class="built_in">int</span>ToString ( <span class="built_in">int</span> num )&#123;</span><br><span class="line"> <span class="number">3</span>   <span class="built_in">string</span> s = <span class="string">&quot;&quot;</span>;</span><br><span class="line"> <span class="number">4</span>   <span class="comment">// n 经过几次“除以10”的操作后，等于0</span></span><br><span class="line"> <span class="number">5</span>   <span class="keyword">while</span> (num )&#123;</span><br><span class="line"> <span class="number">6</span>    s += <span class="string">&#x27;0&#x27;</span> + num%<span class="number">10</span>;</span><br><span class="line"> <span class="number">7</span>    num /= <span class="number">10</span>;</span><br><span class="line"> <span class="number">8</span>   &#125;</span><br><span class="line"> <span class="number">9</span>   reverse(s)</span><br><span class="line"><span class="number">10</span>   <span class="keyword">return</span> s;</span><br><span class="line"><span class="number">11</span>  &#125;</span><br><span class="line"><span class="number">1</span>void hello (<span class="built_in">int</span> n ) &#123;</span><br><span class="line"><span class="number">2</span>   <span class="comment">// n 除以几次 2 到 1</span></span><br><span class="line"><span class="number">3</span>   <span class="keyword">for</span> ( <span class="built_in">int</span> sz = <span class="number">1</span>; sz &lt; n ; sz += sz) </span><br><span class="line"><span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; n; i++)</span><br><span class="line"><span class="number">5</span>        cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-nlogn"><a href="#O-nlogn" class="headerlink" title="O(nlogn)"></a>O(nlogn)</h4><p>将时间复杂度为O(logn)的代码循环N遍的话，那么它的时间复杂度就是 n * O(logn)，也就是了O(nlogn)。</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>void hello ()&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span>( m = <span class="number">1</span> ; m &lt; n ; m++)&#123;</span><br><span class="line"><span class="symbol">3 </span>   i = <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span>   <span class="keyword">while</span>( i &lt; n )&#123;</span><br><span class="line"><span class="symbol">5 </span>       i = i * <span class="number">2</span>;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span>  &#125;</span><br><span class="line"><span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="不常见的时间复杂度"><a href="#不常见的时间复杂度" class="headerlink" title="不常见的时间复杂度"></a>不常见的时间复杂度</h3><p>下面来分析一波另外几种复杂度： 递归算法的时间复杂度（recursive algorithm time complexity），最好情况时间复杂度（best case time complexity）、最坏情况时间复杂度（worst case time complexity）、平均时间复杂度（average case time complexity）和均摊时间复杂度（amortized time complexity）。</p>
+<h4 id="递归算法的时间复杂度"><a href="#递归算法的时间复杂度" class="headerlink" title="递归算法的时间复杂度"></a>递归算法的时间复杂度</h4><p>如果递归函数中，只进行一次递归调用，递归深度为depth；</p>
+<p>在每个递归的函数中，时间复杂度为T；</p>
+<p>*<em>则总体的时间复杂度为O(T \</em> depth)**。</p>
+<p>在前面的学习中，归并排序 与 快速排序 都带有递归的思想，并且时间复杂度都是O(nlogn) ，但并不是有递归的函数就一定是 O(nlogn) 级别的。从以下两种情况进行分析。</p>
+<h5 id="①-递归中进行一次递归调用的复杂度分析"><a href="#①-递归中进行一次递归调用的复杂度分析" class="headerlink" title="① 递归中进行一次递归调用的复杂度分析"></a>① 递归中进行一次递归调用的复杂度分析</h5><h6 id="二分查找法"><a href="#二分查找法" class="headerlink" title="二分查找法"></a>二分查找法</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch(<span class="built_in">int</span> arr[], <span class="built_in">int</span> l, <span class="built_in">int</span> r, <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>    <span class="keyword">if</span>( l &gt; r ) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"> <span class="number">3</span></span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r-l)/<span class="number">2</span>; </span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span>( arr[mid] == target ) <span class="keyword">return</span> mid;  </span><br><span class="line"> <span class="number">6</span>    <span class="keyword">else</span> <span class="keyword">if</span>( arr[mid] &gt; target ) </span><br><span class="line"> <span class="number">7</span>    <span class="keyword">return</span> binarySearch(arr, l, mid<span class="number">-1</span>, target);    <span class="comment">// 左边 </span></span><br><span class="line"> <span class="number">8</span>    <span class="keyword">else</span></span><br><span class="line"> <span class="number">9</span>    <span class="keyword">return</span> binarySearch(arr, mid+<span class="number">1</span>, r, target);   <span class="comment">// 右边</span></span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如在这段二分查找法的代码中，每次在 [ l ,  r  ] 范围中去查找目标的位置，如果中间的元素 <code>arr[mid]</code> 不是 <code>target</code>，那么判断 <code>arr[mid]</code>是比 <code>target</code> 大 还是 小 ，进而再次调用 <code>binarySearch</code>这个函数。</p>
+<p>在这个递归函数中，每一次没有找到<code>target</code>时，要么调用 左边 的 <code>binarySearch</code>函数，要么调用 右边 的 <code>binarySearch</code>函数。也就是说在此次递归中，最多调用了一次递归调用而已。根据数学知识，需要log2n次才能递归到底。因此，二分查找法的时间复杂度为 O(logn)。</p>
+<h6 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaS8P0IxiarxvqcTwqc0SHBOzmnyGvQkXE8pticX5DDicu68ILLcopaSnvw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum (<span class="keyword">int</span> n) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span> <span class="keyword">return</span> n + sum( n - <span class="number">1</span> )</span><br><span class="line"><span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中比较容易理解递归深度随输入 n 的增加而线性递增，因此时间复杂度为 O (n)。</p>
+<h6 id="求幂"><a href="#求幂" class="headerlink" title="求幂"></a>求幂</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iiap3NSVdYcYMicDw1PpsuxY8qQacHM8cIMOt3oBya9UHFrmWypASsyXkA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>//递归深度：logn</span><br><span class="line"><span class="number">2</span>//时间复杂度：O(logn)</span><br><span class="line"><span class="number">3d</span>ouble pow( double x, <span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">4 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="symbol">6 </span> double t = pow(x,n/<span class="number">2</span>);</span><br><span class="line"><span class="symbol">7 </span> <span class="keyword">if</span> (n %<span class="number">2</span>) <span class="keyword">return</span> x*t*t;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> t * t;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>递归深度为 <code>logn</code>，因为是求需要除以 2 多少次才能到底。</p>
+<h5 id="②-递归中进行多次递归调用的复杂度分析"><a href="#②-递归中进行多次递归调用的复杂度分析" class="headerlink" title="② 递归中进行多次递归调用的复杂度分析"></a>② 递归中进行多次递归调用的复杂度分析</h5><p>递归算法中比较难计算的是多次递归调用。</p>
+<p>先看下面这段代码，有两次递归调用。</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>// O(<span class="number">2</span>^n) 指数级别的数量级，后续动态规划的优化点</span><br><span class="line"><span class="number">2</span><span class="keyword">int</span> f(<span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">3 </span><span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span><span class="keyword">return</span> f(n-<span class="number">1</span>) + f(n - <span class="number">1</span>);</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia9S7ev0pwvhCLF5PbyWHVTXrDoJQ79xdSmf1H96AQo6l0A3ttnbaSVQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>递归树中节点数就是代码计算的调用次数。</p>
+<p>比如 当 <code>n = 3</code> 时，调用次数计算公式为</p>
+<blockquote>
+<p>1 + 2 + 4 + 8 = 15</p>
+</blockquote>
+<p>一般的，调用次数计算公式为</p>
+<blockquote>
+<p>2^0 + 2^1 + 2^2 + …… + 2^n<br>= 2^(n+1) - 1<br>= O(2^n)</p>
+</blockquote>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia7WpvIv6ibiaQibGibtSO0BvQyGSssye1sT7RmPOCsXB4e3xQPaicNbibJibqA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>与之有所类似的是 归并排序 的递归树，区别点在于</p>
+<ul>
+<li>\1. 上述例子中树的深度为 <code>n</code>，而 归并排序 的递归树深度为<code>logn</code>。</li>
+<li>\2. 上述例子中每次处理的数据规模是一样的，而在 归并排序 中每个节点处理的数据规模是逐渐缩小的</li>
+</ul>
+<p>因此，在如 归并排序 等排序算法中，每一层处理的数据量为 O(n) 级别，同时有 <code>logn</code> 层，时间复杂度便是 O(nlogn)。</p>
+<h4 id="最好、最坏情况时间复杂度"><a href="#最好、最坏情况时间复杂度" class="headerlink" title="最好、最坏情况时间复杂度"></a>最好、最坏情况时间复杂度</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaocwzriaeqkOJQsorsR5Q0jqxRY9GhRbC7MYiaDKyAstD7v6plsHuHPPw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>最好、最坏情况时间复杂度指的是特殊情况下的时间复杂度。</p>
+<p>动图表明的是在数组 array 中寻找变量 x 第一次出现的位置，若没有找到，则返回 -1；否则返回位置下标。</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> find(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> x) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span> (  <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n; i++) &#123;</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">if</span> (array[i] == x) &#123;</span><br><span class="line"><span class="symbol">4 </span>       <span class="keyword">return</span> i;</span><br><span class="line"><span class="symbol">5 </span>       break;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span> &#125;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里当数组中第一个元素就是要找的 x 时，时间复杂度是 O(1)；而当最后一个元素才是 x 时，时间复杂度则是 O(n)。</p>
+<p>最好情况时间复杂度就是在最理想情况下执行代码的时间复杂度，它的时间是最短的；最坏情况时间复杂度就是在最糟糕情况下执行代码的时间复杂度，它的时间是最长的。</p>
+<h4 id="平均情况时间复杂度"><a href="#平均情况时间复杂度" class="headerlink" title="平均情况时间复杂度"></a>平均情况时间复杂度</h4><p>最好、最坏时间复杂度反应的是极端条件下的复杂度，发生的概率不大，不能代表平均水平。那么为了更好的表示平均情况下的算法复杂度，就需要引入平均时间复杂度。</p>
+<p>平均情况时间复杂度可用代码在所有可能情况下执行次数的加权平均值表示。</p>
+<p>还是以 <code>find</code> 函数为例，从概率的角度看， x 在数组中每一个位置的可能性是相同的，为 1 / n。那么，那么平均情况时间复杂度就可以用下面的方式计算：</p>
+<blockquote>
+<p>((1 + 2 + … + n) / n + n)  /  2 = (3n + 1) / 4</p>
+</blockquote>
+<p><code>find</code> 函数的平均时间复杂度为 O(n)。</p>
+<h4 id="均摊复杂度分析"><a href="#均摊复杂度分析" class="headerlink" title="均摊复杂度分析"></a>均摊复杂度分析</h4><p>我们通过一个动态数组的 <code>push_back</code> 操作来理解 <strong>均摊复杂度</strong>。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia0cnwqHXWTLZQO4dNl7hgE2g4iaibhJTqmRN12wTHFJiav5grgVCEyYNtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span>template &lt;typename T&gt;</span><br><span class="line"> <span class="number">2</span>class MyVector&#123;</span><br><span class="line"> <span class="number">3</span><span class="keyword">private</span>:</span><br><span class="line"> <span class="number">4</span>    T* data;</span><br><span class="line"> <span class="number">5</span>    <span class="built_in">int</span> size;       <span class="comment">// 存储数组中的元素个数</span></span><br><span class="line"> <span class="number">6</span>    <span class="built_in">int</span> capacity;   <span class="comment">// 存储数组中可以容纳的最大的元素个数</span></span><br><span class="line"> <span class="number">7</span>    <span class="comment">// 复杂度为 O(n)</span></span><br><span class="line"> <span class="number">8</span>    <span class="built_in">void</span> resize(<span class="built_in">int</span> newCapacity)&#123;</span><br><span class="line"> <span class="number">9</span>        T *newData = new T[newCapacity];</span><br><span class="line"><span class="number">10</span>        <span class="keyword">for</span>( <span class="built_in">int</span> i = <span class="number">0</span> ; i &lt; size ; i ++ )&#123;</span><br><span class="line"><span class="number">11</span>              newData[i] = data[i];</span><br><span class="line"><span class="number">12</span>            &#125;</span><br><span class="line"><span class="number">13</span>        data = newData;</span><br><span class="line"><span class="number">14</span>        capacity = newCapacity;</span><br><span class="line"><span class="number">15</span>    &#125;</span><br><span class="line"><span class="number">16</span><span class="keyword">public</span>:</span><br><span class="line"><span class="number">17</span>    MyVector()&#123;</span><br><span class="line"><span class="number">18</span>        data = new T[<span class="number">100</span>];</span><br><span class="line"><span class="number">19</span>        size = <span class="number">0</span>;</span><br><span class="line"><span class="number">20</span>        capacity = <span class="number">100</span>;</span><br><span class="line"><span class="number">21</span>    &#125;</span><br><span class="line"><span class="number">22</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">23</span>    <span class="built_in">void</span> push_back(T e)&#123;</span><br><span class="line"><span class="number">24</span>        <span class="keyword">if</span>(size == capacity)</span><br><span class="line"><span class="number">25</span>            resize(<span class="number">2</span> * capacity);</span><br><span class="line"><span class="number">26</span>        data[size++] = e;</span><br><span class="line"><span class="number">27</span>    &#125;</span><br><span class="line"><span class="number">28</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">29</span>    T pop_back()&#123;</span><br><span class="line"><span class="number">30</span>        size --;</span><br><span class="line"><span class="number">31</span>        <span class="keyword">return</span> data[size];</span><br><span class="line"><span class="number">32</span>    &#125;</span><br><span class="line"><span class="number">33</span></span><br><span class="line"><span class="number">34</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>push_back</code>实现的功能是往数组的末尾增加一个元素，如果数组没有满，直接往后面插入元素；如果数组满了，即 <code>size == capacity</code> ，则将数组扩容一倍，然后再插入元素。</p>
+<p>例如，数组长度为 n，则前 n 次调用 <code>push_back</code> 复杂度都为 O(1) 级别；在第 n + 1 次则需要先进行 n 次元素转移操作，然后再进行 1 次插入操作，复杂度为 O(n)。</p>
+<p>因此，平均来看：对于容量为 n 的动态数组，前面添加元素需要消耗了 1 * n 的时间，扩容操作消耗  n 时间 ，<br>总共就是 2 * n 的时间，因此均摊时间复杂度为 O(2n / n) = O(2)，也就是 O(1) 级别了。</p>
+<p>可以得出一个比较有意思的结论：一个相对比较耗时的操作，如果能保证它不会每次都被触发，那么这个相对比较耗时的操作，它所相应的时间是可以分摊到其它的操作中来的。</p>
+<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>一个程序的空间复杂度是指运行完一个程序所需内存的大小。利用程序的空间复杂度，可以对程序的运行所需要的内存多少有个预先估计。一个程序执行时除了需要存储空间和存储本身所使用的指令、常数、变量和输入数据外，还需要一些对数据进行操作的工作单元和存储一些为现实计算所需信息的辅助空间。程序执行时所需存储空间包括以下两部分：</p>
+<p>(1) 固定部分，这部分空间的大小与输入/输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。</p>
+<p>(2) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。</p>
+<p>一个算法所需的存储空间用f(n)表示。S(n)=O(f(n))，其中n为问题的规模，S(n)表示空间复杂度。</p>
+<p><strong>空间复杂度可以理解为除了原始序列大小的内存，在算法过程中用到的额外的存储空间。</strong></p>
+<p>以二叉查找树为例，举例说明二叉排序树的查找性能。</p>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>如果二叉树的是以红黑树等平衡二叉树实现的，则 n 个节点的二叉排序树的高度为 log2n+1 ，其查找效率为O(Log2n)，近似于折半查找。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2IiaepCia27n7uxlH4ZuxKZTe7L6HypIkFLYHfoJ7xEBicoztf6nmeV43uhw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h3 id="列表二叉树"><a href="#列表二叉树" class="headerlink" title="列表二叉树"></a>列表二叉树</h3><p>如果二叉树退变为列表了，则 n 个节点的高度或者说是长度变为了n，查找效率为O(n)，变成了顺序查找。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2Iia4hZdT7n7GAkmzCDNL9fweZm4RnRV8Or4cOmW1j1sqS1eeqvaecyW4A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h3 id="一般二叉树"><a href="#一般二叉树" class="headerlink" title="一般二叉树"></a>一般二叉树</h3><p>介于「列表二叉树」与「平衡二叉树」之间，查找性能也在O(Log2n)到O(n)之间。</p>
+<h2 id="冰火交融"><a href="#冰火交融" class="headerlink" title="冰火交融"></a>冰火交融</h2><p>对于一个算法，其时间复杂度和空间复杂度往往是相互影响的。</p>
+<p>比如说，要判断某某年是不是闰年：</p>
+<ul>
+<li>\1. 可以编写一个算法来计算，这也就意味着，每次给一个年份，都是要通过计算得到是否是闰年的结果。</li>
+<li>\2. 还有另一个办法就是，事先建立一个有 5555 个元素的数组（年数比现实多就行），然后把所有的年份按下标的数字对应，如果是闰年，此数组项的值就是1，如果不是值为0。这样，所谓的判断某一年是否是闰年，就变成了查找这个数组的某一项的值是多少的问题。此时，我们的运算是最小化了，但是硬盘上或者内存中需要存储这 5555 个 0 和 1 。</li>
+</ul>
+<p>这就是典型的使用空间换时间的概念。</p>
+<p>当追求一个较好的时间复杂度时，可能会使空间复杂度的性能变差，即可能导致占用较多的存储空间；<br>反之，求一个较好的空间复杂度时，可能会使时间复杂度的性能变差，即可能导致占用较长的运行时间。</p>
+<p>另外，算法的所有性能之间都存在着或多或少的相互影响。因此，当设计一个算法(特别是大型算法)时，要综合考虑算法的各项性能，算法的使用频率，算法处理的数据量的大小，算法描述语言的特性，算法运行的机器系统环境等各方面因素，才能够设计出比较好的算法。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="liangx 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="liangx 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/" rel="prev" title="数据结构总结">
+      <i class="fa fa-chevron-left"></i> 数据结构总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/29/KMP/" rel="next" title="KMP">
+      KMP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.</span> <span class="nav-text">时间复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6-1"><span class="nav-number"></span> <span class="nav-text">时间复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7O%E7%AC%A6%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">大O符号表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%87%8F%E7%BA%A7"><span class="nav-number">2.</span> <span class="nav-text">常见的时间复杂度量级</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#O-1"><span class="nav-number">2.1.</span> <span class="nav-text">O(1)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-n"><span class="nav-number">2.2.</span> <span class="nav-text">O(n)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-n%C2%B2"><span class="nav-number">2.3.</span> <span class="nav-text">O(n²)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-logn"><span class="nav-number">2.4.</span> <span class="nav-text">O(logn)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-nlogn"><span class="nav-number">2.5.</span> <span class="nav-text">O(nlogn)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">不常见的时间复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.1.</span> <span class="nav-text">递归算法的时间复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A0-%E9%80%92%E5%BD%92%E4%B8%AD%E8%BF%9B%E8%A1%8C%E4%B8%80%E6%AC%A1%E9%80%92%E5%BD%92%E8%B0%83%E7%94%A8%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.1.1.</span> <span class="nav-text">① 递归中进行一次递归调用的复杂度分析</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%B3%95"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">二分查找法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%B1%82%E5%92%8C"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">求和</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%B1%82%E5%B9%82"><span class="nav-number">3.1.1.3.</span> <span class="nav-text">求幂</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%91%A1-%E9%80%92%E5%BD%92%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%A4%9A%E6%AC%A1%E9%80%92%E5%BD%92%E8%B0%83%E7%94%A8%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.1.2.</span> <span class="nav-text">② 递归中进行多次递归调用的复杂度分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%A5%BD%E3%80%81%E6%9C%80%E5%9D%8F%E6%83%85%E5%86%B5%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.2.</span> <span class="nav-text">最好、最坏情况时间复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B3%E5%9D%87%E6%83%85%E5%86%B5%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.3.</span> <span class="nav-text">平均情况时间复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9D%87%E6%91%8A%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.4.</span> <span class="nav-text">均摊复杂度分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number"></span> <span class="nav-text">空间复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">平衡二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">列表二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">3.</span> <span class="nav-text">一般二叉树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B0%E7%81%AB%E4%BA%A4%E8%9E%8D"><span class="nav-number"></span> <span class="nav-text">冰火交融</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="liangx"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">liangx</p>
+  <div class="site-description" itemprop="description">爱前端、爱分享、爱互联网</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/15100399015" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;15100399015" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1474862431@qq.com" title="E-Mail → mailto:1474862431@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liangx</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'oN9c5z0Ppc0d9k3bWlICbwbQ-gzGzoHsz',
+      appKey     : '1znvAAYuK3Kq9MFcrNltFAbs',
+      placeholder: "有什么想法吗？",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -95,16 +95,17 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Jest</title>
-    <url>/2020/09/19/jest/</url>
-    <content><![CDATA[<h3 id="Jest环境搭建"><a href="#Jest环境搭建" class="headerlink" title="Jest环境搭建"></a>Jest环境搭建</h3>]]></content>
-      <categories>
-        <category>前端自动化测试</category>
-      </categories>
-      <tags>
-        <tag>jest</tag>
-        <tag>测试</tag>
-      </tags>
+    <title>KMP</title>
+    <url>/2020/10/29/KMP/</url>
+    <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但KMP算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构使什么，在搞清楚怎么用，最后为什么的问题就会由恍然大悟的感觉，我试着从这个思路介绍一下 </p>
+<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解KMP的最大障碍就是PMT，有些人看了很多KMP的文章后仍然搞不懂PMT中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
+<p>对于字符转 “abababca”，它的PMT如下表所示</p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
+<p>就像图中所示，如果待匹配的模式字符串有8个字符，那么PMT就会有8个值。</p>
+<p>我先解释下字符串的前缀后后缀，如果字符串A和B 存在A=BS，其中S是任意的非空字符串，那么就称B为A的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中S是任意非空字符，那就称B为A的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
+<p>有了这个定义，就可以说明PMT中的值的意义了，<strong>PMT中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长最长的元素就是字符串 “a” 了，长度为1，所以对于”abc”而言， 它在PMT表中对应值就是1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为3。</p>
+<p>好了，清楚这个表是什么之后，我们再来看看如何使用这个表来加速字符串的查找，以及这样用的道理是什么，如图</p>
+]]></content>
   </entry>
   <entry>
     <title>css语法</title>
@@ -113,6 +114,82 @@
 <p>如果我们到 w3c 的网站上搜索看看，可以得到一些信息</p>
 <p>在这里我们一共看到了</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>Proxy</title>
+    <url>/2020/11/02/Proxy/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Proxy 用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”（meta programming），即对编程语言进行编程。</p>
+<p>Proxy 可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。Proxy 这个词的原意是代理，用在这里表示由它来“代理”某些操作，可以译为“代理器”。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(&#123;&#125;, &#123;</span><br><span class="line">  get: <span class="function"><span class="keyword">function</span> (<span class="params">target, propKey, receiver</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`getting <span class="subst">$&#123;propKey&#125;</span>!`</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, propKey, receiver);</span><br><span class="line">  &#125;,</span><br><span class="line">  set: <span class="function"><span class="keyword">function</span> (<span class="params">target, propKey, value, receiver</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`setting <span class="subst">$&#123;propKey&#125;</span>!`</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(target, propKey, value, receiver);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码对一个空对象架设了一层拦截，重定义了属性的读取（<code>get</code>）和设置（<code>set</code>）行为。这里暂时先不解释具体的语法，只看运行结果。对设置了拦截行为的对象<code>obj</code>，去读写它的属性，就会得到下面的结果。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">obj.count = <span class="number">1</span></span><br><span class="line"><span class="comment">//  setting count!</span></span><br><span class="line">++obj.count</span><br><span class="line"><span class="comment">//  getting count!</span></span><br><span class="line"><span class="comment">//  setting count!</span></span><br><span class="line"><span class="comment">//  2</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码说明，Proxy 实际上重载（overload）了点运算符，即用自己的定义覆盖了语言的原始定义。</p>
+<p>ES6 原生提供 Proxy 构造函数，用来生成 Proxy 实例。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br></pre></td></tr></table></figure>
+
+<p>Proxy 对象的所有用法，都是上面这种形式，不同的只是<code>handler</code>参数的写法。其中，<code>new Proxy()</code>表示生成一个<code>Proxy</code>实例，<code>target</code>参数表示所要拦截的目标对象，<code>handler</code>参数也是一个对象，用来定制拦截行为。</p>
+<p>下面是另一个拦截读取属性行为的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> object = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(object, &#123;</span><br><span class="line">  get: <span class="function"><span class="keyword">function</span>(<span class="params">target, propKey</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">35</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">proxy.time <span class="comment">// 35</span></span><br><span class="line">proxy.name <span class="comment">// 35</span></span><br><span class="line">proxy.title <span class="comment">// 35</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，作为构造函数，<code>Proxy</code>接受两个参数。第一个参数是所要代理的目标对象（上例是一个空对象），即如果没有<code>Proxy</code>的介入，操作原来要访问的就是这个对象；第二个参数是一个配置对象，对于每一个被代理的操作，需要提供一个对应的处理函数，该函数将拦截对应的操作。比如，上面代码中，配置对象有一个<code>get</code>方法，用来拦截对目标对象属性的访问请求。<code>get</code>方法的两个参数分别是目标对象和所要访问的属性。可以看到，由于拦截函数总是返回<code>35</code>，所以访问任何属性都得到<code>35</code>。</p>
+<p>注意，要使得<code>Proxy</code>起作用，必须针对<code>Proxy</code>实例（上例是<code>proxy</code>对象）进行操作，而不是针对目标对象（上例是空对象）进行操作。</p>
+<p>如果<code>handler</code>没有设置任何拦截，那就等同于直接通向原对象。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> target = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> handler = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line">proxy.a = <span class="string">&#x27;b&#x27;</span>;</span><br><span class="line">target.a <span class="comment">// &quot;b&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>handler</code>是一个空对象，没有任何拦截效果，访问<code>proxy</code>就等同于访问<code>target</code>。</p>
+<p>一个技巧是将 Proxy 对象，设置到<code>object.proxy</code>属性，从而可以在<code>object</code>对象上调用。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(&#123;&#125;, &#123;</span><br><span class="line">  get: <span class="function"><span class="keyword">function</span>(<span class="params">target, propKey</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">35</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj = <span class="built_in">Object</span>.create(proxy);</span><br><span class="line">obj.time <span class="comment">// 35</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>proxy</code>对象是<code>obj</code>对象的原型，<code>obj</code>对象本身并没有<code>time</code>属性，所以根据原型链，会在<code>proxy</code>对象上读取该属性，导致被拦截。</p>
+<p>同一个拦截器函数，可以设置拦截多个操作。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123;</span><br><span class="line">  get: <span class="function"><span class="keyword">function</span>(<span class="params">target, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (name === <span class="string">&#x27;prototype&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">Object</span>.prototype;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello, &#x27;</span> + name;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  apply: <span class="function"><span class="keyword">function</span>(<span class="params">target, thisBinding, args</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> args[<span class="number">0</span>];</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  construct: <span class="function"><span class="keyword">function</span>(<span class="params">target, args</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">value</span>: args[<span class="number">1</span>]&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fproxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(<span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;, handler);</span><br><span class="line"></span><br><span class="line">fproxy(<span class="number">1</span>, <span class="number">2</span>) <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">new</span> fproxy(<span class="number">1</span>, <span class="number">2</span>) <span class="comment">// &#123;value: 2&#125;</span></span><br><span class="line">fproxy.prototype === <span class="built_in">Object</span>.prototype <span class="comment">// true</span></span><br><span class="line">fproxy.foo === <span class="string">&quot;Hello, foo&quot;</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>对于可以设置、但没有设置拦截的操作，则直接落在目标对象上，按照原先的方式产生结果。</p>
+<p>下面是 Proxy 支持的拦截操作一览，一共 13 种。</p>
+<ul>
+<li>**get(target, propKey, receiver)**：拦截对象属性的读取，比如<code>proxy.foo</code>和<code>proxy[&#39;foo&#39;]</code>。</li>
+<li>**set(target, propKey, value, receiver)**：拦截对象属性的设置，比如<code>proxy.foo = v</code>或<code>proxy[&#39;foo&#39;] = v</code>，返回一个布尔值。</li>
+<li>**has(target, propKey)**：拦截<code>propKey in proxy</code>的操作，返回一个布尔值。</li>
+<li>**deleteProperty(target, propKey)**：拦截<code>delete proxy[propKey]</code>的操作，返回一个布尔值。</li>
+<li>**ownKeys(target)**：拦截<code>Object.getOwnPropertyNames(proxy)</code>、<code>Object.getOwnPropertySymbols(proxy)</code>、<code>Object.keys(proxy)</code>、<code>for...in</code>循环，返回一个数组。该方法返回目标对象所有自身的属性的属性名，而<code>Object.keys()</code>的返回结果仅包括目标对象自身的可遍历属性。</li>
+<li>**getOwnPropertyDescriptor(target, propKey)**：拦截<code>Object.getOwnPropertyDescriptor(proxy, propKey)</code>，返回属性的描述对象。</li>
+<li>**defineProperty(target, propKey, propDesc)**：拦截<code>Object.defineProperty(proxy, propKey, propDesc）</code>、<code>Object.defineProperties(proxy, propDescs)</code>，返回一个布尔值。</li>
+<li>**preventExtensions(target)**：拦截<code>Object.preventExtensions(proxy)</code>，返回一个布尔值。</li>
+<li>**getPrototypeOf(target)**：拦截<code>Object.getPrototypeOf(proxy)</code>，返回一个对象。</li>
+<li>**isExtensible(target)**：拦截<code>Object.isExtensible(proxy)</code>，返回一个布尔值。</li>
+<li>**setPrototypeOf(target, proto)**：拦截<code>Object.setPrototypeOf(proxy, proto)</code>，返回一个布尔值。如果目标对象是函数，那么还有两种额外操作可以拦截。</li>
+<li>**apply(target, object, args)**：拦截 Proxy 实例作为函数调用的操作，比如<code>proxy(...args)</code>、<code>proxy.call(object, ...args)</code>、<code>proxy.apply(...)</code>。</li>
+<li>**construct(target, args)**：拦截 Proxy 实例作为构造函数调用的操作，比如<code>new proxy(...args)</code>。</li>
+</ul>
+<h3 id="Proxy-revocable"><a href="#Proxy-revocable" class="headerlink" title="Proxy.revocable()"></a>Proxy.revocable()</h3><p><code>Proxy.revocable()</code>方法返回一个可取消的 Proxy 实例。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> target = &#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> handler = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> &#123;proxy, revoke&#125; = <span class="built_in">Proxy</span>.revocable(target, handler);</span><br><span class="line"></span><br><span class="line">proxy.foo = <span class="number">123</span>;</span><br><span class="line">proxy.foo <span class="comment">// 123</span></span><br><span class="line"></span><br><span class="line">revoke();</span><br><span class="line">proxy.foo <span class="comment">// TypeError: Revoked</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Proxy.revocable()</code>方法返回一个对象，该对象的<code>proxy</code>属性是<code>Proxy</code>实例，<code>revoke</code>属性是一个函数，可以取消<code>Proxy</code>实例。上面代码中，当执行<code>revoke</code>函数之后，再访问<code>Proxy</code>实例，就会抛出一个错误。</p>
+<p><code>Proxy.revocable()</code>的一个使用场景是，目标对象不允许直接访问，必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。</p>
+<h3 id="this-问题"><a href="#this-问题" class="headerlink" title="this 问题"></a>this 问题</h3><p>虽然 Proxy 可以代理针对目标对象的访问，但它不是目标对象的透明代理，即不做任何拦截的情况下，也无法保证与目标对象的行为一致。主要原因就是在 Proxy 代理的情况下，目标对象内部的<code>this</code>关键字会指向 Proxy 代理。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> target = &#123;</span><br><span class="line">  m: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span> === proxy);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> handler = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line"></span><br><span class="line">target.m() <span class="comment">// false</span></span><br><span class="line">proxy.m()  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，一旦<code>proxy</code>代理<code>target</code>，<code>target.m()</code>内部的<code>this</code>就是指向<code>proxy</code>，而不是<code>target</code>。</p>
+<p>下面是一个例子，由于<code>this</code>指向的变化，导致 Proxy 无法代理目标对象。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> _name = <span class="keyword">new</span> <span class="built_in">WeakMap</span>();</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">    _name.set(<span class="built_in">this</span>, name);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">get</span> <span class="title">name</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> _name.get(<span class="built_in">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> jane = <span class="keyword">new</span> Person(<span class="string">&#x27;Jane&#x27;</span>);</span><br><span class="line">jane.name <span class="comment">// &#x27;Jane&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(jane, &#123;&#125;);</span><br><span class="line">proxy.name <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，目标对象<code>jane</code>的<code>name</code>属性，实际保存在外部<code>WeakMap</code>对象<code>_name</code>上面，通过<code>this</code>键区分。由于通过<code>proxy.name</code>访问时，<code>this</code>指向<code>proxy</code>，导致无法取到值，所以返回<code>undefined</code>。</p>
+<p>此外，有些原生对象的内部属性，只有通过正确的<code>this</code>才能拿到，所以 Proxy 也无法代理这些原生对象的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> target = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="keyword">const</span> handler = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line"></span><br><span class="line">proxy.getDate();</span><br><span class="line"><span class="comment">// TypeError: this is not a Date object.</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>getDate()</code>方法只能在<code>Date</code>对象实例上面拿到，如果<code>this</code>不是<code>Date</code>对象实例就会报错。这时，<code>this</code>绑定原始对象，就可以解决这个问题。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> target = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="string">&#x27;2015-01-01&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> handler = &#123;</span><br><span class="line">  get(target, prop) &#123;</span><br><span class="line">    <span class="keyword">if</span> (prop === <span class="string">&#x27;getDate&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> target.getDate.bind(target);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, prop);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line"></span><br><span class="line">proxy.getDate() <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>另外，Proxy 拦截函数内部的<code>this</code>，指向的是<code>handler</code>对象。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> handler = &#123;</span><br><span class="line">  get: <span class="function"><span class="keyword">function</span> (<span class="params">target, key, receiver</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span> === handler);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello, &#x27;</span> + key;</span><br><span class="line">  &#125;,</span><br><span class="line">  set: <span class="function"><span class="keyword">function</span> (<span class="params">target, key, value</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span> === handler);</span><br><span class="line">    target[key] = value;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(&#123;&#125;, handler);</span><br><span class="line"></span><br><span class="line">proxy.foo</span><br><span class="line"><span class="comment">// true</span></span><br><span class="line"><span class="comment">// Hello, foo</span></span><br><span class="line"></span><br><span class="line">proxy.foo = <span class="number">1</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面例子中，<code>get()</code>和<code>set()</code>拦截函数内部的<code>this</code>，指向的都是<code>handler</code>对象。</p>
+]]></content>
+      <tags>
+        <tag>es6</tag>
+      </tags>
   </entry>
   <entry>
     <title>TypeScript 中的高级类型</title>
@@ -240,6 +317,41 @@
       </categories>
   </entry>
   <entry>
+    <title>数据结构总结</title>
+    <url>/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript中的数组和其他编程语言中的数组还有些不同，JavaScript中的数组中可以存储不同类型的元素，JavaScript中的数组长度是动态变化的</p>
+<blockquote>
+<p>百科定义: 数组（Array）是有序的元素序列。 若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按有序的形式组织起来的一种形式。 这些有序排列的同类数据元素的集合称为数组。</p>
+</blockquote>
+<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>虽然有了数组，然而在某些情况下我们更加需要一种能在添加或删除元素时进行更多的控制的数据结构，这时我们可能就需要用到栈了, 栈是一种遵从<strong>后进先出</strong>原则的有序集合，新添加或待删除的元素都保存在栈的同一端，另一端叫做栈底，新元素都靠近栈顶,旧元素都接近栈底，在现实生活中也能发现很多栈的例子餐厅里叠放的盘子，栈也被用在编程语言的遍历器和内存中保存变量，方法调用等，也被用于浏览器历史记录(浏览器的返回按钮)</p>
+<blockquote>
+<p>百科定义: 栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
+</blockquote>
+<h4 id="队列和双端队列"><a href="#队列和双端队列" class="headerlink" title="队列和双端队列"></a>队列和双端队列</h4><p>队列是一种特殊的线性表，特殊之处在于它只允许在表的前端进行删除操作，而在表的后端进行插入操作，和栈一样，队列是一种操作受限的线性表，进行插入操作的端成为队尾，进行删除操作的成为队头。</p>
+<h4 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h4><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><h4 id="字典和散列表"><a href="#字典和散列表" class="headerlink" title="字典和散列表"></a>字典和散列表</h4><h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><h4 id="二叉堆和堆排序"><a href="#二叉堆和堆排序" class="headerlink" title="二叉堆和堆排序"></a>二叉堆和堆排序</h4><h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4>]]></content>
+  </entry>
+  <entry>
+    <title>浏览器DOMAPI</title>
+    <url>/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOMAPI/</url>
+    <content><![CDATA[<p>今天开始我们浏览器 api 的学习，这一节课，我们来学习一下 dom api</p>
+<p>DOM API 是最早被设计出来的一批 api，也是用途最广的 api，所以早年的技术社区，常常用 dom 来泛指浏览器中的所有 api</p>
+<h3 id="DOM-API-介绍"><a href="#DOM-API-介绍" class="headerlink" title="DOM API 介绍"></a>DOM API 介绍</h3><p>首先我们先来讲一讲什么叫做文档对象模型，</p>
+<p>顾名思义，文档对象模型是用来描述文档，这里的文档，是特指 html 文档（也用于 xml），同时它又是“对象模型”，这意味着它使用的是对象这样的概念来描述 html 文档。</p>
+<p>说起 html 文档，这是大家最熟悉的东西了，我们都知道，html 文档是一个由标签嵌套而成的树形结构，因此，dom 也是使用树形的对象模型来描述一个 html 文档</p>
+<p>dom api 大致会包含四个部分。</p>
+<ul>
+<li>节点：DOM 树形结构中的节点相关 API</li>
+<li>事件：触发和监听事件相关 API</li>
+<li>Range：操作文字范围相关 API</li>
+<li>遍历：遍历 DOM 需要的工具 API</li>
+</ul>
+<p>这里我们重点介绍节点和相比相关 API</p>
+<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>DOM 的树形结构所有的节点由统一的接口 Node，我们按照继承关系，介绍一下节点的类型</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/6e/f6/6e278e450d8cc7122da3616fd18b9cf6.png"></p>
+<p>在这些节点中</p>
+]]></content>
+  </entry>
+  <entry>
     <title>声明合并</title>
     <url>/2020/09/20/%E5%A3%B0%E6%98%8E%E5%90%88%E5%B9%B6/</url>
     <content><![CDATA[<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Typescript 中有些独特的概念可以在类型层面上描述 JavaScript 对象类型，这其中有其独特的有一个例子是“声明合并”的概念，理解了这个概念，将有助于操作现有的 JavaScript 代码，同时，也会有助于理解更多高级抽象的概念，</p>
@@ -365,153 +477,6 @@
       </categories>
   </entry>
   <entry>
-    <title>数据结构总结</title>
-    <url>/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript中的数组和其他编程语言中的数组还有些不同，JavaScript中的数组中可以存储不同类型的元素，JavaScript中的数组长度是动态变化的</p>
-<blockquote>
-<p>百科定义: 数组（Array）是有序的元素序列。 若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按有序的形式组织起来的一种形式。 这些有序排列的同类数据元素的集合称为数组。</p>
-</blockquote>
-<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>虽然有了数组，然而在某些情况下我们更加需要一种能在添加或删除元素时进行更多的控制的数据结构，这时我们可能就需要用到栈了, 栈是一种遵从<strong>后进先出</strong>原则的有序集合，新添加或待删除的元素都保存在栈的同一端，另一端叫做栈底，新元素都靠近栈顶,旧元素都接近栈底，在现实生活中也能发现很多栈的例子餐厅里叠放的盘子，栈也被用在编程语言的遍历器和内存中保存变量，方法调用等，也被用于浏览器历史记录(浏览器的返回按钮)</p>
-<blockquote>
-<p>百科定义: 栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
-</blockquote>
-<h4 id="队列和双端队列"><a href="#队列和双端队列" class="headerlink" title="队列和双端队列"></a>队列和双端队列</h4><p>队列是一种特殊的线性表，特殊之处在于它只允许在表的前端进行删除操作，而在表的后端进行插入操作，和栈一样，队列是一种操作受限的线性表，进行插入操作的端成为队尾，进行删除操作的成为队头。</p>
-<h4 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h4><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><h4 id="字典和散列表"><a href="#字典和散列表" class="headerlink" title="字典和散列表"></a>字典和散列表</h4><h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><h4 id="二叉堆和堆排序"><a href="#二叉堆和堆排序" class="headerlink" title="二叉堆和堆排序"></a>二叉堆和堆排序</h4><h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4>]]></content>
-  </entry>
-  <entry>
-    <title>浏览器DOMAPI</title>
-    <url>/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOMAPI/</url>
-    <content><![CDATA[<p>今天开始我们浏览器 api 的学习，这一节课，我们来学习一下 dom api</p>
-<p>DOM API 是最早被设计出来的一批 api，也是用途最广的 api，所以早年的技术社区，常常用 dom 来泛指浏览器中的所有 api</p>
-<h3 id="DOM-API-介绍"><a href="#DOM-API-介绍" class="headerlink" title="DOM API 介绍"></a>DOM API 介绍</h3><p>首先我们先来讲一讲什么叫做文档对象模型，</p>
-<p>顾名思义，文档对象模型是用来描述文档，这里的文档，是特指 html 文档（也用于 xml），同时它又是“对象模型”，这意味着它使用的是对象这样的概念来描述 html 文档。</p>
-<p>说起 html 文档，这是大家最熟悉的东西了，我们都知道，html 文档是一个由标签嵌套而成的树形结构，因此，dom 也是使用树形的对象模型来描述一个 html 文档</p>
-<p>dom api 大致会包含四个部分。</p>
-<ul>
-<li>节点：DOM 树形结构中的节点相关 API</li>
-<li>事件：触发和监听事件相关 API</li>
-<li>Range：操作文字范围相关 API</li>
-<li>遍历：遍历 DOM 需要的工具 API</li>
-</ul>
-<p>这里我们重点介绍节点和相比相关 API</p>
-<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>DOM 的树形结构所有的节点由统一的接口 Node，我们按照继承关系，介绍一下节点的类型</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/6e/f6/6e278e450d8cc7122da3616fd18b9cf6.png"></p>
-<p>在这些节点中</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>浏览器工作流程-构建DOM树</title>
-    <url>/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</url>
-    <content><![CDATA[<p>在上一篇文章中，简要介绍了浏览器的工作大致可以分为六个阶段，同时也讲完了通讯部分，浏览器使用 HTTP 协议或者 HTTPS 协议，向服务器请求页面的过程</p>
-<p>今天我们主要来看两个过程，如何解析请求回来的 HTML 代码，DOM 树又是如何被构建的</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/34/5a/34231687752c11173b7776ba5f4a0e5a.png"></p>
-<h3 id="解析代码"><a href="#解析代码" class="headerlink" title="解析代码"></a>解析代码</h3><p>我们在前面讲到了 HTTP 的构成，但是我们有一个部分没有详细讲解 ，那就是 Response 的 Body 部分，这正是因为 HTTP Response 的 body ，就要交给我们今天学习的内容区处理，</p>
-<p>HTML 的结构不算太复杂，我们日常开发需要的 90% 的词（指编译原理的术语 token，标识最小的有意义的单元）。种类大约只有标签开始，属性，标签结束，注释，CDATA 节点这几种</p>
-<p>实际上有点麻烦的是，由于 HTML 跟 SGML 的千丝万缕的联系，我们需要做不少容错处理。</p>
-<h4 id="1-词（token）是如何被拆分的"><a href="#1-词（token）是如何被拆分的" class="headerlink" title="1-词（token）是如何被拆分的"></a>1-词（token）是如何被拆分的</h4><p>首先我们来看看一个非常标准的标签会被如何拆分成词</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;a&quot;</span>&gt;</span>text text text<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>如果我们从最小有意义单元来定义拆分系统，第一个词（token）是什么呢？显然，作为一个词（token），整个 p 标签确实是过大了（它甚至可以嵌套）</p>
-<p>那么，只有 p 标签的开头是不是合适？，我们考虑到起始标签也会包含属性的，最小有意义单元其实应该是 “&lt;p”，所以 “&lt;p” 就是我们的第一个词（token）</p>
-<p>我们继续拆分，可以把这段代码一次拆成词（token）</p>
-<ul>
-<li>&lt;p：开始标签的开始；</li>
-<li>class=“a”：属性；</li>
-<li>&gt;：开始标签的结束；</li>
-<li>text text text：文本；</li>
-<li></p> ：标签结束。
-
-</li>
-</ul>
-<p>这是一段最简单的例子，类似的还有什么呢，现在我们可以来看看这些词（token）长成啥样子：</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/f9/84/f98444aa3ea7471d2414dd7d0f5e3a84.png"></p>
-<p>根据这样的分析，现在我们讲讲浏览器是如何用代码实现，我们设想，代码开始从 HTTP 协议收到的字符流读取字符。</p>
-<p>在接受第一个字符之前，我们完全无法判断这是哪一个词（token），不过，随着我们接受的字符越来越多，拼出其他的内容可能性就越来越少。</p>
-<p>比如假设我们接受了一个字符“ &lt; ” 我们一下子就知道这不是一个文本节点啦。</p>
-<p>之后我们再读一个字符，比如就是 x，那么我们一下子就知道这不是注释或 CDATA 了，接下来我们就一直读，直到遇到“&gt;”或者空格，这样就得到了一个完整的词（token）了。</p>
-<p>实际上，我们每读入一个字符，其实都要做一次决策，而且这些决定是跟“当前状态”有关的。在这样的条件下，浏览器工程师要想实现把字符流解析成词（token），最常见的方案就是使用状态机。</p>
-<h4 id="2-状态机"><a href="#2-状态机" class="headerlink" title="2-状态机"></a>2-状态机</h4><p>绝大多数语言的语法部分都是用状态机实现的，那么我们把部分词（token）的解析画成一个状态机看看</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/8b/b0/8b43d598bc1f83a8a1e7e8f922013ab0.png"></p>
-<p>当然了，我们这里的分析比较粗略，真正完整的 HTML 语法状态机，比我们描述的要复杂的多，有关更详细的内容，你可以参考 HTML 官方文档，HTML 官方文档规定了 80 个状态</p>
-<p>这里我们为了了解原理， 用这个简单的状态机足够说明问题了</p>
-<p>状态机的初始状态，我们仅仅区分“&lt;”和非“&lt;”；</p>
-<ul>
-<li>如果获得的是一个 非 &lt; 字符，那么可以认为进入了一个文本节点</li>
-<li>如果获得的是一个 &lt; 字符，那么进入一个标签状态</li>
-</ul>
-<p>不过当我们在标签状态时，则会面临一些可能性</p>
-<ul>
-<li>比如下一个字符是“ ! ” ，那么很可能是进入了注释节点或者 CDATA 节点。</li>
-<li>如果下一个字符是 “/ ”，那么可以确定进入了一个结束标签。</li>
-<li>如果下一个字符是字母，那么可以确定进入了一个开始标签。</li>
-<li>如果我们要完整处理各种 HTML 标准中定义的东西，那么还要考虑“ ? ”“% ”等内容。</li>
-</ul>
-<p>我们可以看到，用状态机做词法分析，其实正是把每个词的“特殊字符”逐个拆开成独立状态，然后再把所有的词的特征字符链合起来，形成一个联通图结构</p>
-<p>由于状态机设计属于编译原理的基本知识，这里我们仅作一个简要的介绍</p>
-<p>接下来就是代码实现的事情了，在 C/C++和 JavaScript 中，实现状态机的方式大同小异，我们把每个函数当作一个状态，参数是接受的字符，返回值是一个状态函数，（这里我希望再次强调下，状态机真的是一种没有办法封装的东西，所以我们永远不要试图封装一个状态机）</p>
-<p>为了方便理解和实验，我们这里用 JavaScript 来讲解，图上的 data 状态大概就像下面这样</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="function"><span class="keyword">function</span> (<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&amp;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> characterReferenceInData;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> tagOpen;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&quot;\0&quot;</span>) &#123;</span><br><span class="line">    error();</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == EOF) &#123;</span><br><span class="line">    emitToken(EOF);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> tagOpenState = <span class="function"><span class="keyword">function</span> <span class="title">tagOpenState</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> endTagOpenState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[A-Z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[a-z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c;</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;?&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bogusCommentState;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    error();</span><br><span class="line">    <span class="keyword">return</span> dataState;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//……</span></span><br></pre></td></tr></table></figure>
-
-<p>这段代码给出了状态机的两个状态示例，data 即为初始状态，tagOpenStart 是接受了个“&lt;”字符，来判断标签类型的状态</p>
-<p>这里的状态机，每一个状态是一个函数，通过 “if else”来区分下一个字符做状态迁移，这里的所谓的状态迁移，就是当前状态函数返回下一个状态函数</p>
-<p>这样，我们的状态迁移代码非常的简单：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> state = data;</span><br><span class="line"><span class="keyword">var</span> char;</span><br><span class="line"><span class="keyword">while</span> ((char = getInput())) state = state(char);</span><br></pre></td></tr></table></figure>
-
-<p>这段代码的关键一句是“start = start(char)”，不论我们用何种方式来读取字符串流，我们都可以通过 state 来处理输入的字符流，这里用循环是一个示例，真实场景中，可能是来自 TCP 的输出流</p>
-<p>状态函数通过代码中 emitToken 函数来输出解析好的 token（词），我们只需要覆盖 emitToken，即可对指定对解析结果的处理方式</p>
-<p>词法分析器接收字符的方式很简单，就像下面这样</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//状态函数们……</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ……</span></span><br><span class="line">  <span class="keyword">var</span> state = data;</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    state = state(char);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>至此，我们就把字符流拆成了词（token）了。</p>
-<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>接下来我们要把这些简单的词编程 DOM 树，这个过程我们是使用栈来实现的，任何语言几乎都有栈，下面我们还是用 JavaScript 来实现，JavaScript 中的栈只要用数组就好了</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLSyntaticalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> stack = [<span class="keyword">new</span> HTMLDocument()];</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">token</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">this</span>.getOutput = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> stack[<span class="number">0</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们这样来设计 HTML 的语法分析器，receiveInput 负责接收此法部分产生的词（token），通常由 emitToken 来调用</p>
-<p>在接收的同时，即开始构建 Dom 树，所以我们主要构建 DOM 树的算法就写在 receiveInput 当中，当接收完所有的输入，栈顶就是最后的的根节点，我们 DOM 树的产出就是这个 stack 的第一项</p>
-<p>为了构建 DOM 树，我们需要一个 Node 类，接下来我们所有的节点都会在这个 Node 类的实例</p>
-<p>在完全符合标准的浏览器中，不一样的 HTML 节点对应了不同的 Node 子类，我们为了简化，就不完整实现这个继承体系了，我们仅仅把 Node 分为 Element 和 Text（如果是基于类的 OOP 的话，我们还需要抽象工厂来创建对象）</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Element</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Text</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.value = value || <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>前面我们的词（token）中，以下两个是需要成对匹配的：</p>
-<ul>
-<li>tag start</li>
-<li>tag end</li>
-</ul>
-<p>根据一些编译原理中常见的技巧，我们使用的栈正是用于匹配开始和结束标签的方案</p>
-<p>对于 Text 节点，我们则需要把相邻的 Text 节点组合起来，我们的做法是当词（token）入栈时，检查栈顶是否是 Text 节点，如果是的话就合并 Text 节点</p>
-<p>同样我们来看看直观的解析过程</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">maaa</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>cool<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;a&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>通过这个栈，我们可以构建 DOM 树</p>
-<ul>
-<li><p>栈顶元素就是当前节点；</p>
-</li>
-<li><p>遇到属性，就添加到当前节点；</p>
-</li>
-<li><p>遇到文本节点，如果当前节点是文本节点，则跟文本节点合并，否则入栈成为当前节点的子节点；</p>
-</li>
-<li><p>遇到注释节点，作为当前节点的子节点；</p>
-</li>
-<li><p>遇到 tag start 就入栈一个节点，当前节点就是这个节点的父节点；</p>
-</li>
-<li><p>遇到 tag end 就出栈一个节点（还可以检查是否匹配）。</p>
-</li>
-</ul>
-<p>这里由一个视频可以让你直观的感受到这个过程</p>
-<p>当我们的源代码完全遵循 XHTML（这是一种比较严谨的 HTML 语法）时，这是非常简单的问题，然后 HTML 具有很强的容错能力，奥妙在于当 tag end 跟栈顶的 start tag 不匹配的时候如何处理</p>
-<p>于是，这又有一个极其复杂的规则，幸好 W3C 又一次很贴心地把全部规则都整理地很好，我们只要翻译成对应的代码就好了，以下这个网站呈现了全部规则。你可以点击查看。</p>
-<ul>
-<li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction">http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction</a></li>
-</ul>
-<blockquote>
-<p>PS：<a href="https://github.com/aimergenge/toy-html-parser">https://github.com/aimergenge/toy-html-parser</a></p>
-</blockquote>
-]]></content>
-      <tags>
-        <tag>浏览器工作流程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>浏览器工作流程-网络部分</title>
     <url>/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E7%BD%91%E7%BB%9C%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<p>对于前端开发来说，我们平时与浏览器打交道的时间是最多的，可浏览器对前端同学来说更像是一个神秘的黑盒，我们仅仅知道它能做什么，而不知道他是如何做到的</p>
@@ -630,6 +595,118 @@
 <p>TCP 连接复用，则使用同一个 TCP 连接来传输多个 HTTP 请求，避免了 TCP 连接建立时的三次握手开销，和初建 TCP 连接时传输窗口小的问题。</p>
 <blockquote>
 <p>Note: 其实很多优化涉及更下层的协议。IP 层的分包情况，和物理层的建连时间是需要被考虑的。</p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>浏览器工作流程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浏览器工作流程-构建DOM树</title>
+    <url>/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</url>
+    <content><![CDATA[<p>在上一篇文章中，简要介绍了浏览器的工作大致可以分为六个阶段，同时也讲完了通讯部分，浏览器使用 HTTP 协议或者 HTTPS 协议，向服务器请求页面的过程</p>
+<p>今天我们主要来看两个过程，如何解析请求回来的 HTML 代码，DOM 树又是如何被构建的</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/34/5a/34231687752c11173b7776ba5f4a0e5a.png"></p>
+<h3 id="解析代码"><a href="#解析代码" class="headerlink" title="解析代码"></a>解析代码</h3><p>我们在前面讲到了 HTTP 的构成，但是我们有一个部分没有详细讲解 ，那就是 Response 的 Body 部分，这正是因为 HTTP Response 的 body ，就要交给我们今天学习的内容区处理，</p>
+<p>HTML 的结构不算太复杂，我们日常开发需要的 90% 的词（指编译原理的术语 token，标识最小的有意义的单元）。种类大约只有标签开始，属性，标签结束，注释，CDATA 节点这几种</p>
+<p>实际上有点麻烦的是，由于 HTML 跟 SGML 的千丝万缕的联系，我们需要做不少容错处理。</p>
+<h4 id="1-词（token）是如何被拆分的"><a href="#1-词（token）是如何被拆分的" class="headerlink" title="1-词（token）是如何被拆分的"></a>1-词（token）是如何被拆分的</h4><p>首先我们来看看一个非常标准的标签会被如何拆分成词</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;a&quot;</span>&gt;</span>text text text<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果我们从最小有意义单元来定义拆分系统，第一个词（token）是什么呢？显然，作为一个词（token），整个 p 标签确实是过大了（它甚至可以嵌套）</p>
+<p>那么，只有 p 标签的开头是不是合适？，我们考虑到起始标签也会包含属性的，最小有意义单元其实应该是 “&lt;p”，所以 “&lt;p” 就是我们的第一个词（token）</p>
+<p>我们继续拆分，可以把这段代码一次拆成词（token）</p>
+<ul>
+<li>&lt;p：开始标签的开始；</li>
+<li>class=“a”：属性；</li>
+<li>&gt;：开始标签的结束；</li>
+<li>text text text：文本；</li>
+<li></p> ：标签结束。
+
+</li>
+</ul>
+<p>这是一段最简单的例子，类似的还有什么呢，现在我们可以来看看这些词（token）长成啥样子：</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/f9/84/f98444aa3ea7471d2414dd7d0f5e3a84.png"></p>
+<p>根据这样的分析，现在我们讲讲浏览器是如何用代码实现，我们设想，代码开始从 HTTP 协议收到的字符流读取字符。</p>
+<p>在接受第一个字符之前，我们完全无法判断这是哪一个词（token），不过，随着我们接受的字符越来越多，拼出其他的内容可能性就越来越少。</p>
+<p>比如假设我们接受了一个字符“ &lt; ” 我们一下子就知道这不是一个文本节点啦。</p>
+<p>之后我们再读一个字符，比如就是 x，那么我们一下子就知道这不是注释或 CDATA 了，接下来我们就一直读，直到遇到“&gt;”或者空格，这样就得到了一个完整的词（token）了。</p>
+<p>实际上，我们每读入一个字符，其实都要做一次决策，而且这些决定是跟“当前状态”有关的。在这样的条件下，浏览器工程师要想实现把字符流解析成词（token），最常见的方案就是使用状态机。</p>
+<h4 id="2-状态机"><a href="#2-状态机" class="headerlink" title="2-状态机"></a>2-状态机</h4><p>绝大多数语言的语法部分都是用状态机实现的，那么我们把部分词（token）的解析画成一个状态机看看</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/8b/b0/8b43d598bc1f83a8a1e7e8f922013ab0.png"></p>
+<p>当然了，我们这里的分析比较粗略，真正完整的 HTML 语法状态机，比我们描述的要复杂的多，有关更详细的内容，你可以参考 HTML 官方文档，HTML 官方文档规定了 80 个状态</p>
+<p>这里我们为了了解原理， 用这个简单的状态机足够说明问题了</p>
+<p>状态机的初始状态，我们仅仅区分“&lt;”和非“&lt;”；</p>
+<ul>
+<li>如果获得的是一个 非 &lt; 字符，那么可以认为进入了一个文本节点</li>
+<li>如果获得的是一个 &lt; 字符，那么进入一个标签状态</li>
+</ul>
+<p>不过当我们在标签状态时，则会面临一些可能性</p>
+<ul>
+<li>比如下一个字符是“ ! ” ，那么很可能是进入了注释节点或者 CDATA 节点。</li>
+<li>如果下一个字符是 “/ ”，那么可以确定进入了一个结束标签。</li>
+<li>如果下一个字符是字母，那么可以确定进入了一个开始标签。</li>
+<li>如果我们要完整处理各种 HTML 标准中定义的东西，那么还要考虑“ ? ”“% ”等内容。</li>
+</ul>
+<p>我们可以看到，用状态机做词法分析，其实正是把每个词的“特殊字符”逐个拆开成独立状态，然后再把所有的词的特征字符链合起来，形成一个联通图结构</p>
+<p>由于状态机设计属于编译原理的基本知识，这里我们仅作一个简要的介绍</p>
+<p>接下来就是代码实现的事情了，在 C/C++和 JavaScript 中，实现状态机的方式大同小异，我们把每个函数当作一个状态，参数是接受的字符，返回值是一个状态函数，（这里我希望再次强调下，状态机真的是一种没有办法封装的东西，所以我们永远不要试图封装一个状态机）</p>
+<p>为了方便理解和实验，我们这里用 JavaScript 来讲解，图上的 data 状态大概就像下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="function"><span class="keyword">function</span> (<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&amp;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> characterReferenceInData;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> tagOpen;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&quot;\0&quot;</span>) &#123;</span><br><span class="line">    error();</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == EOF) &#123;</span><br><span class="line">    emitToken(EOF);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> tagOpenState = <span class="function"><span class="keyword">function</span> <span class="title">tagOpenState</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> endTagOpenState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[A-Z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[a-z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c;</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;?&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bogusCommentState;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    error();</span><br><span class="line">    <span class="keyword">return</span> dataState;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//……</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码给出了状态机的两个状态示例，data 即为初始状态，tagOpenStart 是接受了个“&lt;”字符，来判断标签类型的状态</p>
+<p>这里的状态机，每一个状态是一个函数，通过 “if else”来区分下一个字符做状态迁移，这里的所谓的状态迁移，就是当前状态函数返回下一个状态函数</p>
+<p>这样，我们的状态迁移代码非常的简单：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> state = data;</span><br><span class="line"><span class="keyword">var</span> char;</span><br><span class="line"><span class="keyword">while</span> ((char = getInput())) state = state(char);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码的关键一句是“start = start(char)”，不论我们用何种方式来读取字符串流，我们都可以通过 state 来处理输入的字符流，这里用循环是一个示例，真实场景中，可能是来自 TCP 的输出流</p>
+<p>状态函数通过代码中 emitToken 函数来输出解析好的 token（词），我们只需要覆盖 emitToken，即可对指定对解析结果的处理方式</p>
+<p>词法分析器接收字符的方式很简单，就像下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//状态函数们……</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ……</span></span><br><span class="line">  <span class="keyword">var</span> state = data;</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    state = state(char);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，我们就把字符流拆成了词（token）了。</p>
+<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>接下来我们要把这些简单的词编程 DOM 树，这个过程我们是使用栈来实现的，任何语言几乎都有栈，下面我们还是用 JavaScript 来实现，JavaScript 中的栈只要用数组就好了</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLSyntaticalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> stack = [<span class="keyword">new</span> HTMLDocument()];</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">token</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">this</span>.getOutput = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> stack[<span class="number">0</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们这样来设计 HTML 的语法分析器，receiveInput 负责接收此法部分产生的词（token），通常由 emitToken 来调用</p>
+<p>在接收的同时，即开始构建 Dom 树，所以我们主要构建 DOM 树的算法就写在 receiveInput 当中，当接收完所有的输入，栈顶就是最后的的根节点，我们 DOM 树的产出就是这个 stack 的第一项</p>
+<p>为了构建 DOM 树，我们需要一个 Node 类，接下来我们所有的节点都会在这个 Node 类的实例</p>
+<p>在完全符合标准的浏览器中，不一样的 HTML 节点对应了不同的 Node 子类，我们为了简化，就不完整实现这个继承体系了，我们仅仅把 Node 分为 Element 和 Text（如果是基于类的 OOP 的话，我们还需要抽象工厂来创建对象）</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Element</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Text</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.value = value || <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前面我们的词（token）中，以下两个是需要成对匹配的：</p>
+<ul>
+<li>tag start</li>
+<li>tag end</li>
+</ul>
+<p>根据一些编译原理中常见的技巧，我们使用的栈正是用于匹配开始和结束标签的方案</p>
+<p>对于 Text 节点，我们则需要把相邻的 Text 节点组合起来，我们的做法是当词（token）入栈时，检查栈顶是否是 Text 节点，如果是的话就合并 Text 节点</p>
+<p>同样我们来看看直观的解析过程</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">maaa</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>cool<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;a&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过这个栈，我们可以构建 DOM 树</p>
+<ul>
+<li><p>栈顶元素就是当前节点；</p>
+</li>
+<li><p>遇到属性，就添加到当前节点；</p>
+</li>
+<li><p>遇到文本节点，如果当前节点是文本节点，则跟文本节点合并，否则入栈成为当前节点的子节点；</p>
+</li>
+<li><p>遇到注释节点，作为当前节点的子节点；</p>
+</li>
+<li><p>遇到 tag start 就入栈一个节点，当前节点就是这个节点的父节点；</p>
+</li>
+<li><p>遇到 tag end 就出栈一个节点（还可以检查是否匹配）。</p>
+</li>
+</ul>
+<p>这里由一个视频可以让你直观的感受到这个过程</p>
+<p>当我们的源代码完全遵循 XHTML（这是一种比较严谨的 HTML 语法）时，这是非常简单的问题，然后 HTML 具有很强的容错能力，奥妙在于当 tag end 跟栈顶的 start tag 不匹配的时候如何处理</p>
+<p>于是，这又有一个极其复杂的规则，幸好 W3C 又一次很贴心地把全部规则都整理地很好，我们只要翻译成对应的代码就好了，以下这个网站呈现了全部规则。你可以点击查看。</p>
+<ul>
+<li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction">http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction</a></li>
+</ul>
+<blockquote>
+<p>PS：<a href="https://github.com/aimergenge/toy-html-parser">https://github.com/aimergenge/toy-html-parser</a></p>
 </blockquote>
 ]]></content>
       <tags>
@@ -802,6 +879,182 @@
       <categories>
         <category>JavaScript设计模式与开发实践</category>
       </categories>
+  </entry>
+  <entry>
+    <title>时间复杂度概念</title>
+    <url>/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<p>先简要介绍一下</p>
+<p>算法复杂度分为时间复杂度和空间复杂度，时间复杂度是指执行这个算法所需要的计算工作量，空间复杂度是指执行这个算法所需的内存空间</p>
+<p>时间和空间都是计算机资源的重要体现，而算法的复杂性就是体现在该算法执行时计算机所需的资源多少</p>
+<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>算法的时间复杂度反映了程序执行时间随输入规模增长而增长的量级，在很大程度上很好的反映出算法的优劣与否</p>
+<p>算法的执行时间需要依据该算法编制的程序在计算机上执行运行所消耗的时间来度量，度量方法有两种，事后统计方法和事前分析估算方法，因为事后统计法更多的依赖计算机的硬件，软件等环境因素，有时容易掩盖算法本身的优劣，因此常常采用事后分析估算法</p>
+<p>一个算法由控制结构（顺序，分支，循环）和原操作（固有数据类型的操作）构成，而算法时间取决于两种的综合效率</p>
+<p>一个算法花费的时间与算法中语句的执行次数成正比，执行次数越多，花费的时间就越多，一个算法中的执行次数称为语句频度或时间频度，记为 T(n);</p>
+<p>在各种算法中，若算法中的语句执行次数为一个常数，则时间复杂度为 O(1), 同时若不同算法的时间频度不一样，但它们的时间复杂度可能时一样的<code>T(n)=n^2+2n+4 </code>与 <code>T（n）=4n^2+n+8</code> 它们的时间频度显然不一样，但他们的时间复杂度确是一样的，均为 O(n^2)  时间复杂度只关注最高数量级，且与之系数也没有关系，</p>
+<p>求解算法的时间复杂度的具体步骤是：</p>
+<ol>
+<li><p>找出算法中的基本语句；</p>
+<p>算法中执行次数最多的那条语句就是基本语句，通常是最内层循环的循环体</p>
+</li>
+<li><p>计算基本语句的执行次数的数量级</p>
+<p>只需计算基本语句执行次数的数量级，这就意味着只要保证基本语句执行次数的函数中的最高次幂正确即可，可以忽略所有低次幂和最高次幂，这样就能够简化算法分析，并且使注意力集中在最重要的一点上，增长率</p>
+</li>
+<li><p>用大O记号表示算法的时间性能</p>
+<p>将基本语句执行的数量放入大O记号中，如果算法中包含嵌套的循环，则基本语句通常使最内层的循环体，如果算法中包含并列循环，则将并列循环的时间复杂度相加</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    a++;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">    	a++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个 for 循环的时间复杂度为O(n)，第二个for循环时间复杂度为O(n^2)，则整个算法的时间复杂度为O(n^2+n)。</p>
+<p>O(1)表示基本语句的执行次数是一个常数，一般来说，只要算法中不存在循环语句，时间复杂度就为O(1)。</p>
+<hr>
+<p>算法（Algorithm）是指用来操作数据、解决程序问题的一组方法。对于同一个问题，使用不同的算法，也许最终得到的结果是一样的，比如排序就有前面的十大经典排序和几种奇葩排序，虽然结果相同，但在过程中消耗的资源和时间却会有很大的区别，比如快速排序与猴子排序：）。</p>
+<p>那么我们应该如何去衡量不同算法之间的优劣呢？</p>
+<p>主要还是从算法所占用的「时间」和「空间」两个维度去考量。</p>
+<ul>
+<li>时间维度：是指执行当前算法所消耗的时间，我们通常用「时间复杂度」来描述。</li>
+<li>空间维度：是指执行当前算法需要占用多少内存空间，我们通常用「空间复杂度」来描述。</li>
+</ul>
+<h2 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><h3 id="大O符号表示法"><a href="#大O符号表示法" class="headerlink" title="大O符号表示法"></a>大O符号表示法</h3><p>大O表示法：算法的时间复杂度通常用大O符号表述，定义为 **T[n] = O(f(n)) **。称函数T(n)以f(n)为界或者称T(n)受限于f(n)。</p>
+<p>如果一个问题的规模是n，解这一问题的某一算法所需要的时间为T(n)。T(n)称为这一算法的“时间复杂度”。</p>
+<blockquote>
+<p>上面公式中用到的 Landau符号是由德国数论学家保罗·巴赫曼（Paul Bachmann）在其1892年的著作《解析数论》首先引入，由另一位德国数论学家艾德蒙·朗道（Edmund Landau）推广。Landau符号的作用在于用简单的函数来描述复杂函数行为，给出一个上或下（确）界。在计算算法复杂度时一般只用到大O符号，Landau符号体系中的小o符号、Θ符号等等比较不常用。这里的O，最初是用大写希腊字母，但现在都用大写英语字母O；小o符号也是用小写英语字母o，Θ符号则维持大写希腊字母Θ。</p>
+</blockquote>
+<p>大O符号是一种算法「复杂度」的「相对」「表示」方式。</p>
+<p>这个句子里有一些重要而严谨的用词：</p>
+<ul>
+<li>相对(relative)：你只能比较相同的事物。你不能把一个做算数乘法的算法和排序整数列表的算法进行比较。但是，比较2个算法所做的算术操作（一个做乘法，一个做加法）将会告诉你一些有意义的东西；</li>
+<li>表示(representation)：大O(用它最简单的形式)把算法间的比较简化为了一个单一变量。这个变量的选择基于观察或假设。例如，排序算法之间的对比通常是基于比较操作(比较2个结点来决定这2个结点的相对顺序)。这里面就假设了比较操作的计算开销很大。但是，如果比较操作的计算开销不大，而交换操作的计算开销很大，又会怎么样呢？这就改变了先前的比较方式；</li>
+<li>复杂度(complexity)：如果排序10,000个元素花费了我1秒，那么排序1百万个元素会花多少时间？在这个例子里，复杂度就是相对其他东西的度量结果。</li>
+</ul>
+<h3 id="常见的时间复杂度量级"><a href="#常见的时间复杂度量级" class="headerlink" title="常见的时间复杂度量级"></a>常见的时间复杂度量级</h3><p>我们先从常见的时间复杂度量级进行大O的理解：</p>
+<ul>
+<li>常数阶O(1)</li>
+<li>线性阶O(n)</li>
+<li>平方阶O(n²)</li>
+<li>对数阶O(logn)</li>
+<li>线性对数阶O(nlogn)</li>
+</ul>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_jpg/D67peceibeITdVEicwQ7T05FPwkggMR2IiaRc88PpnacPKl4xapFBz28QSu6HyGU2zpYCiaayiaKia2T2cZzEicYyXAJw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h4 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaC8GtCYhYHhkZgbwSiaBvctaIZ9nZIurQMaQZyeyKKAnEh1fJ6p4vmtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>无论代码执行了多少行，其他区域不会影响到操作，这个代码的时间复杂度都是O(1)</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void swapTwoInts(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">int</span> temp = a;</span><br><span class="line"><span class="symbol">3 </span> a = b;</span><br><span class="line"><span class="symbol">4 </span> b = temp;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawGKfic7qoiaxGt1wmZjDwlJksMAN2nvsMplZNbsa0DxKFKx1Gzo02HaA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>在下面这段代码，for循环里面的代码会执行 n 遍，因此它消耗的时间是随着 n 的变化而变化的，因此可以用O(n)来表示它的时间复杂度。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum ( <span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span>  <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt;= n ; i ++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     ret += i;</span><br><span class="line"><span class="symbol">5 </span>  &#125;</span><br><span class="line"><span class="symbol">6 </span>  <span class="keyword">return</span> ret;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>特别一提的是 c * O(n) 中的 c 可能小于 1 ，比如下面这段代码：</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void reverse ( string &amp;s ) &#123;</span><br><span class="line"><span class="symbol">2 </span>   <span class="keyword">int</span> n = s.size();</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n/<span class="number">2</span> ; i++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     <span class="keyword">swap</span> ( s[i] , s[n-<span class="number">1</span>-i]);</span><br><span class="line"><span class="symbol">5 </span>   &#125;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-n²"><a href="#O-n²" class="headerlink" title="O(n²)"></a>O(n²)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiagPTZBricA32aLO0SKJwBxg9ADp81gE4micOalibyciahExK3AP5woZzmsw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>当存在双重循环的时候，即把 O(n) 的代码再嵌套循环一遍，它的时间复杂度就是 O(n²) 了。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>void selectionSort(<span class="built_in">int</span> arr[],<span class="built_in">int</span> n)&#123;</span><br><span class="line"> <span class="number">2</span>   <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n ; i++)&#123;</span><br><span class="line"> <span class="number">3</span>     <span class="built_in">int</span> minIndex = i;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> j = i + <span class="number">1</span>; j &lt; n ; j++ )</span><br><span class="line"> <span class="number">5</span>       <span class="keyword">if</span> (arr[j] &lt; arr[minIndex])</span><br><span class="line"> <span class="number">6</span>           minIndex = j;</span><br><span class="line"> <span class="number">7</span></span><br><span class="line"> <span class="number">8</span>     swap ( arr[i], arr[minIndex]);</span><br><span class="line"> <span class="number">9</span>   &#125;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里简单的推导一下</p>
+<ul>
+<li>当 i = 0 时，第二重循环需要运行 (n - 1)  次</li>
+<li>当 i = 1 时，第二重循环需要运行 (n - 2)  次</li>
+<li>。。。。。。</li>
+</ul>
+<p>不难得到公式：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>(n - <span class="number">1</span>) + (n - <span class="number">2</span>) + (n - <span class="number">3</span>) + ... + <span class="number">0</span></span><br><span class="line"><span class="number">2</span>= (<span class="number">0</span> + n - <span class="number">1</span>) * n / <span class="number">2</span></span><br><span class="line"><span class="number">3</span>= O (n ^<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当然并不是所有的双重循环都是 O(n²)，比如下面这段输出 30n 次 <code>Hello,五分钟学算法：）</code>的代码。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void printInformation (<span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt;= n ; i++)</span><br><span class="line"><span class="symbol">3 </span>       <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span> ; j &lt;= <span class="number">30</span> ; j ++)</span><br><span class="line"><span class="symbol">4 </span>          cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-logn"><a href="#O-logn" class="headerlink" title="O(logn)"></a>O(logn)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch( <span class="built_in">int</span> arr[], <span class="built_in">int</span> n , <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>  <span class="built_in">int</span> l = <span class="number">0</span>, r = n - <span class="number">1</span>;</span><br><span class="line"> <span class="number">3</span>  <span class="keyword">while</span> ( l &lt;= r) &#123;</span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span> (arr[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line"> <span class="number">6</span>    <span class="keyword">if</span> (arr[mid] &gt; target ) r = mid - <span class="number">1</span>;</span><br><span class="line"> <span class="number">7</span>    <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line"> <span class="number">8</span>  &#125;</span><br><span class="line"> <span class="number">9</span>  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在二分查找法的代码中，通过while循环，成 2 倍数的缩减搜索范围，也就是说需要经过 log2^n 次即可跳出循环。</p>
+<p>同样的还有下面两段代码也是 O(logn) 级别的时间复杂度。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>  <span class="comment">// 整形转成字符串</span></span><br><span class="line"> <span class="number">2</span>  <span class="built_in">string</span> <span class="built_in">int</span>ToString ( <span class="built_in">int</span> num )&#123;</span><br><span class="line"> <span class="number">3</span>   <span class="built_in">string</span> s = <span class="string">&quot;&quot;</span>;</span><br><span class="line"> <span class="number">4</span>   <span class="comment">// n 经过几次“除以10”的操作后，等于0</span></span><br><span class="line"> <span class="number">5</span>   <span class="keyword">while</span> (num )&#123;</span><br><span class="line"> <span class="number">6</span>    s += <span class="string">&#x27;0&#x27;</span> + num%<span class="number">10</span>;</span><br><span class="line"> <span class="number">7</span>    num /= <span class="number">10</span>;</span><br><span class="line"> <span class="number">8</span>   &#125;</span><br><span class="line"> <span class="number">9</span>   reverse(s)</span><br><span class="line"><span class="number">10</span>   <span class="keyword">return</span> s;</span><br><span class="line"><span class="number">11</span>  &#125;</span><br><span class="line"><span class="number">1</span>void hello (<span class="built_in">int</span> n ) &#123;</span><br><span class="line"><span class="number">2</span>   <span class="comment">// n 除以几次 2 到 1</span></span><br><span class="line"><span class="number">3</span>   <span class="keyword">for</span> ( <span class="built_in">int</span> sz = <span class="number">1</span>; sz &lt; n ; sz += sz) </span><br><span class="line"><span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; n; i++)</span><br><span class="line"><span class="number">5</span>        cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-nlogn"><a href="#O-nlogn" class="headerlink" title="O(nlogn)"></a>O(nlogn)</h4><p>将时间复杂度为O(logn)的代码循环N遍的话，那么它的时间复杂度就是 n * O(logn)，也就是了O(nlogn)。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void hello ()&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span>( m = <span class="number">1</span> ; m &lt; n ; m++)&#123;</span><br><span class="line"><span class="symbol">3 </span>   i = <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span>   <span class="keyword">while</span>( i &lt; n )&#123;</span><br><span class="line"><span class="symbol">5 </span>       i = i * <span class="number">2</span>;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span>  &#125;</span><br><span class="line"><span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="不常见的时间复杂度"><a href="#不常见的时间复杂度" class="headerlink" title="不常见的时间复杂度"></a>不常见的时间复杂度</h3><p>下面来分析一波另外几种复杂度： 递归算法的时间复杂度（recursive algorithm time complexity），最好情况时间复杂度（best case time complexity）、最坏情况时间复杂度（worst case time complexity）、平均时间复杂度（average case time complexity）和均摊时间复杂度（amortized time complexity）。</p>
+<h4 id="递归算法的时间复杂度"><a href="#递归算法的时间复杂度" class="headerlink" title="递归算法的时间复杂度"></a>递归算法的时间复杂度</h4><p>如果递归函数中，只进行一次递归调用，递归深度为depth；</p>
+<p>在每个递归的函数中，时间复杂度为T；</p>
+<p>*<em>则总体的时间复杂度为O(T \</em> depth)**。</p>
+<p>在前面的学习中，归并排序 与 快速排序 都带有递归的思想，并且时间复杂度都是O(nlogn) ，但并不是有递归的函数就一定是 O(nlogn) 级别的。从以下两种情况进行分析。</p>
+<h5 id="①-递归中进行一次递归调用的复杂度分析"><a href="#①-递归中进行一次递归调用的复杂度分析" class="headerlink" title="① 递归中进行一次递归调用的复杂度分析"></a>① 递归中进行一次递归调用的复杂度分析</h5><h6 id="二分查找法"><a href="#二分查找法" class="headerlink" title="二分查找法"></a>二分查找法</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch(<span class="built_in">int</span> arr[], <span class="built_in">int</span> l, <span class="built_in">int</span> r, <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>    <span class="keyword">if</span>( l &gt; r ) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"> <span class="number">3</span></span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r-l)/<span class="number">2</span>; </span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span>( arr[mid] == target ) <span class="keyword">return</span> mid;  </span><br><span class="line"> <span class="number">6</span>    <span class="keyword">else</span> <span class="keyword">if</span>( arr[mid] &gt; target ) </span><br><span class="line"> <span class="number">7</span>    <span class="keyword">return</span> binarySearch(arr, l, mid<span class="number">-1</span>, target);    <span class="comment">// 左边 </span></span><br><span class="line"> <span class="number">8</span>    <span class="keyword">else</span></span><br><span class="line"> <span class="number">9</span>    <span class="keyword">return</span> binarySearch(arr, mid+<span class="number">1</span>, r, target);   <span class="comment">// 右边</span></span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如在这段二分查找法的代码中，每次在 [ l ,  r  ] 范围中去查找目标的位置，如果中间的元素 <code>arr[mid]</code> 不是 <code>target</code>，那么判断 <code>arr[mid]</code>是比 <code>target</code> 大 还是 小 ，进而再次调用 <code>binarySearch</code>这个函数。</p>
+<p>在这个递归函数中，每一次没有找到<code>target</code>时，要么调用 左边 的 <code>binarySearch</code>函数，要么调用 右边 的 <code>binarySearch</code>函数。也就是说在此次递归中，最多调用了一次递归调用而已。根据数学知识，需要log2n次才能递归到底。因此，二分查找法的时间复杂度为 O(logn)。</p>
+<h6 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaS8P0IxiarxvqcTwqc0SHBOzmnyGvQkXE8pticX5DDicu68ILLcopaSnvw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum (<span class="keyword">int</span> n) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span> <span class="keyword">return</span> n + sum( n - <span class="number">1</span> )</span><br><span class="line"><span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中比较容易理解递归深度随输入 n 的增加而线性递增，因此时间复杂度为 O (n)。</p>
+<h6 id="求幂"><a href="#求幂" class="headerlink" title="求幂"></a>求幂</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iiap3NSVdYcYMicDw1PpsuxY8qQacHM8cIMOt3oBya9UHFrmWypASsyXkA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>//递归深度：logn</span><br><span class="line"><span class="number">2</span>//时间复杂度：O(logn)</span><br><span class="line"><span class="number">3d</span>ouble pow( double x, <span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">4 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="symbol">6 </span> double t = pow(x,n/<span class="number">2</span>);</span><br><span class="line"><span class="symbol">7 </span> <span class="keyword">if</span> (n %<span class="number">2</span>) <span class="keyword">return</span> x*t*t;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> t * t;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>递归深度为 <code>logn</code>，因为是求需要除以 2 多少次才能到底。</p>
+<h5 id="②-递归中进行多次递归调用的复杂度分析"><a href="#②-递归中进行多次递归调用的复杂度分析" class="headerlink" title="② 递归中进行多次递归调用的复杂度分析"></a>② 递归中进行多次递归调用的复杂度分析</h5><p>递归算法中比较难计算的是多次递归调用。</p>
+<p>先看下面这段代码，有两次递归调用。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>// O(<span class="number">2</span>^n) 指数级别的数量级，后续动态规划的优化点</span><br><span class="line"><span class="number">2</span><span class="keyword">int</span> f(<span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">3 </span><span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span><span class="keyword">return</span> f(n-<span class="number">1</span>) + f(n - <span class="number">1</span>);</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia9S7ev0pwvhCLF5PbyWHVTXrDoJQ79xdSmf1H96AQo6l0A3ttnbaSVQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>递归树中节点数就是代码计算的调用次数。</p>
+<p>比如 当 <code>n = 3</code> 时，调用次数计算公式为</p>
+<blockquote>
+<p>1 + 2 + 4 + 8 = 15</p>
+</blockquote>
+<p>一般的，调用次数计算公式为</p>
+<blockquote>
+<p>2^0 + 2^1 + 2^2 + …… + 2^n<br>= 2^(n+1) - 1<br>= O(2^n)</p>
+</blockquote>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia7WpvIv6ibiaQibGibtSO0BvQyGSssye1sT7RmPOCsXB4e3xQPaicNbibJibqA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>与之有所类似的是 归并排序 的递归树，区别点在于</p>
+<ul>
+<li>\1. 上述例子中树的深度为 <code>n</code>，而 归并排序 的递归树深度为<code>logn</code>。</li>
+<li>\2. 上述例子中每次处理的数据规模是一样的，而在 归并排序 中每个节点处理的数据规模是逐渐缩小的</li>
+</ul>
+<p>因此，在如 归并排序 等排序算法中，每一层处理的数据量为 O(n) 级别，同时有 <code>logn</code> 层，时间复杂度便是 O(nlogn)。</p>
+<h4 id="最好、最坏情况时间复杂度"><a href="#最好、最坏情况时间复杂度" class="headerlink" title="最好、最坏情况时间复杂度"></a>最好、最坏情况时间复杂度</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaocwzriaeqkOJQsorsR5Q0jqxRY9GhRbC7MYiaDKyAstD7v6plsHuHPPw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>最好、最坏情况时间复杂度指的是特殊情况下的时间复杂度。</p>
+<p>动图表明的是在数组 array 中寻找变量 x 第一次出现的位置，若没有找到，则返回 -1；否则返回位置下标。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> find(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> x) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span> (  <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n; i++) &#123;</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">if</span> (array[i] == x) &#123;</span><br><span class="line"><span class="symbol">4 </span>       <span class="keyword">return</span> i;</span><br><span class="line"><span class="symbol">5 </span>       break;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span> &#125;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里当数组中第一个元素就是要找的 x 时，时间复杂度是 O(1)；而当最后一个元素才是 x 时，时间复杂度则是 O(n)。</p>
+<p>最好情况时间复杂度就是在最理想情况下执行代码的时间复杂度，它的时间是最短的；最坏情况时间复杂度就是在最糟糕情况下执行代码的时间复杂度，它的时间是最长的。</p>
+<h4 id="平均情况时间复杂度"><a href="#平均情况时间复杂度" class="headerlink" title="平均情况时间复杂度"></a>平均情况时间复杂度</h4><p>最好、最坏时间复杂度反应的是极端条件下的复杂度，发生的概率不大，不能代表平均水平。那么为了更好的表示平均情况下的算法复杂度，就需要引入平均时间复杂度。</p>
+<p>平均情况时间复杂度可用代码在所有可能情况下执行次数的加权平均值表示。</p>
+<p>还是以 <code>find</code> 函数为例，从概率的角度看， x 在数组中每一个位置的可能性是相同的，为 1 / n。那么，那么平均情况时间复杂度就可以用下面的方式计算：</p>
+<blockquote>
+<p>((1 + 2 + … + n) / n + n)  /  2 = (3n + 1) / 4</p>
+</blockquote>
+<p><code>find</code> 函数的平均时间复杂度为 O(n)。</p>
+<h4 id="均摊复杂度分析"><a href="#均摊复杂度分析" class="headerlink" title="均摊复杂度分析"></a>均摊复杂度分析</h4><p>我们通过一个动态数组的 <code>push_back</code> 操作来理解 <strong>均摊复杂度</strong>。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia0cnwqHXWTLZQO4dNl7hgE2g4iaibhJTqmRN12wTHFJiav5grgVCEyYNtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>template &lt;typename T&gt;</span><br><span class="line"> <span class="number">2</span>class MyVector&#123;</span><br><span class="line"> <span class="number">3</span><span class="keyword">private</span>:</span><br><span class="line"> <span class="number">4</span>    T* data;</span><br><span class="line"> <span class="number">5</span>    <span class="built_in">int</span> size;       <span class="comment">// 存储数组中的元素个数</span></span><br><span class="line"> <span class="number">6</span>    <span class="built_in">int</span> capacity;   <span class="comment">// 存储数组中可以容纳的最大的元素个数</span></span><br><span class="line"> <span class="number">7</span>    <span class="comment">// 复杂度为 O(n)</span></span><br><span class="line"> <span class="number">8</span>    <span class="built_in">void</span> resize(<span class="built_in">int</span> newCapacity)&#123;</span><br><span class="line"> <span class="number">9</span>        T *newData = new T[newCapacity];</span><br><span class="line"><span class="number">10</span>        <span class="keyword">for</span>( <span class="built_in">int</span> i = <span class="number">0</span> ; i &lt; size ; i ++ )&#123;</span><br><span class="line"><span class="number">11</span>              newData[i] = data[i];</span><br><span class="line"><span class="number">12</span>            &#125;</span><br><span class="line"><span class="number">13</span>        data = newData;</span><br><span class="line"><span class="number">14</span>        capacity = newCapacity;</span><br><span class="line"><span class="number">15</span>    &#125;</span><br><span class="line"><span class="number">16</span><span class="keyword">public</span>:</span><br><span class="line"><span class="number">17</span>    MyVector()&#123;</span><br><span class="line"><span class="number">18</span>        data = new T[<span class="number">100</span>];</span><br><span class="line"><span class="number">19</span>        size = <span class="number">0</span>;</span><br><span class="line"><span class="number">20</span>        capacity = <span class="number">100</span>;</span><br><span class="line"><span class="number">21</span>    &#125;</span><br><span class="line"><span class="number">22</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">23</span>    <span class="built_in">void</span> push_back(T e)&#123;</span><br><span class="line"><span class="number">24</span>        <span class="keyword">if</span>(size == capacity)</span><br><span class="line"><span class="number">25</span>            resize(<span class="number">2</span> * capacity);</span><br><span class="line"><span class="number">26</span>        data[size++] = e;</span><br><span class="line"><span class="number">27</span>    &#125;</span><br><span class="line"><span class="number">28</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">29</span>    T pop_back()&#123;</span><br><span class="line"><span class="number">30</span>        size --;</span><br><span class="line"><span class="number">31</span>        <span class="keyword">return</span> data[size];</span><br><span class="line"><span class="number">32</span>    &#125;</span><br><span class="line"><span class="number">33</span></span><br><span class="line"><span class="number">34</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>push_back</code>实现的功能是往数组的末尾增加一个元素，如果数组没有满，直接往后面插入元素；如果数组满了，即 <code>size == capacity</code> ，则将数组扩容一倍，然后再插入元素。</p>
+<p>例如，数组长度为 n，则前 n 次调用 <code>push_back</code> 复杂度都为 O(1) 级别；在第 n + 1 次则需要先进行 n 次元素转移操作，然后再进行 1 次插入操作，复杂度为 O(n)。</p>
+<p>因此，平均来看：对于容量为 n 的动态数组，前面添加元素需要消耗了 1 * n 的时间，扩容操作消耗  n 时间 ，<br>总共就是 2 * n 的时间，因此均摊时间复杂度为 O(2n / n) = O(2)，也就是 O(1) 级别了。</p>
+<p>可以得出一个比较有意思的结论：一个相对比较耗时的操作，如果能保证它不会每次都被触发，那么这个相对比较耗时的操作，它所相应的时间是可以分摊到其它的操作中来的。</p>
+<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>一个程序的空间复杂度是指运行完一个程序所需内存的大小。利用程序的空间复杂度，可以对程序的运行所需要的内存多少有个预先估计。一个程序执行时除了需要存储空间和存储本身所使用的指令、常数、变量和输入数据外，还需要一些对数据进行操作的工作单元和存储一些为现实计算所需信息的辅助空间。程序执行时所需存储空间包括以下两部分：</p>
+<p>(1) 固定部分，这部分空间的大小与输入/输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。</p>
+<p>(2) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。</p>
+<p>一个算法所需的存储空间用f(n)表示。S(n)=O(f(n))，其中n为问题的规模，S(n)表示空间复杂度。</p>
+<p><strong>空间复杂度可以理解为除了原始序列大小的内存，在算法过程中用到的额外的存储空间。</strong></p>
+<p>以二叉查找树为例，举例说明二叉排序树的查找性能。</p>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>如果二叉树的是以红黑树等平衡二叉树实现的，则 n 个节点的二叉排序树的高度为 log2n+1 ，其查找效率为O(Log2n)，近似于折半查找。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2IiaepCia27n7uxlH4ZuxKZTe7L6HypIkFLYHfoJ7xEBicoztf6nmeV43uhw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h3 id="列表二叉树"><a href="#列表二叉树" class="headerlink" title="列表二叉树"></a>列表二叉树</h3><p>如果二叉树退变为列表了，则 n 个节点的高度或者说是长度变为了n，查找效率为O(n)，变成了顺序查找。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2Iia4hZdT7n7GAkmzCDNL9fweZm4RnRV8Or4cOmW1j1sqS1eeqvaecyW4A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h3 id="一般二叉树"><a href="#一般二叉树" class="headerlink" title="一般二叉树"></a>一般二叉树</h3><p>介于「列表二叉树」与「平衡二叉树」之间，查找性能也在O(Log2n)到O(n)之间。</p>
+<h2 id="冰火交融"><a href="#冰火交融" class="headerlink" title="冰火交融"></a>冰火交融</h2><p>对于一个算法，其时间复杂度和空间复杂度往往是相互影响的。</p>
+<p>比如说，要判断某某年是不是闰年：</p>
+<ul>
+<li>\1. 可以编写一个算法来计算，这也就意味着，每次给一个年份，都是要通过计算得到是否是闰年的结果。</li>
+<li>\2. 还有另一个办法就是，事先建立一个有 5555 个元素的数组（年数比现实多就行），然后把所有的年份按下标的数字对应，如果是闰年，此数组项的值就是1，如果不是值为0。这样，所谓的判断某一年是否是闰年，就变成了查找这个数组的某一项的值是多少的问题。此时，我们的运算是最小化了，但是硬盘上或者内存中需要存储这 5555 个 0 和 1 。</li>
+</ul>
+<p>这就是典型的使用空间换时间的概念。</p>
+<p>当追求一个较好的时间复杂度时，可能会使空间复杂度的性能变差，即可能导致占用较多的存储空间；<br>反之，求一个较好的空间复杂度时，可能会使时间复杂度的性能变差，即可能导致占用较长的运行时间。</p>
+<p>另外，算法的所有性能之间都存在着或多或少的相互影响。因此，当设计一个算法(特别是大型算法)时，要综合考虑算法的各项性能，算法的使用频率，算法处理的数据量的大小，算法描述语言的特性，算法运行的机器系统环境等各方面因素，才能够设计出比较好的算法。</p>
+]]></content>
   </entry>
   <entry>
     <title>模块</title>
