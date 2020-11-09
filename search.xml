@@ -98,6 +98,137 @@
       </tags>
   </entry>
   <entry>
+    <title>JavaScript面向对象还是基于对象？</title>
+    <url>/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/</url>
+    <content><![CDATA[<p>与其他语言相比，JavaScript 中的对象总是显得不那么合群。一些新人再学习 JavaScript 面向对象的时候，往往也会有疑惑</p>
+<ul>
+<li>为什么 JavaScript（直到 ES6）有对象的概念，但是却没有像其他语言那样，有类的概念呢？</li>
+<li>为什么 JavaScript 对象可以自由添加属性，而其他语言却不能呢？</li>
+</ul>
+<p>甚至，再一些争论中，有人强调：JavaScript 并非 “面向对象的语言”，而是基于对象的语言，这个说法一度流传甚广，而事实上，我至今遇到持有这一说法的人中，无一能够回答，如何定义面向对象和基于对象，这个问题</p>
+<p>实际上，基于对象和面向对象两个形容词都出现了 JavaScript 标准的各个版本当中</p>
+<p>我们可以先看看，JavaScript 标准基于对象的定义，这个定义的具体内容是：“语言和宿主的基础设施由对象来提供，并且 JavaScript 程序即是一系列相互通讯的对象集合”</p>
+<p>这里的意思根本不是表达弱化的面向对象的意思，反而是表达对象对于语言的重要性。</p>
+<p>那么，在本篇文章中，我会尝试让你去理解面向对象和 JavaScript 中的面向对象究竟是什么，</p>
+<h3 id="什么是面向对象"><a href="#什么是面向对象" class="headerlink" title="什么是面向对象"></a>什么是面向对象</h3><p>我们先来说说，什么是对象，因为翻译的原因，中文语境下我们很难理解“对象的真正含义”，事实上，Object（对象）在英文中，是一切事物的总称，这和面向对象的抽象思维有互通之处。</p>
+<p>中文的 “对象”，却没有这样的普适性，在学习编程的过程中，更多的是把它当作一个专业名词来理解</p>
+<p>但不论如何，我们应该认识到，对象并不是计算机领域凭空捏造出来的概念，它是顺着人类思维模式产生的一种抽象，（于是面向对象编程也被认为是更接近人类思维模式的一种编程范式）。</p>
+<p>那么我们先来看看人类思维模式下，对象究竟是什么。</p>
+<blockquote>
+<p>对象这以概念在人类的幼儿期形成，这远远早于我们编程中常用的值，过程等概念，在幼年期，我们总是先认识到某一个苹果能吃（这里的一个苹果就是一个对象）继而认识到所有的苹果都可以吃，（这里所有的苹果就是一个类），再后来我们才能意识到三个苹果和三个梨之间的联系，进而产生数字 3 （值）的概念</p>
+</blockquote>
+<p>在《面向对象分析与设计》这本书中，Grady Booch 替我们做了总结，他认为，从人类的认知角度来说，对象应该是下列事物之一：</p>
+<ul>
+<li>一个可以触摸或者可以看见的东西；</li>
+<li>人的智力可以理解的东西；</li>
+<li>可以指导思考或行动（进行想象或施加动作）的东西。</li>
+</ul>
+<p>有了对象的自然定义后，我们就可以描述编程语言中的对象了。在不同的编程语言中，设计者也利用各种不同的语言特性来抽象描述对象，最为成功的流派是使用“类”的方式来描述对象，这诞生了诸如 C++、Java 等流行的编程语言。</p>
+<p>而 JavaScript 早年却选择了一个更为冷门的方式：原型。这是我在前面说它不合群的原因之一。</p>
+<p>然而很不幸，因为一些公司政治原因，JavaScript 推出之时受管理层之命被要求模仿 Java，所以，JavaScript 创始人 Brendan Eich 在“原型运行时”的基础上引入了 new、this 等语言特性，使之“看起来更像 Java”。</p>
+<p>在 ES6 出现之前，大量的 JavaScript 程序员试图在原型体系的基础上，把 JavaScript 变得更像是基于类的编程，进而产生了很多所谓的“框架”，比如 PrototypeJS、Dojo。</p>
+<p>事实上，它们成为了某种 JavaScript 的古怪方言，甚至产生了一系列互不相容的社群，显然这样做的收益是远远小于损失的。</p>
+<p>如果我们从运行时角度来谈论对象，就是在讨论 JavaScript 实际运行中的模型，这是由于任何代码执行都必定绕不开运行时的对象模型。</p>
+<p>不过，幸运的是，从运行时的角度看，可以不必受到这些“基于类的设施”的困扰，这是因为任何语言运行时类的概念都是被弱化的。</p>
+<p>首先我们来了解一下 JavaScript 是如何设计对象模型的。</p>
+<h3 id="JavaScript-对象的特征"><a href="#JavaScript-对象的特征" class="headerlink" title="JavaScript 对象的特征"></a>JavaScript 对象的特征</h3><p>在我看来，不论我们使用什么样的编程语言，我们都先应该去理解对象的本质特征（参考 Grandy Booch 《面向对象分析与设计》）。总结看来，对象有如下几个特点。</p>
+<ul>
+<li>对象具有唯一标识性：即使完全相同的两个对象，也并非同一个对象</li>
+<li>对象有状态：对象具有状态，同一对象可能处于不同状态之下</li>
+<li>对象具有行为：即对象的状态，可能因为它的行为产生变迁</li>
+</ul>
+<p>我们先来看第一个特征，对象具有唯一标识性，一般而言，各种语言的对象唯一标识性都是用内存地址来体现的，对象具有唯一标识的内存地址，所以具有唯一的标识。</p>
+<p>所以 JavaScript 程序员都知道，任何不同的 JavaScript 对象其实都是互不相等的，我们可以看下面的代码，o1 和 o2 初看是两个一摸一样的对象，但是打印出来的结果却是 false</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> o2 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(o1 == o2); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>关于对象的第二个和第三个特征 “状态和行为”，不同语言会使用不同的属于来抽象描述它们，比如 C++ 中称它们为 “成员变量”和“成员函数”，Java 中则称它们为 “属性”和“方法”</p>
+<p>在 JavaScript 中，将状态和行为统一抽象为 “属性”，考虑到 JavaScript 中将函数设计成一种特殊的对象，所以 JavaScript 中的行为和状态都能用属性来抽象</p>
+<p>下面这段代码其实就展示了普通属性和函数作为属性的一个例子，其中 o 是对象，d 是一个属性，而函数 f 也是一个属性，尽管写法不太相同，但是对 JavaScript 来说，d 和 f 就是两个普通属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    d: <span class="number">1</span>,</span><br><span class="line">    f() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">this</span>.d);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>所以，总结一句话来看，在 JavaScript 中，对象的状态和行为其实都被抽象为了属性。如果你用过 Java，一定不要觉得奇怪，尽管设计思路有一定差别，但是二者都很好地表现了对象的基本特征：标识性、状态和行为。</p>
+<p>在实现了对象基本特征的基础上, 我认为，JavaScript 中对象独有的特色是：对象具有高度的动态性，这是因为 JavaScript 赋予了使用者在运行时为对象添改状态和行为的能力。</p>
+<p>我来举个例子，比如，JavaScript 允许运行时向对象添加属性，这就跟绝大多数基于类的、静态的对象设计完全不同。如果你用过 Java 或者其它别的语言，肯定会产生跟我一样的感受。</p>
+<p>下面这段代码就展示了运行时如何向一个对象添加属性，一开始我定义了一个对象 o，定义完成之后，再添加它的属性 b，这样操作是完全没问题的。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line">o.b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(o.a, o.b); <span class="comment">//1 2</span></span><br></pre></td></tr></table></figure>
+
+<p>为了提高抽象能力，JavaScript 的属性被设计成比别的语言更加复杂的形式，它提供了数据属性和访问器属性（getter/setter）两类。</p>
+<h3 id="JavaScript-对象的两类属性"><a href="#JavaScript-对象的两类属性" class="headerlink" title="JavaScript 对象的两类属性"></a>JavaScript 对象的两类属性</h3><p>对 JavaScript 来说，属性并非只是简单的名称和值，JavaScript 用一组特征（attribute）来描述属性（property）</p>
+<p>先来说说第一类属性，数据属性，它比较接近其他语言的属性概念，数据属性具有四个特征</p>
+<ul>
+<li>value：就是属性的值。</li>
+<li>writable：决定属性能否被赋值。</li>
+<li>enumerable：决定 for in 能否枚举该属性。</li>
+<li>configurable：决定该属性能否被删除或者改变特征值。</li>
+</ul>
+<p>在大多数情况下，我们只关心数据属性的只即可</p>
+<p>第二类属性是访问器（getter/setter）属性，它也有四个特征</p>
+<ul>
+<li>getter：函数或 undefined，在取属性值时被调用。</li>
+<li>setter：函数或 undefined，在设置属性值时被调用。</li>
+<li>enumerable：决定 for in 能否枚举该属性。</li>
+<li>configurable：决定该属性能否被删除或者改变特征值。</li>
+</ul>
+<p>访问器属性使得属性在读和写时执行代码，它允许使用者在写和读属性时，得到完全不同的值，它可以视为一种函数的语法糖。</p>
+<p>我们通常用于定义属性的代码会产生数据属性，其中的 writable、enumerable、configurable 都默认为 true。我们可以使用内置函数 getOwnPropertyDescripter 来查看，如以下代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line">o.b = <span class="number">2</span>;</span><br><span class="line"><span class="comment">//a和b皆为数据属性</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;a&quot;</span>) <span class="comment">// &#123;value: 1, writable: true, enumerable: true, configurable: true&#125;</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;b&quot;</span>) <span class="comment">// &#123;value: 2, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们在这里使用了两种语法来定义属性，定义完属性后，我们用 JavaScript 的 API 来查看这个属性，我们可以发现，这样定义出来的属性都是数据属性，writeable、enumerable、configurable 都是默认值为 true。</p>
+<p>如果我们要想改变属性的特征，或者定义访问器属性，我们可以使用 Object.defineProperty，示例如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(o, <span class="string">&quot;b&quot;</span>, &#123;<span class="attr">value</span>: <span class="number">2</span>, <span class="attr">writable</span>: <span class="literal">false</span>, <span class="attr">enumerable</span>: <span class="literal">false</span>, <span class="attr">configurable</span>: <span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//a和b都是数据属性，但特征值变化了</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;a&quot;</span>); <span class="comment">// &#123;value: 1, writable: true, enumerable: true, configurable: true&#125;</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;b&quot;</span>); <span class="comment">// &#123;value: 2, writable: false, enumerable: false, configurable: true&#125;</span></span><br><span class="line">o.b = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(o.b); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>这里我们使用了 Object.defineProperty 来定义属性，这样定义属性可以改变属性的 writable 和 enumerable。</p>
+<p>我们同样用 Object.getOwnPropertyDescriptor 来查看，发现确实改变了 writable 和 enumerable 特征。因为 writable 特征为 false，所以我们重新对 b 赋值，b 的值不会发生变化。</p>
+<p>在创建对象时，也可以使用 get 和 set 关键字来创建访问器属性，代码如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="keyword">get</span> <span class="title">a</span>() &#123; <span class="keyword">return</span> <span class="number">1</span> &#125; &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(o.a); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>访问器属性跟数据属性不同，每次访问属性都会执行 getter 或者 setter 函数。这里我们的 getter 函数返回了 1，所以 o.a 每次都得到 1。</p>
+<p>这样，我们就理解了，实际上 JavaScript 对象的运行时是一个“属性的集合”，属性以字符串或者 Symbol 为 key，以数据属性特征值或者访问器属性特征值为 value。</p>
+<p>对象是一个属性的索引结构（索引结构是一类常见的数据结构，我们可以把它理解为一个能够以比较快的速度用 key 来查找 value 的字典）。我们以上面的对象 o 为例，你可以想象一下“a”是 key。</p>
+<p>{writable:true,value:1,configurable:true,enumerable:true}是 value。我们在前面的类型课程中，已经介绍了 Symbol 类型，能够以 Symbol 为属性名，这是 JavaScript 对象的一个特色。</p>
+<p>讲到了这里，如果你理解了对象的特征，也就不难理解我开篇提出来的问题。</p>
+<p>你甚至可以理解为什么会有“JavaScript 不是面向对象”这样的说法了。这是由于 JavaScript 的对象设计跟目前主流基于类的面向对象差异非常大。</p>
+<p>可事实上，这样的对象系统设计虽然特别，但是 JavaScript 提供了完全运行时的对象系统，这使得它可以模仿多数面向对象编程范式（下一节课我们会给你介绍 JavaScript 中两种面向对象编程的范式：基于类和基于原型），所以它也是正统的面向对象语言。</p>
+<p>JavaScript 语言标准也已经明确说明，JavaScript 是一门面向对象的语言，我想标准中能这样说，正是因为 JavaScript 的高度动态性的对象系统。</p>
+<p>所以，我们应该在理解其设计思想的基础上充分挖掘它的能力，而不是机械地模仿其它语言。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>要想理解 JavaScript 对象，必须清空我们脑子里“基于类的面向对象”相关的知识，回到人类对对象的朴素认知和面向对象的语言无关基础理论，我们就能够理解 JavaScript 面向对象设计的思路。</p>
+<p>在这篇文章中，我从对象的基本理论出发，和你理清了关于对象的一些基本概念，分析了 JavaScript 对象的设计思路。接下来又从运行时的角度，介绍了 JavaScript 对象的具体设计：具有高度动态性的属性集合。</p>
+<p>很多人在思考 JavaScript 对象时，会带着已有的“对象”观来看问题，最后的结果当然就是“剪不断理还乱”了。</p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>结合文章通篇看下来，觉得 JS 的 OO 和他基于类的 OO 不同之处，在于 JS 可以在运行时修改对象，而 class based 的类只能预先全部定义好，我们并不能在运行时动态修改类。在我理解来说，条条大路通罗马，面向对象是罗马，class based 是一条路，prototype based 是另一条路。而且 Symbol 的出现，暴露出了许多内置接口，让 JS 又在这条路上走了更远一些。（以前上学背面向对象的三个特征，封装，继承，多态，现在看一下突然觉得很对。。。</p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>KMP</title>
+    <url>/2020/10/29/KMP/</url>
+    <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
+<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解 KMP 的最大障碍就是 PMT，有些人看了很多 KMP 的文章后仍然搞不懂 PMT 中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
+<p>对于字符转 “abababca”，它的 PMT 如下表所示</p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
+<p>就像图中所示，如果待匹配的模式字符串有 8 个字符，那么 PMT 就会有 8 个值。</p>
+<p>我先解释下字符串的前缀和后缀，如果字符串 A 和 B 存在 A=BS，其中 S 是任意的非空字符串，那么就称 B 为 A 的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中 S 是任意非空字符，那就称 B 为 A 的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>。然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
+<p>有了这个定义，就可以说明 PMT 中的值的意义了，<strong>PMT 中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长的元素就是字符串 “a” 了，长度为 1，所以对于”abc”而言， 它在 PMT 表中对应值就是 1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为 3。</p>
+<p>好了，解释清楚这个表是什么之后，我们再来看如何使用这个表来加速字符串的查找，以及这样用的道理是什么。如图 1.12 所示，要在主字符串”ababababca”中查找模式字符串”abababca”。如果在 j 处字符不匹配，那么由于前边所说的模式字符串 PMT 的性质，主字符串中 i 指针之前的 PMT[j −1] 位就一定与模式字符串的第 0 位至第 PMT[j−1] 位是相同的。这是因为主字符串在 i 位失配，也就意味着主字符串从 i−j 到 i 这一段是与模式字符串的 0 到 j 这一段是完全相同的。而我们上面也解释了，模式字符串从 0 到 j−1 ，在这个例子中就是”ababab”，其前缀集合与后缀集合的交集的最长元素为”abab”， 长度为 4。所以就可以断言，主字符串中 i 指针之前的 4 位一定与模式字符串的第 0 位至第 4 位是相同的，即长度为 4 的后缀与前缀相同。这样一来，我们就可以将这些字符段的比较省略掉。具体的做法是，保持 i 指针不动，然后将 j 指针指向模式字符串的 PMT[j −1]位即可。</p>
+<p>简言之，以图中的例子来说，在 i 处失配，那么主字符串和模式字符串的前边 6 位就是相同的。又因为模式字符串的前 6 位，它的前 4 位前缀和后 4 位后缀是相同的，所以我们推知主字符串 i 之前的 4 位和模式字符串开头的 4 位是相同的。就是图中的灰色部分。那这部分就不用再比较了。</p>
+<p><img data-src="https://pic4.zhimg.com/50/v2-03a0d005badd0b8e7116d8d07947681c_hd.jpg?source=1940ef5"></p>
+<p>有了上面的思路，我们就可以使用 PMT 加速字符串的查找了。我们看到如果是在 j 位 失配，那么影响 j 指针回溯的位置的其实是第 j −1 位的 PMT 值，所以为了编程的方便， 我们不直接使用 PMT 数组，而是将 PMT 数组向后偏移一位。我们把新得到的这个数组称为 next 数组。下面给出根据 next 数组进行字符串匹配加速的字符串匹配程序。其中要注意的一个技巧是，在把 PMT 进行向右偏移时，第 0 位的值，我们将其设成了-1，这只是为了编程的方便，并没有其他的意义。在本节的例子中，next 数组如下表所示。</p>
+<p><img data-src="https://pic1.zhimg.com/80/v2-40b4885aace7b31499da9b90b7c46ed3_720w.jpg?source=1940ef5c"></p>
+<p>具体的程序如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">kmp</span>(<span class="params">source, pattern</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 求出 pmt 表格</span></span><br><span class="line">  <span class="keyword">let</span> table = <span class="keyword">new</span> <span class="built_in">Array</span>(pattern.length).fill(<span class="number">0</span>);</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; pattern.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[i] === pattern[j]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">        table[i] = j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 匹配</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; source.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[j] === source[i]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === pattern.length) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(kmp(<span class="string">&quot;abababcaabababca&quot;</span>, <span class="string">&quot;abababca&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>好了，讲到这里，其实 KMP 算法的主体就已经讲解完了。你会发现，其实 KMP 算法的动机是很简单的，解决的方案也很简单。远没有很多教材和算法书里所讲的那么乱七八糟，只要搞明白了 PMT 的意义，其实整个算法都迎刃而解。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>字符串算法</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Proxy</title>
     <url>/2020/11/02/Proxy/</url>
     <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Proxy 用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”（meta programming），即对编程语言进行编程。</p>
@@ -303,182 +434,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JavaScript面向对象还是基于对象？</title>
-    <url>/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/</url>
-    <content><![CDATA[<p>与其他语言相比，JavaScript 中的对象总是显得不那么合群。一些新人再学习 JavaScript 面向对象的时候，往往也会有疑惑</p>
-<ul>
-<li>为什么 JavaScript（直到 ES6）有对象的概念，但是却没有像其他语言那样，有类的概念呢？</li>
-<li>为什么 JavaScript 对象可以自由添加属性，而其他语言却不能呢？</li>
-</ul>
-<p>甚至，再一些争论中，有人强调：JavaScript 并非 “面向对象的语言”，而是基于对象的语言，这个说法一度流传甚广，而事实上，我至今遇到持有这一说法的人中，无一能够回答，如何定义面向对象和基于对象，这个问题</p>
-<p>实际上，基于对象和面向对象两个形容词都出现了 JavaScript 标准的各个版本当中</p>
-<p>我们可以先看看，JavaScript 标准基于对象的定义，这个定义的具体内容是：“语言和宿主的基础设施由对象来提供，并且 JavaScript 程序即是一系列相互通讯的对象集合”</p>
-<p>这里的意思根本不是表达弱化的面向对象的意思，反而是表达对象对于语言的重要性。</p>
-<p>那么，在本篇文章中，我会尝试让你去理解面向对象和 JavaScript 中的面向对象究竟是什么，</p>
-<h3 id="什么是面向对象"><a href="#什么是面向对象" class="headerlink" title="什么是面向对象"></a>什么是面向对象</h3><p>我们先来说说，什么是对象，因为翻译的原因，中文语境下我们很难理解“对象的真正含义”，事实上，Object（对象）在英文中，是一切事物的总称，这和面向对象的抽象思维有互通之处。</p>
-<p>中文的 “对象”，却没有这样的普适性，在学习编程的过程中，更多的是把它当作一个专业名词来理解</p>
-<p>但不论如何，我们应该认识到，对象并不是计算机领域凭空捏造出来的概念，它是顺着人类思维模式产生的一种抽象，（于是面向对象编程也被认为是更接近人类思维模式的一种编程范式）。</p>
-<p>那么我们先来看看人类思维模式下，对象究竟是什么。</p>
-<blockquote>
-<p>对象这以概念在人类的幼儿期形成，这远远早于我们编程中常用的值，过程等概念，在幼年期，我们总是先认识到某一个苹果能吃（这里的一个苹果就是一个对象）继而认识到所有的苹果都可以吃，（这里所有的苹果就是一个类），再后来我们才能意识到三个苹果和三个梨之间的联系，进而产生数字 3 （值）的概念</p>
-</blockquote>
-<p>在《面向对象分析与设计》这本书中，Grady Booch 替我们做了总结，他认为，从人类的认知角度来说，对象应该是下列事物之一：</p>
-<ul>
-<li>一个可以触摸或者可以看见的东西；</li>
-<li>人的智力可以理解的东西；</li>
-<li>可以指导思考或行动（进行想象或施加动作）的东西。</li>
-</ul>
-<p>有了对象的自然定义后，我们就可以描述编程语言中的对象了。在不同的编程语言中，设计者也利用各种不同的语言特性来抽象描述对象，最为成功的流派是使用“类”的方式来描述对象，这诞生了诸如 C++、Java 等流行的编程语言。</p>
-<p>而 JavaScript 早年却选择了一个更为冷门的方式：原型。这是我在前面说它不合群的原因之一。</p>
-<p>然而很不幸，因为一些公司政治原因，JavaScript 推出之时受管理层之命被要求模仿 Java，所以，JavaScript 创始人 Brendan Eich 在“原型运行时”的基础上引入了 new、this 等语言特性，使之“看起来更像 Java”。</p>
-<p>在 ES6 出现之前，大量的 JavaScript 程序员试图在原型体系的基础上，把 JavaScript 变得更像是基于类的编程，进而产生了很多所谓的“框架”，比如 PrototypeJS、Dojo。</p>
-<p>事实上，它们成为了某种 JavaScript 的古怪方言，甚至产生了一系列互不相容的社群，显然这样做的收益是远远小于损失的。</p>
-<p>如果我们从运行时角度来谈论对象，就是在讨论 JavaScript 实际运行中的模型，这是由于任何代码执行都必定绕不开运行时的对象模型。</p>
-<p>不过，幸运的是，从运行时的角度看，可以不必受到这些“基于类的设施”的困扰，这是因为任何语言运行时类的概念都是被弱化的。</p>
-<p>首先我们来了解一下 JavaScript 是如何设计对象模型的。</p>
-<h3 id="JavaScript-对象的特征"><a href="#JavaScript-对象的特征" class="headerlink" title="JavaScript 对象的特征"></a>JavaScript 对象的特征</h3><p>在我看来，不论我们使用什么样的编程语言，我们都先应该去理解对象的本质特征（参考 Grandy Booch 《面向对象分析与设计》）。总结看来，对象有如下几个特点。</p>
-<ul>
-<li>对象具有唯一标识性：即使完全相同的两个对象，也并非同一个对象</li>
-<li>对象有状态：对象具有状态，同一对象可能处于不同状态之下</li>
-<li>对象具有行为：即对象的状态，可能因为它的行为产生变迁</li>
-</ul>
-<p>我们先来看第一个特征，对象具有唯一标识性，一般而言，各种语言的对象唯一标识性都是用内存地址来体现的，对象具有唯一标识的内存地址，所以具有唯一的标识。</p>
-<p>所以 JavaScript 程序员都知道，任何不同的 JavaScript 对象其实都是互不相等的，我们可以看下面的代码，o1 和 o2 初看是两个一摸一样的对象，但是打印出来的结果却是 false</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> o2 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(o1 == o2); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-
-<p>关于对象的第二个和第三个特征 “状态和行为”，不同语言会使用不同的属于来抽象描述它们，比如 C++ 中称它们为 “成员变量”和“成员函数”，Java 中则称它们为 “属性”和“方法”</p>
-<p>在 JavaScript 中，将状态和行为统一抽象为 “属性”，考虑到 JavaScript 中将函数设计成一种特殊的对象，所以 JavaScript 中的行为和状态都能用属性来抽象</p>
-<p>下面这段代码其实就展示了普通属性和函数作为属性的一个例子，其中 o 是对象，d 是一个属性，而函数 f 也是一个属性，尽管写法不太相同，但是对 JavaScript 来说，d 和 f 就是两个普通属性。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    d: <span class="number">1</span>,</span><br><span class="line">    f() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">this</span>.d);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>所以，总结一句话来看，在 JavaScript 中，对象的状态和行为其实都被抽象为了属性。如果你用过 Java，一定不要觉得奇怪，尽管设计思路有一定差别，但是二者都很好地表现了对象的基本特征：标识性、状态和行为。</p>
-<p>在实现了对象基本特征的基础上, 我认为，JavaScript 中对象独有的特色是：对象具有高度的动态性，这是因为 JavaScript 赋予了使用者在运行时为对象添改状态和行为的能力。</p>
-<p>我来举个例子，比如，JavaScript 允许运行时向对象添加属性，这就跟绝大多数基于类的、静态的对象设计完全不同。如果你用过 Java 或者其它别的语言，肯定会产生跟我一样的感受。</p>
-<p>下面这段代码就展示了运行时如何向一个对象添加属性，一开始我定义了一个对象 o，定义完成之后，再添加它的属性 b，这样操作是完全没问题的。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line">o.b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(o.a, o.b); <span class="comment">//1 2</span></span><br></pre></td></tr></table></figure>
-
-<p>为了提高抽象能力，JavaScript 的属性被设计成比别的语言更加复杂的形式，它提供了数据属性和访问器属性（getter/setter）两类。</p>
-<h3 id="JavaScript-对象的两类属性"><a href="#JavaScript-对象的两类属性" class="headerlink" title="JavaScript 对象的两类属性"></a>JavaScript 对象的两类属性</h3><p>对 JavaScript 来说，属性并非只是简单的名称和值，JavaScript 用一组特征（attribute）来描述属性（property）</p>
-<p>先来说说第一类属性，数据属性，它比较接近其他语言的属性概念，数据属性具有四个特征</p>
-<ul>
-<li>value：就是属性的值。</li>
-<li>writable：决定属性能否被赋值。</li>
-<li>enumerable：决定 for in 能否枚举该属性。</li>
-<li>configurable：决定该属性能否被删除或者改变特征值。</li>
-</ul>
-<p>在大多数情况下，我们只关心数据属性的只即可</p>
-<p>第二类属性是访问器（getter/setter）属性，它也有四个特征</p>
-<ul>
-<li>getter：函数或 undefined，在取属性值时被调用。</li>
-<li>setter：函数或 undefined，在设置属性值时被调用。</li>
-<li>enumerable：决定 for in 能否枚举该属性。</li>
-<li>configurable：决定该属性能否被删除或者改变特征值。</li>
-</ul>
-<p>访问器属性使得属性在读和写时执行代码，它允许使用者在写和读属性时，得到完全不同的值，它可以视为一种函数的语法糖。</p>
-<p>我们通常用于定义属性的代码会产生数据属性，其中的 writable、enumerable、configurable 都默认为 true。我们可以使用内置函数 getOwnPropertyDescripter 来查看，如以下代码所示：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line">o.b = <span class="number">2</span>;</span><br><span class="line"><span class="comment">//a和b皆为数据属性</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;a&quot;</span>) <span class="comment">// &#123;value: 1, writable: true, enumerable: true, configurable: true&#125;</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;b&quot;</span>) <span class="comment">// &#123;value: 2, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>我们在这里使用了两种语法来定义属性，定义完属性后，我们用 JavaScript 的 API 来查看这个属性，我们可以发现，这样定义出来的属性都是数据属性，writeable、enumerable、configurable 都是默认值为 true。</p>
-<p>如果我们要想改变属性的特征，或者定义访问器属性，我们可以使用 Object.defineProperty，示例如下：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(o, <span class="string">&quot;b&quot;</span>, &#123;<span class="attr">value</span>: <span class="number">2</span>, <span class="attr">writable</span>: <span class="literal">false</span>, <span class="attr">enumerable</span>: <span class="literal">false</span>, <span class="attr">configurable</span>: <span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//a和b都是数据属性，但特征值变化了</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;a&quot;</span>); <span class="comment">// &#123;value: 1, writable: true, enumerable: true, configurable: true&#125;</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;b&quot;</span>); <span class="comment">// &#123;value: 2, writable: false, enumerable: false, configurable: true&#125;</span></span><br><span class="line">o.b = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(o.b); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>这里我们使用了 Object.defineProperty 来定义属性，这样定义属性可以改变属性的 writable 和 enumerable。</p>
-<p>我们同样用 Object.getOwnPropertyDescriptor 来查看，发现确实改变了 writable 和 enumerable 特征。因为 writable 特征为 false，所以我们重新对 b 赋值，b 的值不会发生变化。</p>
-<p>在创建对象时，也可以使用 get 和 set 关键字来创建访问器属性，代码如下所示：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="keyword">get</span> <span class="title">a</span>() &#123; <span class="keyword">return</span> <span class="number">1</span> &#125; &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(o.a); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-
-<p>访问器属性跟数据属性不同，每次访问属性都会执行 getter 或者 setter 函数。这里我们的 getter 函数返回了 1，所以 o.a 每次都得到 1。</p>
-<p>这样，我们就理解了，实际上 JavaScript 对象的运行时是一个“属性的集合”，属性以字符串或者 Symbol 为 key，以数据属性特征值或者访问器属性特征值为 value。</p>
-<p>对象是一个属性的索引结构（索引结构是一类常见的数据结构，我们可以把它理解为一个能够以比较快的速度用 key 来查找 value 的字典）。我们以上面的对象 o 为例，你可以想象一下“a”是 key。</p>
-<p>{writable:true,value:1,configurable:true,enumerable:true}是 value。我们在前面的类型课程中，已经介绍了 Symbol 类型，能够以 Symbol 为属性名，这是 JavaScript 对象的一个特色。</p>
-<p>讲到了这里，如果你理解了对象的特征，也就不难理解我开篇提出来的问题。</p>
-<p>你甚至可以理解为什么会有“JavaScript 不是面向对象”这样的说法了。这是由于 JavaScript 的对象设计跟目前主流基于类的面向对象差异非常大。</p>
-<p>可事实上，这样的对象系统设计虽然特别，但是 JavaScript 提供了完全运行时的对象系统，这使得它可以模仿多数面向对象编程范式（下一节课我们会给你介绍 JavaScript 中两种面向对象编程的范式：基于类和基于原型），所以它也是正统的面向对象语言。</p>
-<p>JavaScript 语言标准也已经明确说明，JavaScript 是一门面向对象的语言，我想标准中能这样说，正是因为 JavaScript 的高度动态性的对象系统。</p>
-<p>所以，我们应该在理解其设计思想的基础上充分挖掘它的能力，而不是机械地模仿其它语言。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>要想理解 JavaScript 对象，必须清空我们脑子里“基于类的面向对象”相关的知识，回到人类对对象的朴素认知和面向对象的语言无关基础理论，我们就能够理解 JavaScript 面向对象设计的思路。</p>
-<p>在这篇文章中，我从对象的基本理论出发，和你理清了关于对象的一些基本概念，分析了 JavaScript 对象的设计思路。接下来又从运行时的角度，介绍了 JavaScript 对象的具体设计：具有高度动态性的属性集合。</p>
-<p>很多人在思考 JavaScript 对象时，会带着已有的“对象”观来看问题，最后的结果当然就是“剪不断理还乱”了。</p>
-<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>结合文章通篇看下来，觉得 JS 的 OO 和他基于类的 OO 不同之处，在于 JS 可以在运行时修改对象，而 class based 的类只能预先全部定义好，我们并不能在运行时动态修改类。在我理解来说，条条大路通罗马，面向对象是罗马，class based 是一条路，prototype based 是另一条路。而且 Symbol 的出现，暴露出了许多内置接口，让 JS 又在这条路上走了更远一些。（以前上学背面向对象的三个特征，封装，继承，多态，现在看一下突然觉得很对。。。</p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>KMP</title>
-    <url>/2020/10/29/KMP/</url>
-    <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
-<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解 KMP 的最大障碍就是 PMT，有些人看了很多 KMP 的文章后仍然搞不懂 PMT 中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
-<p>对于字符转 “abababca”，它的 PMT 如下表所示</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
-<p>就像图中所示，如果待匹配的模式字符串有 8 个字符，那么 PMT 就会有 8 个值。</p>
-<p>我先解释下字符串的前缀和后缀，如果字符串 A 和 B 存在 A=BS，其中 S 是任意的非空字符串，那么就称 B 为 A 的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中 S 是任意非空字符，那就称 B 为 A 的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>。然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
-<p>有了这个定义，就可以说明 PMT 中的值的意义了，<strong>PMT 中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长的元素就是字符串 “a” 了，长度为 1，所以对于”abc”而言， 它在 PMT 表中对应值就是 1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为 3。</p>
-<p>好了，解释清楚这个表是什么之后，我们再来看如何使用这个表来加速字符串的查找，以及这样用的道理是什么。如图 1.12 所示，要在主字符串”ababababca”中查找模式字符串”abababca”。如果在 j 处字符不匹配，那么由于前边所说的模式字符串 PMT 的性质，主字符串中 i 指针之前的 PMT[j −1] 位就一定与模式字符串的第 0 位至第 PMT[j−1] 位是相同的。这是因为主字符串在 i 位失配，也就意味着主字符串从 i−j 到 i 这一段是与模式字符串的 0 到 j 这一段是完全相同的。而我们上面也解释了，模式字符串从 0 到 j−1 ，在这个例子中就是”ababab”，其前缀集合与后缀集合的交集的最长元素为”abab”， 长度为 4。所以就可以断言，主字符串中 i 指针之前的 4 位一定与模式字符串的第 0 位至第 4 位是相同的，即长度为 4 的后缀与前缀相同。这样一来，我们就可以将这些字符段的比较省略掉。具体的做法是，保持 i 指针不动，然后将 j 指针指向模式字符串的 PMT[j −1]位即可。</p>
-<p>简言之，以图中的例子来说，在 i 处失配，那么主字符串和模式字符串的前边 6 位就是相同的。又因为模式字符串的前 6 位，它的前 4 位前缀和后 4 位后缀是相同的，所以我们推知主字符串 i 之前的 4 位和模式字符串开头的 4 位是相同的。就是图中的灰色部分。那这部分就不用再比较了。</p>
-<p><img data-src="https://pic4.zhimg.com/50/v2-03a0d005badd0b8e7116d8d07947681c_hd.jpg?source=1940ef5"></p>
-<p>有了上面的思路，我们就可以使用 PMT 加速字符串的查找了。我们看到如果是在 j 位 失配，那么影响 j 指针回溯的位置的其实是第 j −1 位的 PMT 值，所以为了编程的方便， 我们不直接使用 PMT 数组，而是将 PMT 数组向后偏移一位。我们把新得到的这个数组称为 next 数组。下面给出根据 next 数组进行字符串匹配加速的字符串匹配程序。其中要注意的一个技巧是，在把 PMT 进行向右偏移时，第 0 位的值，我们将其设成了-1，这只是为了编程的方便，并没有其他的意义。在本节的例子中，next 数组如下表所示。</p>
-<p><img data-src="https://pic1.zhimg.com/80/v2-40b4885aace7b31499da9b90b7c46ed3_720w.jpg?source=1940ef5c"></p>
-<p>具体的程序如下所示：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">kmp</span>(<span class="params">source, pattern</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 求出 pmt 表格</span></span><br><span class="line">  <span class="keyword">let</span> table = <span class="keyword">new</span> <span class="built_in">Array</span>(pattern.length).fill(<span class="number">0</span>);</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; pattern.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[i] === pattern[j]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">        table[i] = j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 匹配</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; source.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[j] === source[i]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === pattern.length) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(kmp(<span class="string">&quot;abababcaabababca&quot;</span>, <span class="string">&quot;abababca&quot;</span>));</span><br></pre></td></tr></table></figure>
-
-<p>好了，讲到这里，其实 KMP 算法的主体就已经讲解完了。你会发现，其实 KMP 算法的动机是很简单的，解决的方案也很简单。远没有很多教材和算法书里所讲的那么乱七八糟，只要搞明白了 PMT 的意义，其实整个算法都迎刃而解。</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>字符串算法</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>TypeScript 中的高级类型</title>
-    <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
-<p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
-
-<a id="more"></a>
-
-<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
-
-<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
-<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
-
-<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
-<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
-
-<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
-<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了让这段代码工作，我们需要使用类型断言</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用户自定义的类型保护</strong></p>
-<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
-<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
-<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
-]]></content>
-      <categories>
-        <category>TypeScript</category>
-      </categories>
-  </entry>
-  <entry>
     <title>什么是图灵完备？</title>
     <url>/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/</url>
     <content><![CDATA[<p>这是一篇旨在帮助理解图灵机及相关概念是什么，而非证明其正确性的回答，它包含以下内容：</p>
@@ -561,6 +516,116 @@
       </tags>
   </entry>
   <entry>
+    <title>分支界限法</title>
+    <url>/2020/11/07/%E5%88%86%E6%94%AF%E7%95%8C%E9%99%90%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>类似于回溯法，也是一种在问题的空间树 T 上搜索问题的解的算法，但在一般情况下，分支界限方与回溯法的求解目标不同，回溯法的求解目标是找出 T 中满足约束条件的所有解，而分支界限发的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一个目标函数值达到极大或极小的解，即在某种意义上的最优解</p>
+<h4 id="分支搜索法"><a href="#分支搜索法" class="headerlink" title="分支搜索法"></a>分支搜索法</h4><p>所谓 “分支” 就是采用广度优先搜索策略，依次搜索 E-结点的所有分支，也就是所有相邻节点，抛弃不满足约束条件的节点，其余节点加入活节点表，然后从表中选择一个节点作为下一个 E-节点，继续搜索</p>
+<p>选择一个 E-节点的方式不同，则会有几种不同的分支搜索方式，</p>
+<ul>
+<li>FIFO 搜索</li>
+<li>LIFO 搜索</li>
+<li>优先队列式搜索</li>
+</ul>
+<h4 id="分支界限搜索法"><a href="#分支界限搜索法" class="headerlink" title="分支界限搜索法"></a>分支界限搜索法</h4><h3 id="分支界限搜索法的一般过程"><a href="#分支界限搜索法的一般过程" class="headerlink" title="分支界限搜索法的一般过程"></a>分支界限搜索法的一般过程</h3><p>由于求解目标不同，导致分支限界法与回溯法在解空间树 T 上的搜索方式也不相同。回溯法以深度优先的方式搜索解空间树 T，而分支限界法则以广度优先或以最小耗费优先的方式搜索解空间树 T。</p>
+<p>分支限界法的搜索策略是：在扩展结点处，先生成其所有的儿子结点（分支），然后再从当前的活结点表中选择下一个扩展对点。为了有效地选择下一扩展结点，以加速搜索的进程，在每一活结点处，计算一个函数值（限界），并根据这些已计算出的函数值，从当前活结点表中选择一个最有利的结点作为扩展结点，使搜索朝着解空间树上有最优解的分支推进，以便尽快地找出一个最优解。</p>
+<p>分支限界法常以广度优先或以最小耗费（最大效益）优先的方式搜索问题的解空间树。问题的解空间树是表示问题解空间的一棵有序树，常见的有子集树和排列树。在搜索问题的解空间树时，分支限界法与回溯法对当前扩展结点所使用的扩展方式不同。在分支限界法中，每一个活结点只有一次机会成为扩展结点。活结点一旦成为扩展结点，就一次性产生其所有儿子结点。在这些儿子结点中，那些导致不可行解或导致非最优解的儿子结点被舍弃，其余儿子结点被子加入活结点表中。此后，从活结点表中取下一结点成为当前扩展结点，并重复上述结点扩展过程。这个过程一直持续到找到所求的解或活结点表为空时为止。</p>
+<h3 id="回溯法和分支限界法的一些区别"><a href="#回溯法和分支限界法的一些区别" class="headerlink" title="回溯法和分支限界法的一些区别"></a>回溯法和分支限界法的一些区别</h3><p>有一些问题其实无论用回溯法还是分支限界法都可以得到很好的解决，但是另外一些则不然。也许我们需要具体一些的分析——到底何时使用分支限界而何时使用回溯呢？</p>
+<p>回溯法和分支限界法的一些区别：</p>
+<ul>
+<li>方法对解空间树的搜索方式</li>
+<li>存储结点的常用数据结构</li>
+<li>结点存储特性常用应用</li>
+</ul>
+<p>回溯法深度优先搜索堆栈活结点的所有可行子结点被遍历后才被从栈中弹出找出满足约束条件的所有解</p>
+<p>分支限界法广度优先或最小消耗优先搜索队列、优先队列每个结点只有一次成为活结点的机会找出满足约束条件的一个解或特定意义下的最优解</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>五大常用经典算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>TypeScript 中的高级类型</title>
+    <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
+<p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
+
+<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
+<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
+
+<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
+<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
+<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了让这段代码工作，我们需要使用类型断言</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用户自定义的类型保护</strong></p>
+<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
+<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
+<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
+]]></content>
+      <categories>
+        <category>TypeScript</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>人类将成为人工智能的宠物？</title>
+    <url>/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/</url>
+    <content><![CDATA[<p>前面几篇文章从图灵说到图灵机，再到人工智能，其实对于人工智能有很多话题。其中包括对人工智能的定义、人工智能技术实现、人工智能是使用场景和范围、人工智能是否会取代人类甚至屠杀人类等等。今天我们就“人工智能是否会取代人类？”这个很有争议性话题进行解读，希望大家对人工智能有更多的思考维度。</p>
+<p>现实版钢铁侠的马斯克（特斯拉 CEO），2017 年在社交平台回怼 Facebook 创始人扎克伯格，原因是扎克伯格不认为人工智能是末日，马斯克回怼：他对人工智能的理解很有限。</p>
+<p>马斯克多次在不同场合表示自己对人工智能发展的担忧，认为工人智能是人类文明的最大威胁，甚至发出警告：人工智能可能引发第三次世界大战。</p>
+<h1 id="一、人工智能威胁论"><a href="#一、人工智能威胁论" class="headerlink" title="一、人工智能威胁论"></a>一、人工智能威胁论</h1><p>2016 年阿尔法狗战胜了世界围棋冠军李世石，一时间整个世界哗然，围棋一直被冠以人类智力游戏的最后一高地，就这样突然被占领。 人工智能经过几十年的发展，特别在近几年大数据的共同发展，已经取得了不少的进展，人工智能在很多方面远超了人类。</p>
+<p>在全世界范围内，很多科技大佬表示对人工智能的担心，上面已经提到了特斯拉 CEO 马斯克，还有今年（2018 年）刚去世的著名物理学家，天文学家霍金也提出对人工智能的担心：“我真的害怕人工智能取代人类，成为新的物种。”、“我们已经拥有原始形式的人工智能，但我认为人工智能的完全发展会导致人类的终结”等等言论。</p>
+<p>对于普通民众来讲，很多人担心人工智能抢了自己的工作而丢了饭碗。在第一次工业期间，由于蒸汽机的发明，机器代替了人工在英国掀起了捣毁纺织机械为手段的工人罢工。但是其实机器大规模使用不但没有减少工作岗位，反而是增多了。</p>
+<h1 id="二、人工智能有意识吗？"><a href="#二、人工智能有意识吗？" class="headerlink" title="二、人工智能有意识吗？"></a>二、人工智能有意识吗？</h1><p>计算机在非离散数学计算、存储等方面已经远超于人类，也真是因为计算机，因为信息互联网给人类带来了巨大的便利，更创造了超之前几千年之和的财富。从最广义的角度看，传统软件也应属于人工智能的范畴：实际上很多早期的计算机科学家，比如图灵，就是以人工智能为动力展开对计算机科学的研究。从这个意义上来看，人工智能是一种为人类工作的工具或机器。</p>
+<p>如果人工智能只是一种可以代替人类工作的机器，它的出现并不足以让人们恐惧。 终极问题是：<strong>人工智能会有人一样，甚至超出人类的意识吗？</strong></p>
+<p>现在机器（人工智能）是被人类奴役着，如果人工智能得到长足发展后，在未来，人类奴役机器的剧情将得到反转，未来，人类才是那个被“奴役”的物种！这种情节我们在很多的电影中都看到过。</p>
+<p>从现在的人工智能发展水平来看，现在的人工智能其实还非常初级，只能算做弱人工智能，其实在我们有生之年估计看不到超级人工智能的存在。</p>
+<h1 id="三、人工智能是生命-3-0？"><a href="#三、人工智能是生命-3-0？" class="headerlink" title="三、人工智能是生命 3.0？"></a>三、人工智能是生命 3.0？</h1><p>最近在看人工智能专家，麻省理工终身教授泰格马克的《生命 3.0》，这本书题目是生命，但是其实一本讲人工智能的书，作者对人工智能的发展、人类的终极命运将会是什么，进行了预测，脑洞非常大。</p>
+<p>我们现在思考人工智能，动不动就担心机器会不会有人类的意识，人类的喜怒哀乐，情感都是因为意识。机器会自动驾驶，会人脸识别，会翻译等只不过是一种机械运动而已。但是实际上，图灵和现代生物学家都认为，人在做事的时候，本质上也是机械的，也就是可以用图灵机来进行表达，只是我们还没有找到表达的算法而已。</p>
+<p>在我们都在担心意识问题的时候，泰格马克教授从生命的角度进行了解读。他把生命分成了三个阶段：生命 1.0、生命 2.0 和生命 3.0</p>
+<p>生命是什么？这个问题争议很大，就像意识一样难以定义。</p>
+<blockquote>
+<p>泰格马克对生命进行了广阔的定义：生命是一个能够进行复制和保持自我复杂性的过程。</p>
+</blockquote>
+<p>1，生命 1.0 的有生之年都无法重新设计自己的硬件和软件，二者由基因 DNA 来决定，只有进化才能带来改变，而进行则需要许多代才能有很小的改变，因此生命 1.0 的进化是非常非常非常缓慢的，生命 1.0 典型的是细菌。</p>
+<p>2，生命 2.0 则能够重新设计自身大部分的软件，比如人类，人类可以学习复杂的新技能、语言、知识和职业技能，并且能够从认知上更新自己的目标，自己对世界的认识。</p>
+<p>3，生命 3.0 现在在地球上还没有出现，他不仅能够最大限度的重新设计自己的软件，还是重新设计自己的硬件，而不需要等待许多代进行缓慢的进化。</p>
+<p>当然，我们会问，那其他的动物算生命几点 0 呢？如果细菌是 1.0，人类是 2.0，老鼠可以看做 1.1，虽然它们可以学习许多知识，但是不足以进化出语言，所以许多的东西死亡就会消失，不能积累传承。</p>
+<p>那么问题来了，生命 3.0 什么时候出现？出现后，作为生命 2.0 的人类怎么共存呢？ 不知道大家有没有一个感觉？人工智能技术，特别是语音识别技术就是在近 5 年才突然爆发的，其实人工智的能力增长是指数级的，是爆发式的。超级人工智能的出现也许就需要一个契机，一个突破，比如量子计算机，他的出现肯定是爆发式的，突然出现的。</p>
+<p>如果有一天人类造出了超级人工智能，即生命 3.0，就可能触发一场智能革命，将人类远远甩在后面，就像我们人类对比细菌一样，甚至更大。 如果这场智能革命由某一小撮人类控制，那他们讲可能在短短几年内控制整个世界。 如果人类没有控制这场智能革命，那么，人工智能可能以更快的速度控制世界。 因为生命 3.0 比我们高一个维度，人类将成为人工智能的宠物。</p>
+<h1 id="说在最后"><a href="#说在最后" class="headerlink" title="说在最后"></a>说在最后</h1><p>有个图灵机、人工智能的话题差不多写完了，这些话题太大，很难写。在看了《生命 3.0》这本书，对人工智能有了更多的理解和想法，其实心情既兴奋也很担忧。在我们所做的宇宙，从宇宙大爆发那一刻开始，各种参数其实已经决定了整个宇宙发展的过程。图灵的结论告诉我们，即使未来是注定的，我们也没有一种算法去预测它，除非模拟它运行一遍。但是，要想模拟这个宇宙的运行，需要的计算量必然超出了这个宇宙自身的所有资源。运行这个宇宙的唯一方式，就是运行这个宇宙本身，或者参与其中才能知道最终的答案！</p>
+<p>除非有麦克斯韦妖修改宇宙大爆炸的时候的参数，生命 3.0，超级人工智能一定会把人类甩在后面，而不仅仅是取代，人类将成为人工智能的宠物。</p>
+]]></content>
+      <categories>
+        <category>大话说</category>
+      </categories>
+  </entry>
+  <entry>
     <title>分治算法</title>
     <url>/2020/11/05/%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在计算机科学中，分治法是一种很重要的算法，字面上的解释是 “分而治之”，就是把一个复杂问题分成两个或更多的相同或类似的子问题，再把子问题分成更小的子问题……直到最后的子问题可以简单的直接求解，原问题的解即是子问题的解的合并，这个技巧是很多高效算法的基础，如排序算法（快速排序，归并排序）,傅立叶变换(快速傅立叶变换)……</p>
@@ -616,72 +681,6 @@
         <tag>算法</tag>
         <tag>五大常用经典算法</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>分支界限法</title>
-    <url>/2020/11/07/%E5%88%86%E6%94%AF%E7%95%8C%E9%99%90%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>类似于回溯法，也是一种在问题的空间树 T 上搜索问题的解的算法，但在一般情况下，分支界限方与回溯法的求解目标不同，回溯法的求解目标是找出 T 中满足约束条件的所有解，而分支界限发的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一个目标函数值达到极大或极小的解，即在某种意义上的最优解</p>
-<h4 id="分支搜索法"><a href="#分支搜索法" class="headerlink" title="分支搜索法"></a>分支搜索法</h4><p>所谓 “分支” 就是采用广度优先搜索策略，依次搜索 E-结点的所有分支，也就是所有相邻节点，抛弃不满足约束条件的节点，其余节点加入活节点表，然后从表中选择一个节点作为下一个 E-节点，继续搜索</p>
-<p>选择一个 E-节点的方式不同，则会有几种不同的分支搜索方式，</p>
-<ul>
-<li>FIFO 搜索</li>
-<li>LIFO 搜索</li>
-<li>优先队列式搜索</li>
-</ul>
-<h4 id="分支界限搜索法"><a href="#分支界限搜索法" class="headerlink" title="分支界限搜索法"></a>分支界限搜索法</h4><h3 id="分支界限搜索法的一般过程"><a href="#分支界限搜索法的一般过程" class="headerlink" title="分支界限搜索法的一般过程"></a>分支界限搜索法的一般过程</h3><p>由于求解目标不同，导致分支限界法与回溯法在解空间树 T 上的搜索方式也不相同。回溯法以深度优先的方式搜索解空间树 T，而分支限界法则以广度优先或以最小耗费优先的方式搜索解空间树 T。</p>
-<p>分支限界法的搜索策略是：在扩展结点处，先生成其所有的儿子结点（分支），然后再从当前的活结点表中选择下一个扩展对点。为了有效地选择下一扩展结点，以加速搜索的进程，在每一活结点处，计算一个函数值（限界），并根据这些已计算出的函数值，从当前活结点表中选择一个最有利的结点作为扩展结点，使搜索朝着解空间树上有最优解的分支推进，以便尽快地找出一个最优解。</p>
-<p>分支限界法常以广度优先或以最小耗费（最大效益）优先的方式搜索问题的解空间树。问题的解空间树是表示问题解空间的一棵有序树，常见的有子集树和排列树。在搜索问题的解空间树时，分支限界法与回溯法对当前扩展结点所使用的扩展方式不同。在分支限界法中，每一个活结点只有一次机会成为扩展结点。活结点一旦成为扩展结点，就一次性产生其所有儿子结点。在这些儿子结点中，那些导致不可行解或导致非最优解的儿子结点被舍弃，其余儿子结点被子加入活结点表中。此后，从活结点表中取下一结点成为当前扩展结点，并重复上述结点扩展过程。这个过程一直持续到找到所求的解或活结点表为空时为止。</p>
-<h3 id="回溯法和分支限界法的一些区别"><a href="#回溯法和分支限界法的一些区别" class="headerlink" title="回溯法和分支限界法的一些区别"></a>回溯法和分支限界法的一些区别</h3><p>有一些问题其实无论用回溯法还是分支限界法都可以得到很好的解决，但是另外一些则不然。也许我们需要具体一些的分析——到底何时使用分支限界而何时使用回溯呢？</p>
-<p>回溯法和分支限界法的一些区别：</p>
-<ul>
-<li>方法对解空间树的搜索方式</li>
-<li>存储结点的常用数据结构</li>
-<li>结点存储特性常用应用</li>
-</ul>
-<p>回溯法深度优先搜索堆栈活结点的所有可行子结点被遍历后才被从栈中弹出找出满足约束条件的所有解</p>
-<p>分支限界法广度优先或最小消耗优先搜索队列、优先队列每个结点只有一次成为活结点的机会找出满足约束条件的一个解或特定意义下的最优解</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>人类将成为人工智能的宠物？</title>
-    <url>/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/</url>
-    <content><![CDATA[<p>前面几篇文章从图灵说到图灵机，再到人工智能，其实对于人工智能有很多话题。其中包括对人工智能的定义、人工智能技术实现、人工智能是使用场景和范围、人工智能是否会取代人类甚至屠杀人类等等。今天我们就“人工智能是否会取代人类？”这个很有争议性话题进行解读，希望大家对人工智能有更多的思考维度。</p>
-<p>现实版钢铁侠的马斯克（特斯拉 CEO），2017 年在社交平台回怼 Facebook 创始人扎克伯格，原因是扎克伯格不认为人工智能是末日，马斯克回怼：他对人工智能的理解很有限。</p>
-<p><img data-src="https://upload-images.jianshu.io/upload_images/10096448-2236d871328dac73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/550/format/webp" alt="img"></p>
-<p>马斯克多次在不同场合表示自己对人工智能发展的担忧，认为工人智能是人类文明的最大威胁，甚至发出警告：人工智能可能引发第三次世界大战。</p>
-<h1 id="一、人工智能威胁论"><a href="#一、人工智能威胁论" class="headerlink" title="一、人工智能威胁论"></a>一、人工智能威胁论</h1><p>2016 年阿尔法狗战胜了世界围棋冠军李世石，一时间整个世界哗然，围棋一直被冠以人类智力游戏的最后一高地，就这样突然被占领。 人工智能经过几十年的发展，特别在近几年大数据的共同发展，已经取得了不少的进展，人工智能在很多方面远超了人类。</p>
-<p>在全世界范围内，很多科技大佬表示对人工智能的担心，上面已经提到了特斯拉 CEO 马斯克，还有今年（2018 年）刚去世的著名物理学家，天文学家霍金也提出对人工智能的担心：“我真的害怕人工智能取代人类，成为新的物种。”、“我们已经拥有原始形式的人工智能，但我认为人工智能的完全发展会导致人类的终结”等等言论。</p>
-<p>对于普通民众来讲，很多人担心人工智能抢了自己的工作而丢了饭碗。在第一次工业期间，由于蒸汽机的发明，机器代替了人工在英国掀起了捣毁纺织机械为手段的工人罢工。但是其实机器大规模使用不但没有减少工作岗位，反而是增多了。</p>
-<h1 id="二、人工智能有意识吗？"><a href="#二、人工智能有意识吗？" class="headerlink" title="二、人工智能有意识吗？"></a>二、人工智能有意识吗？</h1><p>计算机在非离散数学计算、存储等方面已经远超于人类，也真是因为计算机，因为信息互联网给人类带来了巨大的便利，更创造了超之前几千年之和的财富。从最广义的角度看，传统软件也应属于人工智能的范畴：实际上很多早期的计算机科学家，比如图灵，就是以人工智能为动力展开对计算机科学的研究。从这个意义上来看，人工智能是一种为人类工作的工具或机器。</p>
-<p>如果人工智能只是一种可以代替人类工作的机器，它的出现并不足以让人们恐惧。 终极问题是：<strong>人工智能会有人一样，甚至超出人类的意识吗？</strong></p>
-<p>现在机器（人工智能）是被人类奴役着，如果人工智能得到长足发展后，在未来，人类奴役机器的剧情将得到反转，未来，人类才是那个被“奴役”的物种！这种情节我们在很多的电影中都看到过。</p>
-<p>从现在的人工智能发展水平来看，现在的人工智能其实还非常初级，只能算做弱人工智能，其实在我们有生之年估计看不到超级人工智能的存在。</p>
-<h1 id="三、人工智能是生命-3-0？"><a href="#三、人工智能是生命-3-0？" class="headerlink" title="三、人工智能是生命 3.0？"></a>三、人工智能是生命 3.0？</h1><p>最近在看人工智能专家，麻省理工终身教授泰格马克的《生命 3.0》，这本书题目是生命，但是其实一本讲人工智能的书，作者对人工智能的发展、人类的终极命运将会是什么，进行了预测，脑洞非常大。</p>
-<p>我们现在思考人工智能，动不动就担心机器会不会有人类的意识，人类的喜怒哀乐，情感都是因为意识。机器会自动驾驶，会人脸识别，会翻译等只不过是一种机械运动而已。但是实际上，图灵和现代生物学家都认为，人在做事的时候，本质上也是机械的，也就是可以用图灵机来进行表达，只是我们还没有找到表达的算法而已。</p>
-<p>在我们都在担心意识问题的时候，泰格马克教授从生命的角度进行了解读。他把生命分成了三个阶段：生命 1.0、生命 2.0 和生命 3.0</p>
-<p>生命是什么？这个问题争议很大，就像意识一样难以定义。</p>
-<blockquote>
-<p>泰格马克对生命进行了广阔的定义：生命是一个能够进行复制和保持自我复杂性的过程。</p>
-</blockquote>
-<p>1，生命 1.0 的有生之年都无法重新设计自己的硬件和软件，二者由基因 DNA 来决定，只有进化才能带来改变，而进行则需要许多代才能有很小的改变，因此生命 1.0 的进化是非常非常非常缓慢的，生命 1.0 典型的是细菌。</p>
-<p>2，生命 2.0 则能够重新设计自身大部分的软件，比如人类，人类可以学习复杂的新技能、语言、知识和职业技能，并且能够从认知上更新自己的目标，自己对世界的认识。</p>
-<p>3，生命 3.0 现在在地球上还没有出现，他不仅能够最大限度的重新设计自己的软件，还是重新设计自己的硬件，而不需要等待许多代进行缓慢的进化。</p>
-<p>当然，我们会问，那其他的动物算生命几点 0 呢？如果细菌是 1.0，人类是 2.0，老鼠可以看做 1.1，虽然它们可以学习许多知识，但是不足以进化出语言，所以许多的东西死亡就会消失，不能积累传承。</p>
-<p>那么问题来了，生命 3.0 什么时候出现？出现后，作为生命 2.0 的人类怎么共存呢？ 不知道大家有没有一个感觉？人工智能技术，特别是语音识别技术就是在近 5 年才突然爆发的，其实人工智的能力增长是指数级的，是爆发式的。超级人工智能的出现也许就需要一个契机，一个突破，比如量子计算机，他的出现肯定是爆发式的，突然出现的。</p>
-<p>如果有一天人类造出了超级人工智能，即生命 3.0，就可能触发一场智能革命，将人类远远甩在后面，就像我们人类对比细菌一样，甚至更大。 如果这场智能革命由某一小撮人类控制，那他们讲可能在短短几年内控制整个世界。 如果人类没有控制这场智能革命，那么，人工智能可能以更快的速度控制世界。 因为生命 3.0 比我们高一个维度，人类将成为人工智能的宠物。</p>
-<h1 id="说在最后"><a href="#说在最后" class="headerlink" title="说在最后"></a>说在最后</h1><p>有个图灵机、人工智能的话题差不多写完了，这些话题太大，很难写。在看了《生命 3.0》这本书，对人工智能有了更多的理解和想法，其实心情既兴奋也很担忧。在我们所做的宇宙，从宇宙大爆发那一刻开始，各种参数其实已经决定了整个宇宙发展的过程。图灵的结论告诉我们，即使未来是注定的，我们也没有一种算法去预测它，除非模拟它运行一遍。但是，要想模拟这个宇宙的运行，需要的计算量必然超出了这个宇宙自身的所有资源。运行这个宇宙的唯一方式，就是运行这个宇宙本身，或者参与其中才能知道最终的答案！</p>
-<p>除非有麦克斯韦妖修改宇宙大爆炸的时候的参数，生命 3.0，超级人工智能一定会把人类甩在后面，而不仅仅是取代，人类将成为人工智能的宠物。</p>
-]]></content>
-      <categories>
-        <category>大话说</category>
-      </categories>
   </entry>
   <entry>
     <title>前端测试开篇</title>
@@ -747,6 +746,41 @@
       </tags>
   </entry>
   <entry>
+    <title>命令模式</title>
+    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
+<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
+<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
+<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>回溯法</title>
+    <url>/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
+<p>回溯法是一种优先搜索法，按选优条件向前搜索，但当探索到某一步时，发现原先选择并不优或达不到目标，就返回一步重新选择，这种走走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为 “回溯点”。</p>
+<p>许多复杂的，规模较大的问题都可以适用回溯法，有 “通用解提方法” 的美称</p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>在包含问题的所有解的空间树中，按照深度优先搜索的策略，从根节点出发深度探索解空间树，当探索到某一节点的时候，要先判断该节点是否包含问题的解，就从该节点继续探索下去，如果该节点不包含问题的解，则逐层向其祖先节点回溯，（其实回溯法就是对隐式图的深度优先搜索算法）</p>
+<p>若用回溯法求问题的所有解时，要回溯到根，其根节点的所有可行的子树都要以被搜索遍才结束</p>
+<p>而若使用回溯法求任一解时，只要搜索到问题的第一个解就可以结束</p>
+<h3 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h3><ol>
+<li>针对所给问题，确定问题的解空间：首先应明确定义问题的解空间，问题的解空间应至少包含问题的一个（最优）解。</li>
+<li>确定结点的扩展搜索规则</li>
+<li>以深度优先方式搜索解空间，并在搜索过程中用剪枝函数避免无效搜索。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>五大常用经典算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>动态规划算法</title>
     <url>/2020/11/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>动态规划过程是：每次决策依赖于当前状态，又随即引起状态的转移，一个决策序列就是在变化的状态中产生出来的，所以，这种多阶段最优化决策解决问题的过程叫做动态规划</p>
@@ -789,41 +823,6 @@
         <tag>算法</tag>
         <tag>五大常用经典算法</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>回溯法</title>
-    <url>/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
-<p>回溯法是一种优先搜索法，按选优条件向前搜索，但当探索到某一步时，发现原先选择并不优或达不到目标，就返回一步重新选择，这种走走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为 “回溯点”。</p>
-<p>许多复杂的，规模较大的问题都可以适用回溯法，有 “通用解提方法” 的美称</p>
-<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>在包含问题的所有解的空间树中，按照深度优先搜索的策略，从根节点出发深度探索解空间树，当探索到某一节点的时候，要先判断该节点是否包含问题的解，就从该节点继续探索下去，如果该节点不包含问题的解，则逐层向其祖先节点回溯，（其实回溯法就是对隐式图的深度优先搜索算法）</p>
-<p>若用回溯法求问题的所有解时，要回溯到根，其根节点的所有可行的子树都要以被搜索遍才结束</p>
-<p>而若使用回溯法求任一解时，只要搜索到问题的第一个解就可以结束</p>
-<h3 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h3><ol>
-<li>针对所给问题，确定问题的解空间：首先应明确定义问题的解空间，问题的解空间应至少包含问题的一个（最优）解。</li>
-<li>确定结点的扩展搜索规则</li>
-<li>以深度优先方式搜索解空间，并在搜索过程中用剪枝函数避免无效搜索。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>命令模式</title>
-    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
-<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
-<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
-<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
-]]></content>
-      <categories>
-        <category>设计模式</category>
-      </categories>
   </entry>
   <entry>
     <title>声明合并</title>
@@ -973,7 +972,7 @@
 <p>两位被询问者分别用 X 和 Y 表示，询问者用 C 表示，询问者 C 事先只知道 X 和 Y 中 有且仅有一位女性，而询问的目标是正确分辨 X 和 Y 中哪一位是女性。另一方面，两位被询问者 X 和 Y 的目标都是试图让询问者认为自己是女性。也就是说，男性被询问者需要把自己伪装成女性，而女性被询问者需要努力自证。</p>
 <p>现在我们问：如果我们把“模仿游戏”中的男性被询问者换成计算机，结果会怎样？相比人类男性，计算机能否使询问者更容易产生误判？”</p>
 </blockquote>
-<p><img data-src="https://upload-images.jianshu.io/upload_images/10096448-2593cfeefed5a765.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/866/format/webp" alt="img"></p>
+<p><img data-src="https://tu.sunpma.com/imgs/2020/11/1bb628716cf805b9.webp" alt="img"></p>
 <p>智能行为与人类行为的关系</p>
 <p>图灵测试其实对人工智能的一种充分的等价性。 如上图所示，“所有智能行为”对应的集合和“所有人类行为”对应的集合既有交集又互有不同。在全部智能行为中有一些是人类靠自身无法做到的（比如计算出国际象棋中白棋是否必胜），但人类也是有智能的，因此只要完成两个集合的交集部分—就应该被认作是“拥有智能”的。另一方面，人类行为并不总是和智能相关。图灵测试要求机器全面模拟“所有人类行为”，其中既包括了两个集合的交集，也包括了人类的“非智能”行为。</p>
 <p>因此图灵测试是 “拥有智能”的一个有效的充分条件，也就是说，由于没有办法严格定义智能，图灵把智能测试的范围扩大了，即不一定要全部通过图灵测试才算是真正的人工智能。</p>
@@ -985,8 +984,6 @@
 <p>深度学习实现方式源于多层神经网络，把特征表示和学习合二为一，特点是放弃了可解释性，寻找关联性。简单白话一下深度学习的工作原理：一个神经元就是一个分类器，神经元模型就是不停的分类，形成规模效率和网络效率，最终高质量的特征值就奇妙的产生了。不过缺点是：<strong>神经元的参数调整依然高度依赖人的经验。</strong></p>
 <h2 id="3，其他更好的人工智能技术？"><a href="#3，其他更好的人工智能技术？" class="headerlink" title="3，其他更好的人工智能技术？"></a>3，其他更好的人工智能技术？</h2><p>现在很多网站要求输入验证码来验证登录，这里的目的是防止机器人模拟登录，比如 12306 要求你找出某一类物品，现在机器还不能很好的通过模式识别出来，但是人类可以。反过来来讲，如果让机器收集人类的这些验证码的识别结果，是否让机器学会人类的识别模式？目前已经很多公司开始了以人工的人工智能方法。当然还有更多更好的方法在不断探索中。</p>
 <h1 id="四、人工智能-AI-能取代人吗？"><a href="#四、人工智能-AI-能取代人吗？" class="headerlink" title="四、人工智能 AI 能取代人吗？"></a>四、人工智能 AI 能取代人吗？</h1><p>2016 年阿尔法狗战胜围棋世界冠军，攻破了人类智力的引以为傲的最后一道防线，一年后，阿尔法狗升级版 master 战胜了阿尔法狗第一版，并通过和自己不断对弈，以人们不可想象的速度快速的进步，最后以全胜的绝对优势打败了世界排名第一的柯洁，甚至让柯洁产生了无力感，至此人类围棋棋手已经不可能战胜以阿尔法狗为代表人工智能机器。</p>
-<p><strong>那么，人们不仅要问，人工智能会全面超过人类或取代人类吗？</strong></p>
-<p>下一篇我们来探讨下这个问题。</p>
 ]]></content>
       <categories>
         <category>图灵</category>
@@ -994,24 +991,6 @@
       </categories>
       <tags>
         <tag>人工智能</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>排序算法</title>
-    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
-<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
-<p>冒泡排序</p>
-<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
-<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
-<p>让我们实现下冒泡排序</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -1089,6 +1068,41 @@
       <tags>
         <tag>人物</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>排序算法</title>
+    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
+<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
+<p>冒泡排序</p>
+<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
+<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
+<p>让我们实现下冒泡排序</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构总结</title>
+    <url>/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript 中的数组和其他编程语言中的数组还有些不同，JavaScript 中的数组中可以存储不同类型的元素，JavaScript 中的数组长度是动态变化的</p>
+<blockquote>
+<p>百科定义: 数组（Array）是有序的元素序列。 若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按有序的形式组织起来的一种形式。 这些有序排列的同类数据元素的集合称为数组。</p>
+</blockquote>
+<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>虽然有了数组，然而在某些情况下我们更加需要一种能在添加或删除元素时进行更多的控制的数据结构，这时我们可能就需要用到栈了, 栈是一种遵从<strong>后进先出</strong>原则的有序集合，新添加或待删除的元素都保存在栈的同一端，另一端叫做栈底，新元素都靠近栈顶,旧元素都接近栈底，在现实生活中也能发现很多栈的例子餐厅里叠放的盘子，栈也被用在编程语言的遍历器和内存中保存变量，方法调用等，也被用于浏览器历史记录(浏览器的返回按钮)</p>
+<blockquote>
+<p>百科定义: 栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
+</blockquote>
+<h4 id="队列和双端队列"><a href="#队列和双端队列" class="headerlink" title="队列和双端队列"></a>队列和双端队列</h4><p>队列是一种特殊的线性表，特殊之处在于它只允许在表的前端进行删除操作，而在表的后端进行插入操作，和栈一样，队列是一种操作受限的线性表，进行插入操作的端成为队尾，进行删除操作的成为队头。</p>
+<h4 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h4><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><h4 id="字典和散列表"><a href="#字典和散列表" class="headerlink" title="字典和散列表"></a>字典和散列表</h4><h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><h4 id="二叉堆和堆排序"><a href="#二叉堆和堆排序" class="headerlink" title="二叉堆和堆排序"></a>二叉堆和堆排序</h4><h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
   </entry>
   <entry>
     <title>带你深入理解图灵机-图灵机,图灵完备</title>
@@ -1274,23 +1288,6 @@
       </tags>
   </entry>
   <entry>
-    <title>数据结构总结</title>
-    <url>/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript 中的数组和其他编程语言中的数组还有些不同，JavaScript 中的数组中可以存储不同类型的元素，JavaScript 中的数组长度是动态变化的</p>
-<blockquote>
-<p>百科定义: 数组（Array）是有序的元素序列。 若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按有序的形式组织起来的一种形式。 这些有序排列的同类数据元素的集合称为数组。</p>
-</blockquote>
-<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>虽然有了数组，然而在某些情况下我们更加需要一种能在添加或删除元素时进行更多的控制的数据结构，这时我们可能就需要用到栈了, 栈是一种遵从<strong>后进先出</strong>原则的有序集合，新添加或待删除的元素都保存在栈的同一端，另一端叫做栈底，新元素都靠近栈顶,旧元素都接近栈底，在现实生活中也能发现很多栈的例子餐厅里叠放的盘子，栈也被用在编程语言的遍历器和内存中保存变量，方法调用等，也被用于浏览器历史记录(浏览器的返回按钮)</p>
-<blockquote>
-<p>百科定义: 栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
-</blockquote>
-<h4 id="队列和双端队列"><a href="#队列和双端队列" class="headerlink" title="队列和双端队列"></a>队列和双端队列</h4><p>队列是一种特殊的线性表，特殊之处在于它只允许在表的前端进行删除操作，而在表的后端进行插入操作，和栈一样，队列是一种操作受限的线性表，进行插入操作的端成为队尾，进行删除操作的成为队头。</p>
-<h4 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h4><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><h4 id="字典和散列表"><a href="#字典和散列表" class="headerlink" title="字典和散列表"></a>字典和散列表</h4><h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><h4 id="二叉堆和堆排序"><a href="#二叉堆和堆排序" class="headerlink" title="二叉堆和堆排序"></a>二叉堆和堆排序</h4><h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4>]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-  </entry>
-  <entry>
     <title>浏览器DOM API</title>
     <url>/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/</url>
     <content><![CDATA[<p>DOM API 是最早被设计出来的一批 API，也是用途最广的 API，所以早年的技术社区，常常用 DOM 来泛指浏览器中所有的 API。不过今天这里我们要介绍的 DOM，指的就是狭义的文档对象模型。</p>
@@ -1464,6 +1461,173 @@
       </categories>
   </entry>
   <entry>
+    <title>浏览器工作流程-排版</title>
+    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/</url>
+    <content><![CDATA[<p>我们书接上文。浏览器进行到这一步，我们已经给 DOM 元素添加了用于展现的 CSS 属性，接下来，浏览器的工作就是确定每一个元素的位置了。我们的基本原则仍然不变，就是尽可能流式地处理上一步骤的输出。</p>
+<p>在构建 DOM 树和计算 CSS 属性这两个步骤，我们的产出都是一个一个的元素，但是在排版这个步骤中，有些情况下，我们就没法做到这样了。</p>
+<p>尤其是表格相关排版、Flex 排版和 Grid 排版，它们有一个显著的特点，那就是子元素之间具有关联性。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>首先我们先来介绍一些基本概念，使你可以感性地认识一下我们平常说的各种术语。</p>
+<p><strong>“排版”</strong>这个概念最初来自活字印刷，是指我们把一个一个的铅字根据文章顺序，放入板框当中的步骤，排版的意思是确定每一个字的位置。</p>
+<p>在现代浏览器中，仍然借用了这个概念，但是排版的内容更加复杂，包括文字、图片、图形、表格等等，我们把浏览器确定它们位置的过程，叫作排版。</p>
+<p>浏览器最基本的排版方案是正常流排版，它包含了顺次排布和折行等规则，这是一个跟我们提到的印刷排版类似的排版方案，也跟我们平时书写文字的方式一致，所以我们把它叫做正常流。</p>
+<p>浏览器的文字排版遵循公认的文字排版规范，文字排版是一个复杂的系统，它规定了行模型和文字在行模型中的排布。行模型规定了行顶、行底、文字区域、基线等对齐方式。（你还记得小时候写英语的英语本吗？英语本上的四条线就是一个简单的行模型。）</p>
+<p>此外，浏览器支持不同语言，因为不同语言的书写顺序不一致，所以浏览器的文本排版还支持双向文字系统。</p>
+<p>浏览器又可以支持元素和文字的混排，元素被定义为占据长方形的区域，还允许边框、边距和留白，这个就是所谓的盒模型。</p>
+<p>在正常流的基础上，浏览器还支持两类元素：绝对定位元素和浮动元素。</p>
+<ul>
+<li>绝对定位元素把自身从正常流抽出，直接由 top 和 left 等属性确定自身的位置，不参加排版计算，也不影响其它元素。绝对定位元素由 position 属性控制。</li>
+<li>浮动元素则是使得自己在正常流的位置向左或者向右移动到边界，并且占据一块排版空间。浮动元素由 float 属性控制。</li>
+</ul>
+<p>除了正常流，浏览器还支持其它排版方式，比如现在非常常用的 Flex 排版，这些排版方式由外部元素的 display 属性来控制（注意，display 同时还控制元素在正常流中属于 inline 等级还是 block 等级）。</p>
+<h3 id="正常流文字排版"><a href="#正常流文字排版" class="headerlink" title="正常流文字排版"></a>正常流文字排版</h3><p>我们会在 CSS 部分详细介绍正常流排版的行为，我们这里主要介绍浏览器中的正常流。正常流是唯一一个文字和盒混排的排版方式，我们先从文字来讲起。</p>
+<p>要想理解正常流，我们首先要回忆一下自己如何在纸上写文章。</p>
+<p>首先，纸是有固定宽度的，虽然纸有固定高度，但是我们可以通过下一页纸的方式来接续，因此我们不存在写不下的场景。</p>
+<p>我们书写文字的时候，是从左到右依次书写，每一个字跟上一个字都不重叠，文字之间有一定间距，当写满一行时，我们换到下一行去继续写。</p>
+<p>书写中文时，文字的上、下、中轴线都对齐，书写英文时，不同字母的高度不同，但是有一条基线对齐。</p>
+<p>实际上浏览器环境也很类似。但是因为浏览器支持改变排版方向，不一定是从左到右从上到下，所以我们把文字依次书写的延伸方向称为主轴或者主方向，换行延伸的方向，跟主轴垂直交叉，称为交叉轴或者交叉方向。</p>
+<p>我们一般会从某个字体文件中获取某个特定文字的相关信息。我们获取到的信息大概类似下面：</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/06/01/0619d38f00d539f7b6773e541ce6fa01.png"></p>
+<p>纵向版本:</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/c3/96/c361c7ff3a11216c139ed462b9d5f196.png"></p>
+<p>这两张图片来自著名开源字体解析库 freetype，实际上，各个库对字体的理解大同小异，我们注意一下，advance 代表每一个文字排布后在主轴上的前进距离，它跟文字的宽 / 高不相等，是字体中最重要的属性。</p>
+<p>除了字体提供的字形本身包含的信息，文字排版还受到一些 CSS 属性影响，如 line-height、letter-spacing、word-spacing 等。</p>
+<p>在正常流的文字排版中，多数元素被当作长方形盒来排版，而只有 display 为 inline 的元素，是被拆成文本来排版的（还有一种 run-in 元素，它有时作为盒，有时作为文字，不太常用，这里不详细讲了）。</p>
+<p>display 值为 inline 的元素中的文字排版时会被直接排入文字流中，inline 元素主轴方向的 margin 属性和 border 属性（例如主轴为横向时的 margin-left 和 margin-right）也会被计算进排版前进距离当中。</p>
+<p>注意，当没有强制指定文字书写方向时，在左到右文字中插入右到左向文字，会形成一个双向文字盒，反之亦然。</p>
+<p>这样，即使没有元素包裹，混合书写方向的文字也可以形成一个盒结构，我们在排版时，遇到这样的双向文字盒，会先排完盒内再排盒外。</p>
+<h3 id="正常流中的盒"><a href="#正常流中的盒" class="headerlink" title="正常流中的盒"></a>正常流中的盒</h3><p>在正常流中，display 不为 inline 的元素或者伪元素，会以盒的形式跟文字一起排版。多数 display 属性都可以分成两部分：内部的排版和是否 inline，带有 inline- 前缀的盒，被称作行内级盒。</p>
+<p>根据盒模型，一个盒具有 margin、border、padding、width/height 等属性，它在主轴方向占据的空间是由对应方向的这几个属性之和决定的，而 vertical-align 属性决定了盒在交叉轴方向的位置，同时也会影响实际行高。</p>
+<p>所以，浏览器对行的排版，一般是先行内布局，再确定行的位置，根据行的位置计算出行内盒和文字的排版位置。块级盒比较简单，它总是单独占据一整行，计算出交叉轴方向的高度即可。</p>
+<h3 id="绝对定位元素"><a href="#绝对定位元素" class="headerlink" title="绝对定位元素"></a>绝对定位元素</h3><p>position 属性为 absolute 的元素，我们需要根据它的包含块来确定位置，这是完全跟正常流无关的一种独立排版模式，逐层找到其父级的 position 非 static 元素即可。</p>
+<h3 id="浮动元素排版"><a href="#浮动元素排版" class="headerlink" title="浮动元素排版"></a>浮动元素排版</h3><p>float 元素非常特别，浏览器对 float 的处理是先排入正常流，再移动到排版宽度的最左 / 最右（这里实际上是主轴的最前和最后）。移动之后，float 元素占据了一块排版的空间，因此，在数行之内，主轴方向的排版距离发生了变化，直到交叉轴方向的尺寸超过了浮动元素的交叉轴尺寸范围，主轴排版尺寸才会恢复。float 元素排布完成后，float 元素所在的行需要重新确定位置。</p>
+<h3 id="其它的排版"><a href="#其它的排版" class="headerlink" title="其它的排版"></a>其它的排版</h3><p>CSS 的每一种排版都有一个很复杂的规定，实际实现形式也各不相同。比如如 Flex 排版，支持了 flex 属性，flex 属性将每一行排版后的剩余空间平均分配给主轴方向的 width/height 属性。浏览器支持的每一种排版方式，都是按照对应的标准来实现的。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一部分，我们以正常流为主，介绍了浏览器的排版基本概念及一些算法。这里，我主要介绍了正常流中的文字排版、正常流中的盒、绝对定位元素、浮动元素排版这几种情况。最后，我还简单介绍了一下 Flex 排版。这属于进阶版的排版方式了，你可以了解一下。</p>
+]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器工作流程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浏览器工作流程-构建DOM树</title>
+    <url>/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</url>
+    <content><![CDATA[<p>在上一篇文章中，简要介绍了浏览器的工作大致可以分为六个阶段，同时也讲完了通讯部分，浏览器使用 HTTP 协议或者 HTTPS 协议，向服务器请求页面的过程</p>
+<p>今天我们主要来看两个过程，如何解析请求回来的 HTML 代码，DOM 树又是如何被构建的</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/34/5a/34231687752c11173b7776ba5f4a0e5a.png"></p>
+<h3 id="解析代码"><a href="#解析代码" class="headerlink" title="解析代码"></a>解析代码</h3><p>我们在前面讲到了 HTTP 的构成，但是我们有一个部分没有详细讲解 ，那就是 Response 的 Body 部分，这正是因为 HTTP Response 的 body ，就要交给我们今天学习的内容区处理，</p>
+<p>HTML 的结构不算太复杂，我们日常开发需要的 90% 的词（指编译原理的术语 token，标识最小的有意义的单元）。种类大约只有标签开始，属性，标签结束，注释，CDATA 节点这几种</p>
+<p>实际上有点麻烦的是，由于 HTML 跟 SGML 的千丝万缕的联系，我们需要做不少容错处理。</p>
+<h4 id="1-词（token）是如何被拆分的"><a href="#1-词（token）是如何被拆分的" class="headerlink" title="1-词（token）是如何被拆分的"></a>1-词（token）是如何被拆分的</h4><p>首先我们来看看一个非常标准的标签会被如何拆分成词</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;a&quot;</span>&gt;</span>text text text<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果我们从最小有意义单元来定义拆分系统，第一个词（token）是什么呢？显然，作为一个词（token），整个 p 标签确实是过大了（它甚至可以嵌套）</p>
+<p>那么，只有 p 标签的开头是不是合适？，我们考虑到起始标签也会包含属性的，最小有意义单元其实应该是 “&lt;p”，所以 “&lt;p” 就是我们的第一个词（token）</p>
+<p>我们继续拆分，可以把这段代码一次拆成词（token）</p>
+<ul>
+<li>&lt;p：开始标签的开始；</li>
+<li>class=“a”：属性；</li>
+<li>&gt;：开始标签的结束；</li>
+<li>text text text：文本；</li>
+<li></p> ：标签结束。
+
+</li>
+</ul>
+<p>这是一段最简单的例子，类似的还有什么呢，现在我们可以来看看这些词（token）长成啥样子：</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/f9/84/f98444aa3ea7471d2414dd7d0f5e3a84.png"></p>
+<p>根据这样的分析，现在我们讲讲浏览器是如何用代码实现，我们设想，代码开始从 HTTP 协议收到的字符流读取字符。</p>
+<p>在接受第一个字符之前，我们完全无法判断这是哪一个词（token），不过，随着我们接受的字符越来越多，拼出其他的内容可能性就越来越少。</p>
+<p>比如假设我们接受了一个字符“ &lt; ” 我们一下子就知道这不是一个文本节点啦。</p>
+<p>之后我们再读一个字符，比如就是 x，那么我们一下子就知道这不是注释或 CDATA 了，接下来我们就一直读，直到遇到“&gt;”或者空格，这样就得到了一个完整的词（token）了。</p>
+<p>实际上，我们每读入一个字符，其实都要做一次决策，而且这些决定是跟“当前状态”有关的。在这样的条件下，浏览器工程师要想实现把字符流解析成词（token），最常见的方案就是使用状态机。</p>
+<h4 id="2-状态机"><a href="#2-状态机" class="headerlink" title="2-状态机"></a>2-状态机</h4><p>绝大多数语言的语法部分都是用状态机实现的，那么我们把部分词（token）的解析画成一个状态机看看</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/8b/b0/8b43d598bc1f83a8a1e7e8f922013ab0.png"></p>
+<p>当然了，我们这里的分析比较粗略，真正完整的 HTML 语法状态机，比我们描述的要复杂的多，有关更详细的内容，你可以参考 HTML 官方文档，HTML 官方文档规定了 80 个状态</p>
+<p>这里我们为了了解原理， 用这个简单的状态机足够说明问题了</p>
+<p>状态机的初始状态，我们仅仅区分“&lt;”和非“&lt;”；</p>
+<ul>
+<li>如果获得的是一个 非 &lt; 字符，那么可以认为进入了一个文本节点</li>
+<li>如果获得的是一个 &lt; 字符，那么进入一个标签状态</li>
+</ul>
+<p>不过当我们在标签状态时，则会面临一些可能性</p>
+<ul>
+<li>比如下一个字符是“ ! ” ，那么很可能是进入了注释节点或者 CDATA 节点。</li>
+<li>如果下一个字符是 “/ ”，那么可以确定进入了一个结束标签。</li>
+<li>如果下一个字符是字母，那么可以确定进入了一个开始标签。</li>
+<li>如果我们要完整处理各种 HTML 标准中定义的东西，那么还要考虑“ ? ”“% ”等内容。</li>
+</ul>
+<p>我们可以看到，用状态机做词法分析，其实正是把每个词的“特殊字符”逐个拆开成独立状态，然后再把所有的词的特征字符链合起来，形成一个联通图结构</p>
+<p>由于状态机设计属于编译原理的基本知识，这里我们仅作一个简要的介绍</p>
+<p>接下来就是代码实现的事情了，在 C/C++和 JavaScript 中，实现状态机的方式大同小异，我们把每个函数当作一个状态，参数是接受的字符，返回值是一个状态函数，（这里我希望再次强调下，状态机真的是一种没有办法封装的东西，所以我们永远不要试图封装一个状态机）</p>
+<p>为了方便理解和实验，我们这里用 JavaScript 来讲解，图上的 data 状态大概就像下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="function"><span class="keyword">function</span> (<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&amp;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> characterReferenceInData;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> tagOpen;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&quot;\0&quot;</span>) &#123;</span><br><span class="line">    error();</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == EOF) &#123;</span><br><span class="line">    emitToken(EOF);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> tagOpenState = <span class="function"><span class="keyword">function</span> <span class="title">tagOpenState</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> endTagOpenState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[A-Z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[a-z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c;</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;?&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bogusCommentState;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    error();</span><br><span class="line">    <span class="keyword">return</span> dataState;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//……</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码给出了状态机的两个状态示例，data 即为初始状态，tagOpenStart 是接受了个“&lt;”字符，来判断标签类型的状态</p>
+<p>这里的状态机，每一个状态是一个函数，通过 “if else”来区分下一个字符做状态迁移，这里的所谓的状态迁移，就是当前状态函数返回下一个状态函数</p>
+<p>这样，我们的状态迁移代码非常的简单：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> state = data;</span><br><span class="line"><span class="keyword">var</span> char;</span><br><span class="line"><span class="keyword">while</span> ((char = getInput())) state = state(char);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码的关键一句是“start = start(char)”，不论我们用何种方式来读取字符串流，我们都可以通过 state 来处理输入的字符流，这里用循环是一个示例，真实场景中，可能是来自 TCP 的输出流</p>
+<p>状态函数通过代码中 emitToken 函数来输出解析好的 token（词），我们只需要覆盖 emitToken，即可对指定对解析结果的处理方式</p>
+<p>词法分析器接收字符的方式很简单，就像下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//状态函数们……</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ……</span></span><br><span class="line">  <span class="keyword">var</span> state = data;</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    state = state(char);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，我们就把字符流拆成了词（token）了。</p>
+<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>接下来我们要把这些简单的词编程 DOM 树，这个过程我们是使用栈来实现的，任何语言几乎都有栈，下面我们还是用 JavaScript 来实现，JavaScript 中的栈只要用数组就好了</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLSyntaticalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> stack = [<span class="keyword">new</span> HTMLDocument()];</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">token</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">this</span>.getOutput = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> stack[<span class="number">0</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们这样来设计 HTML 的语法分析器，receiveInput 负责接收此法部分产生的词（token），通常由 emitToken 来调用</p>
+<p>在接收的同时，即开始构建 Dom 树，所以我们主要构建 DOM 树的算法就写在 receiveInput 当中，当接收完所有的输入，栈顶就是最后的的根节点，我们 DOM 树的产出就是这个 stack 的第一项</p>
+<p>为了构建 DOM 树，我们需要一个 Node 类，接下来我们所有的节点都会在这个 Node 类的实例</p>
+<p>在完全符合标准的浏览器中，不一样的 HTML 节点对应了不同的 Node 子类，我们为了简化，就不完整实现这个继承体系了，我们仅仅把 Node 分为 Element 和 Text（如果是基于类的 OOP 的话，我们还需要抽象工厂来创建对象）</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Element</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Text</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.value = value || <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前面我们的词（token）中，以下两个是需要成对匹配的：</p>
+<ul>
+<li>tag start</li>
+<li>tag end</li>
+</ul>
+<p>根据一些编译原理中常见的技巧，我们使用的栈正是用于匹配开始和结束标签的方案</p>
+<p>对于 Text 节点，我们则需要把相邻的 Text 节点组合起来，我们的做法是当词（token）入栈时，检查栈顶是否是 Text 节点，如果是的话就合并 Text 节点</p>
+<p>同样我们来看看直观的解析过程</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">maaa</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>cool<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;a&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过这个栈，我们可以构建 DOM 树</p>
+<ul>
+<li><p>栈顶元素就是当前节点；</p>
+</li>
+<li><p>遇到属性，就添加到当前节点；</p>
+</li>
+<li><p>遇到文本节点，如果当前节点是文本节点，则跟文本节点合并，否则入栈成为当前节点的子节点；</p>
+</li>
+<li><p>遇到注释节点，作为当前节点的子节点；</p>
+</li>
+<li><p>遇到 tag start 就入栈一个节点，当前节点就是这个节点的父节点；</p>
+</li>
+<li><p>遇到 tag end 就出栈一个节点（还可以检查是否匹配）。</p>
+</li>
+</ul>
+<p>这里由一个视频可以让你直观的感受到这个过程</p>
+<p>当我们的源代码完全遵循 XHTML（这是一种比较严谨的 HTML 语法）时，这是非常简单的问题，然后 HTML 具有很强的容错能力，奥妙在于当 tag end 跟栈顶的 start tag 不匹配的时候如何处理</p>
+<p>于是，这又有一个极其复杂的规则，幸好 W3C 又一次很贴心地把全部规则都整理地很好，我们只要翻译成对应的代码就好了，以下这个网站呈现了全部规则。你可以点击查看。</p>
+<ul>
+<li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction">http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction</a></li>
+</ul>
+<blockquote>
+<p>PS：<a href="https://github.com/aimergenge/toy-html-parser">https://github.com/aimergenge/toy-html-parser</a></p>
+</blockquote>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>好了，总结一下。在今天的文章中，我带你继续探索了浏览器的工作原理，我们主要研究了解析代码和构建 DOM 树两个步骤。在解析代码的环节里，我们一起详细地分析了一个词（token）被拆分的过程，并且给出了实现它所需要的一个简单的状态机。</p>
+<p>在构建 DOM 树的环节中，基本思路是使用栈来构建 DOM 树为了方便你动手实践，我用 JavaScript 实现了这一过程。</p>
+]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器工作流程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>浏览器工作流程-CSS解析</title>
     <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/</url>
     <content><![CDATA[<p>在上一节课中，我已经讲了浏览器的 DOM 构建过程，但是这个构建的 DOM，实际上信息是不全的，它只有节点和属性，不包含任何的样式信息。</p>
@@ -1536,47 +1700,57 @@
       </tags>
   </entry>
   <entry>
-    <title>浏览器工作流程-排版</title>
-    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/</url>
-    <content><![CDATA[<p>我们书接上文。浏览器进行到这一步，我们已经给 DOM 元素添加了用于展现的 CSS 属性，接下来，浏览器的工作就是确定每一个元素的位置了。我们的基本原则仍然不变，就是尽可能流式地处理上一步骤的输出。</p>
-<p>在构建 DOM 树和计算 CSS 属性这两个步骤，我们的产出都是一个一个的元素，但是在排版这个步骤中，有些情况下，我们就没法做到这样了。</p>
-<p>尤其是表格相关排版、Flex 排版和 Grid 排版，它们有一个显著的特点，那就是子元素之间具有关联性。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>首先我们先来介绍一些基本概念，使你可以感性地认识一下我们平常说的各种术语。</p>
-<p><strong>“排版”</strong>这个概念最初来自活字印刷，是指我们把一个一个的铅字根据文章顺序，放入板框当中的步骤，排版的意思是确定每一个字的位置。</p>
-<p>在现代浏览器中，仍然借用了这个概念，但是排版的内容更加复杂，包括文字、图片、图形、表格等等，我们把浏览器确定它们位置的过程，叫作排版。</p>
-<p>浏览器最基本的排版方案是正常流排版，它包含了顺次排布和折行等规则，这是一个跟我们提到的印刷排版类似的排版方案，也跟我们平时书写文字的方式一致，所以我们把它叫做正常流。</p>
-<p>浏览器的文字排版遵循公认的文字排版规范，文字排版是一个复杂的系统，它规定了行模型和文字在行模型中的排布。行模型规定了行顶、行底、文字区域、基线等对齐方式。（你还记得小时候写英语的英语本吗？英语本上的四条线就是一个简单的行模型。）</p>
-<p>此外，浏览器支持不同语言，因为不同语言的书写顺序不一致，所以浏览器的文本排版还支持双向文字系统。</p>
-<p>浏览器又可以支持元素和文字的混排，元素被定义为占据长方形的区域，还允许边框、边距和留白，这个就是所谓的盒模型。</p>
-<p>在正常流的基础上，浏览器还支持两类元素：绝对定位元素和浮动元素。</p>
-<ul>
-<li>绝对定位元素把自身从正常流抽出，直接由 top 和 left 等属性确定自身的位置，不参加排版计算，也不影响其它元素。绝对定位元素由 position 属性控制。</li>
-<li>浮动元素则是使得自己在正常流的位置向左或者向右移动到边界，并且占据一块排版空间。浮动元素由 float 属性控制。</li>
-</ul>
-<p>除了正常流，浏览器还支持其它排版方式，比如现在非常常用的 Flex 排版，这些排版方式由外部元素的 display 属性来控制（注意，display 同时还控制元素在正常流中属于 inline 等级还是 block 等级）。</p>
-<h3 id="正常流文字排版"><a href="#正常流文字排版" class="headerlink" title="正常流文字排版"></a>正常流文字排版</h3><p>我们会在 CSS 部分详细介绍正常流排版的行为，我们这里主要介绍浏览器中的正常流。正常流是唯一一个文字和盒混排的排版方式，我们先从文字来讲起。</p>
-<p>要想理解正常流，我们首先要回忆一下自己如何在纸上写文章。</p>
-<p>首先，纸是有固定宽度的，虽然纸有固定高度，但是我们可以通过下一页纸的方式来接续，因此我们不存在写不下的场景。</p>
-<p>我们书写文字的时候，是从左到右依次书写，每一个字跟上一个字都不重叠，文字之间有一定间距，当写满一行时，我们换到下一行去继续写。</p>
-<p>书写中文时，文字的上、下、中轴线都对齐，书写英文时，不同字母的高度不同，但是有一条基线对齐。</p>
-<p>实际上浏览器环境也很类似。但是因为浏览器支持改变排版方向，不一定是从左到右从上到下，所以我们把文字依次书写的延伸方向称为主轴或者主方向，换行延伸的方向，跟主轴垂直交叉，称为交叉轴或者交叉方向。</p>
-<p>我们一般会从某个字体文件中获取某个特定文字的相关信息。我们获取到的信息大概类似下面：</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/06/01/0619d38f00d539f7b6773e541ce6fa01.png"></p>
-<p>纵向版本:</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/c3/96/c361c7ff3a11216c139ed462b9d5f196.png"></p>
-<p>这两张图片来自著名开源字体解析库 freetype，实际上，各个库对字体的理解大同小异，我们注意一下，advance 代表每一个文字排布后在主轴上的前进距离，它跟文字的宽 / 高不相等，是字体中最重要的属性。</p>
-<p>除了字体提供的字形本身包含的信息，文字排版还受到一些 CSS 属性影响，如 line-height、letter-spacing、word-spacing 等。</p>
-<p>在正常流的文字排版中，多数元素被当作长方形盒来排版，而只有 display 为 inline 的元素，是被拆成文本来排版的（还有一种 run-in 元素，它有时作为盒，有时作为文字，不太常用，这里不详细讲了）。</p>
-<p>display 值为 inline 的元素中的文字排版时会被直接排入文字流中，inline 元素主轴方向的 margin 属性和 border 属性（例如主轴为横向时的 margin-left 和 margin-right）也会被计算进排版前进距离当中。</p>
-<p>注意，当没有强制指定文字书写方向时，在左到右文字中插入右到左向文字，会形成一个双向文字盒，反之亦然。</p>
-<p>这样，即使没有元素包裹，混合书写方向的文字也可以形成一个盒结构，我们在排版时，遇到这样的双向文字盒，会先排完盒内再排盒外。</p>
-<h3 id="正常流中的盒"><a href="#正常流中的盒" class="headerlink" title="正常流中的盒"></a>正常流中的盒</h3><p>在正常流中，display 不为 inline 的元素或者伪元素，会以盒的形式跟文字一起排版。多数 display 属性都可以分成两部分：内部的排版和是否 inline，带有 inline- 前缀的盒，被称作行内级盒。</p>
-<p>根据盒模型，一个盒具有 margin、border、padding、width/height 等属性，它在主轴方向占据的空间是由对应方向的这几个属性之和决定的，而 vertical-align 属性决定了盒在交叉轴方向的位置，同时也会影响实际行高。</p>
-<p>所以，浏览器对行的排版，一般是先行内布局，再确定行的位置，根据行的位置计算出行内盒和文字的排版位置。块级盒比较简单，它总是单独占据一整行，计算出交叉轴方向的高度即可。</p>
-<h3 id="绝对定位元素"><a href="#绝对定位元素" class="headerlink" title="绝对定位元素"></a>绝对定位元素</h3><p>position 属性为 absolute 的元素，我们需要根据它的包含块来确定位置，这是完全跟正常流无关的一种独立排版模式，逐层找到其父级的 position 非 static 元素即可。</p>
-<h3 id="浮动元素排版"><a href="#浮动元素排版" class="headerlink" title="浮动元素排版"></a>浮动元素排版</h3><p>float 元素非常特别，浏览器对 float 的处理是先排入正常流，再移动到排版宽度的最左 / 最右（这里实际上是主轴的最前和最后）。移动之后，float 元素占据了一块排版的空间，因此，在数行之内，主轴方向的排版距离发生了变化，直到交叉轴方向的尺寸超过了浮动元素的交叉轴尺寸范围，主轴排版尺寸才会恢复。float 元素排布完成后，float 元素所在的行需要重新确定位置。</p>
-<h3 id="其它的排版"><a href="#其它的排版" class="headerlink" title="其它的排版"></a>其它的排版</h3><p>CSS 的每一种排版都有一个很复杂的规定，实际实现形式也各不相同。比如如 Flex 排版，支持了 flex 属性，flex 属性将每一行排版后的剩余空间平均分配给主轴方向的 width/height 属性。浏览器支持的每一种排版方式，都是按照对应的标准来实现的。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一部分，我们以正常流为主，介绍了浏览器的排版基本概念及一些算法。这里，我主要介绍了正常流中的文字排版、正常流中的盒、绝对定位元素、浮动元素排版这几种情况。最后，我还简单介绍了一下 Flex 排版。这属于进阶版的排版方式了，你可以了解一下。</p>
+    <title>浏览器工作流程-渲染</title>
+    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/</url>
+    <content><![CDATA[<p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
+<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
+<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
+<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
+<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
+<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
+<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
+<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
+<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
+<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
+<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
+<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
+<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
+<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
+<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
+<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
+<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
+<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
+<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
+<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
+<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
+<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
+<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
+<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
+<p>我们来举个例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
+<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
+<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
+<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
+<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
+<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
+<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
+<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
+<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
+<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
+<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
+<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
+<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
+<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
+<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
+<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
+<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
 ]]></content>
       <categories>
         <category>浏览器</category>
@@ -1783,183 +1957,6 @@
       <categories>
         <category>TypeScript</category>
       </categories>
-  </entry>
-  <entry>
-    <title>浏览器工作流程-构建DOM树</title>
-    <url>/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</url>
-    <content><![CDATA[<p>在上一篇文章中，简要介绍了浏览器的工作大致可以分为六个阶段，同时也讲完了通讯部分，浏览器使用 HTTP 协议或者 HTTPS 协议，向服务器请求页面的过程</p>
-<p>今天我们主要来看两个过程，如何解析请求回来的 HTML 代码，DOM 树又是如何被构建的</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/34/5a/34231687752c11173b7776ba5f4a0e5a.png"></p>
-<h3 id="解析代码"><a href="#解析代码" class="headerlink" title="解析代码"></a>解析代码</h3><p>我们在前面讲到了 HTTP 的构成，但是我们有一个部分没有详细讲解 ，那就是 Response 的 Body 部分，这正是因为 HTTP Response 的 body ，就要交给我们今天学习的内容区处理，</p>
-<p>HTML 的结构不算太复杂，我们日常开发需要的 90% 的词（指编译原理的术语 token，标识最小的有意义的单元）。种类大约只有标签开始，属性，标签结束，注释，CDATA 节点这几种</p>
-<p>实际上有点麻烦的是，由于 HTML 跟 SGML 的千丝万缕的联系，我们需要做不少容错处理。</p>
-<h4 id="1-词（token）是如何被拆分的"><a href="#1-词（token）是如何被拆分的" class="headerlink" title="1-词（token）是如何被拆分的"></a>1-词（token）是如何被拆分的</h4><p>首先我们来看看一个非常标准的标签会被如何拆分成词</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;a&quot;</span>&gt;</span>text text text<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>如果我们从最小有意义单元来定义拆分系统，第一个词（token）是什么呢？显然，作为一个词（token），整个 p 标签确实是过大了（它甚至可以嵌套）</p>
-<p>那么，只有 p 标签的开头是不是合适？，我们考虑到起始标签也会包含属性的，最小有意义单元其实应该是 “&lt;p”，所以 “&lt;p” 就是我们的第一个词（token）</p>
-<p>我们继续拆分，可以把这段代码一次拆成词（token）</p>
-<ul>
-<li>&lt;p：开始标签的开始；</li>
-<li>class=“a”：属性；</li>
-<li>&gt;：开始标签的结束；</li>
-<li>text text text：文本；</li>
-<li></p> ：标签结束。
-
-</li>
-</ul>
-<p>这是一段最简单的例子，类似的还有什么呢，现在我们可以来看看这些词（token）长成啥样子：</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/f9/84/f98444aa3ea7471d2414dd7d0f5e3a84.png"></p>
-<p>根据这样的分析，现在我们讲讲浏览器是如何用代码实现，我们设想，代码开始从 HTTP 协议收到的字符流读取字符。</p>
-<p>在接受第一个字符之前，我们完全无法判断这是哪一个词（token），不过，随着我们接受的字符越来越多，拼出其他的内容可能性就越来越少。</p>
-<p>比如假设我们接受了一个字符“ &lt; ” 我们一下子就知道这不是一个文本节点啦。</p>
-<p>之后我们再读一个字符，比如就是 x，那么我们一下子就知道这不是注释或 CDATA 了，接下来我们就一直读，直到遇到“&gt;”或者空格，这样就得到了一个完整的词（token）了。</p>
-<p>实际上，我们每读入一个字符，其实都要做一次决策，而且这些决定是跟“当前状态”有关的。在这样的条件下，浏览器工程师要想实现把字符流解析成词（token），最常见的方案就是使用状态机。</p>
-<h4 id="2-状态机"><a href="#2-状态机" class="headerlink" title="2-状态机"></a>2-状态机</h4><p>绝大多数语言的语法部分都是用状态机实现的，那么我们把部分词（token）的解析画成一个状态机看看</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/8b/b0/8b43d598bc1f83a8a1e7e8f922013ab0.png"></p>
-<p>当然了，我们这里的分析比较粗略，真正完整的 HTML 语法状态机，比我们描述的要复杂的多，有关更详细的内容，你可以参考 HTML 官方文档，HTML 官方文档规定了 80 个状态</p>
-<p>这里我们为了了解原理， 用这个简单的状态机足够说明问题了</p>
-<p>状态机的初始状态，我们仅仅区分“&lt;”和非“&lt;”；</p>
-<ul>
-<li>如果获得的是一个 非 &lt; 字符，那么可以认为进入了一个文本节点</li>
-<li>如果获得的是一个 &lt; 字符，那么进入一个标签状态</li>
-</ul>
-<p>不过当我们在标签状态时，则会面临一些可能性</p>
-<ul>
-<li>比如下一个字符是“ ! ” ，那么很可能是进入了注释节点或者 CDATA 节点。</li>
-<li>如果下一个字符是 “/ ”，那么可以确定进入了一个结束标签。</li>
-<li>如果下一个字符是字母，那么可以确定进入了一个开始标签。</li>
-<li>如果我们要完整处理各种 HTML 标准中定义的东西，那么还要考虑“ ? ”“% ”等内容。</li>
-</ul>
-<p>我们可以看到，用状态机做词法分析，其实正是把每个词的“特殊字符”逐个拆开成独立状态，然后再把所有的词的特征字符链合起来，形成一个联通图结构</p>
-<p>由于状态机设计属于编译原理的基本知识，这里我们仅作一个简要的介绍</p>
-<p>接下来就是代码实现的事情了，在 C/C++和 JavaScript 中，实现状态机的方式大同小异，我们把每个函数当作一个状态，参数是接受的字符，返回值是一个状态函数，（这里我希望再次强调下，状态机真的是一种没有办法封装的东西，所以我们永远不要试图封装一个状态机）</p>
-<p>为了方便理解和实验，我们这里用 JavaScript 来讲解，图上的 data 状态大概就像下面这样</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="function"><span class="keyword">function</span> (<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&amp;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> characterReferenceInData;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> tagOpen;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&quot;\0&quot;</span>) &#123;</span><br><span class="line">    error();</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == EOF) &#123;</span><br><span class="line">    emitToken(EOF);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> tagOpenState = <span class="function"><span class="keyword">function</span> <span class="title">tagOpenState</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> endTagOpenState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[A-Z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[a-z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c;</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;?&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bogusCommentState;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    error();</span><br><span class="line">    <span class="keyword">return</span> dataState;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//……</span></span><br></pre></td></tr></table></figure>
-
-<p>这段代码给出了状态机的两个状态示例，data 即为初始状态，tagOpenStart 是接受了个“&lt;”字符，来判断标签类型的状态</p>
-<p>这里的状态机，每一个状态是一个函数，通过 “if else”来区分下一个字符做状态迁移，这里的所谓的状态迁移，就是当前状态函数返回下一个状态函数</p>
-<p>这样，我们的状态迁移代码非常的简单：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> state = data;</span><br><span class="line"><span class="keyword">var</span> char;</span><br><span class="line"><span class="keyword">while</span> ((char = getInput())) state = state(char);</span><br></pre></td></tr></table></figure>
-
-<p>这段代码的关键一句是“start = start(char)”，不论我们用何种方式来读取字符串流，我们都可以通过 state 来处理输入的字符流，这里用循环是一个示例，真实场景中，可能是来自 TCP 的输出流</p>
-<p>状态函数通过代码中 emitToken 函数来输出解析好的 token（词），我们只需要覆盖 emitToken，即可对指定对解析结果的处理方式</p>
-<p>词法分析器接收字符的方式很简单，就像下面这样</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//状态函数们……</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ……</span></span><br><span class="line">  <span class="keyword">var</span> state = data;</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    state = state(char);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>至此，我们就把字符流拆成了词（token）了。</p>
-<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>接下来我们要把这些简单的词编程 DOM 树，这个过程我们是使用栈来实现的，任何语言几乎都有栈，下面我们还是用 JavaScript 来实现，JavaScript 中的栈只要用数组就好了</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLSyntaticalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> stack = [<span class="keyword">new</span> HTMLDocument()];</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">token</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">this</span>.getOutput = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> stack[<span class="number">0</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们这样来设计 HTML 的语法分析器，receiveInput 负责接收此法部分产生的词（token），通常由 emitToken 来调用</p>
-<p>在接收的同时，即开始构建 Dom 树，所以我们主要构建 DOM 树的算法就写在 receiveInput 当中，当接收完所有的输入，栈顶就是最后的的根节点，我们 DOM 树的产出就是这个 stack 的第一项</p>
-<p>为了构建 DOM 树，我们需要一个 Node 类，接下来我们所有的节点都会在这个 Node 类的实例</p>
-<p>在完全符合标准的浏览器中，不一样的 HTML 节点对应了不同的 Node 子类，我们为了简化，就不完整实现这个继承体系了，我们仅仅把 Node 分为 Element 和 Text（如果是基于类的 OOP 的话，我们还需要抽象工厂来创建对象）</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Element</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Text</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.value = value || <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>前面我们的词（token）中，以下两个是需要成对匹配的：</p>
-<ul>
-<li>tag start</li>
-<li>tag end</li>
-</ul>
-<p>根据一些编译原理中常见的技巧，我们使用的栈正是用于匹配开始和结束标签的方案</p>
-<p>对于 Text 节点，我们则需要把相邻的 Text 节点组合起来，我们的做法是当词（token）入栈时，检查栈顶是否是 Text 节点，如果是的话就合并 Text 节点</p>
-<p>同样我们来看看直观的解析过程</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">maaa</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>cool<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;a&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>通过这个栈，我们可以构建 DOM 树</p>
-<ul>
-<li><p>栈顶元素就是当前节点；</p>
-</li>
-<li><p>遇到属性，就添加到当前节点；</p>
-</li>
-<li><p>遇到文本节点，如果当前节点是文本节点，则跟文本节点合并，否则入栈成为当前节点的子节点；</p>
-</li>
-<li><p>遇到注释节点，作为当前节点的子节点；</p>
-</li>
-<li><p>遇到 tag start 就入栈一个节点，当前节点就是这个节点的父节点；</p>
-</li>
-<li><p>遇到 tag end 就出栈一个节点（还可以检查是否匹配）。</p>
-</li>
-</ul>
-<p>这里由一个视频可以让你直观的感受到这个过程</p>
-<p>当我们的源代码完全遵循 XHTML（这是一种比较严谨的 HTML 语法）时，这是非常简单的问题，然后 HTML 具有很强的容错能力，奥妙在于当 tag end 跟栈顶的 start tag 不匹配的时候如何处理</p>
-<p>于是，这又有一个极其复杂的规则，幸好 W3C 又一次很贴心地把全部规则都整理地很好，我们只要翻译成对应的代码就好了，以下这个网站呈现了全部规则。你可以点击查看。</p>
-<ul>
-<li><a href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction">http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction</a></li>
-</ul>
-<blockquote>
-<p>PS：<a href="https://github.com/aimergenge/toy-html-parser">https://github.com/aimergenge/toy-html-parser</a></p>
-</blockquote>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>好了，总结一下。在今天的文章中，我带你继续探索了浏览器的工作原理，我们主要研究了解析代码和构建 DOM 树两个步骤。在解析代码的环节里，我们一起详细地分析了一个词（token）被拆分的过程，并且给出了实现它所需要的一个简单的状态机。</p>
-<p>在构建 DOM 树的环节中，基本思路是使用栈来构建 DOM 树为了方便你动手实践，我用 JavaScript 实现了这一过程。</p>
-]]></content>
-      <categories>
-        <category>浏览器</category>
-      </categories>
-      <tags>
-        <tag>浏览器工作流程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>浏览器工作流程-渲染</title>
-    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/</url>
-    <content><![CDATA[<p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
-<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
-<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
-<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
-<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
-<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
-<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
-<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
-<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
-<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
-<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
-<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
-<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
-<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
-<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
-<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
-<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
-<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
-<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
-<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
-<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
-<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
-<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
-<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
-<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
-<p>我们来举个例子：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
-<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
-<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
-<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
-<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
-<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
-<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
-<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
-<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
-<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
-<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
-<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
-<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
-<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
-<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
-<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
-<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
-]]></content>
-      <categories>
-        <category>浏览器</category>
-      </categories>
-      <tags>
-        <tag>浏览器工作流程</tag>
-      </tags>
   </entry>
   <entry>
     <title>贪心算法</title>
