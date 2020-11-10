@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/" class="post-title-link" itemprop="url">浏览器工作流程-排版</a>
+            <a href="/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/" class="post-title-link" itemprop="url">带你深入理解图灵机-天才所在的时代</a>
         </h2>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-11-09 15:51:17 / 修改时间：17:47:41" itemprop="dateCreated datePublished" datetime="2020-11-09T15:51:17+08:00">2020-11-09</time>
+              <time title="创建时间：2020-11-09 17:12:10 / 修改时间：17:56:59" itemprop="dateCreated datePublished" datetime="2020-11-09T17:12:10+08:00">2020-11-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -227,7 +227,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
+                  <a href="/categories/%E5%9B%BE%E7%81%B5/" itemprop="url" rel="index"><span itemprop="name">图灵</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E7%81%B5/%E7%8E%84%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">玄学</span></a>
                 </span>
             </span>
 
@@ -240,8 +244,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -256,45 +260,70 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>我们书接上文。浏览器进行到这一步，我们已经给 DOM 元素添加了用于展现的 CSS 属性，接下来，浏览器的工作就是确定每一个元素的位置了。我们的基本原则仍然不变，就是尽可能流式地处理上一步骤的输出。</p>
-<p>在构建 DOM 树和计算 CSS 属性这两个步骤，我们的产出都是一个一个的元素，但是在排版这个步骤中，有些情况下，我们就没法做到这样了。</p>
-<p>尤其是表格相关排版、Flex 排版和 Grid 排版，它们有一个显著的特点，那就是子元素之间具有关联性。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>首先我们先来介绍一些基本概念，使你可以感性地认识一下我们平常说的各种术语。</p>
-<p><strong>“排版”</strong>这个概念最初来自活字印刷，是指我们把一个一个的铅字根据文章顺序，放入板框当中的步骤，排版的意思是确定每一个字的位置。</p>
-<p>在现代浏览器中，仍然借用了这个概念，但是排版的内容更加复杂，包括文字、图片、图形、表格等等，我们把浏览器确定它们位置的过程，叫作排版。</p>
-<p>浏览器最基本的排版方案是正常流排版，它包含了顺次排布和折行等规则，这是一个跟我们提到的印刷排版类似的排版方案，也跟我们平时书写文字的方式一致，所以我们把它叫做正常流。</p>
-<p>浏览器的文字排版遵循公认的文字排版规范，文字排版是一个复杂的系统，它规定了行模型和文字在行模型中的排布。行模型规定了行顶、行底、文字区域、基线等对齐方式。（你还记得小时候写英语的英语本吗？英语本上的四条线就是一个简单的行模型。）</p>
-<p>此外，浏览器支持不同语言，因为不同语言的书写顺序不一致，所以浏览器的文本排版还支持双向文字系统。</p>
-<p>浏览器又可以支持元素和文字的混排，元素被定义为占据长方形的区域，还允许边框、边距和留白，这个就是所谓的盒模型。</p>
-<p>在正常流的基础上，浏览器还支持两类元素：绝对定位元素和浮动元素。</p>
-<ul>
-<li>绝对定位元素把自身从正常流抽出，直接由 top 和 left 等属性确定自身的位置，不参加排版计算，也不影响其它元素。绝对定位元素由 position 属性控制。</li>
-<li>浮动元素则是使得自己在正常流的位置向左或者向右移动到边界，并且占据一块排版空间。浮动元素由 float 属性控制。</li>
-</ul>
-<p>除了正常流，浏览器还支持其它排版方式，比如现在非常常用的 Flex 排版，这些排版方式由外部元素的 display 属性来控制（注意，display 同时还控制元素在正常流中属于 inline 等级还是 block 等级）。</p>
-<h3 id="正常流文字排版"><a href="#正常流文字排版" class="headerlink" title="正常流文字排版"></a>正常流文字排版</h3><p>我们会在 CSS 部分详细介绍正常流排版的行为，我们这里主要介绍浏览器中的正常流。正常流是唯一一个文字和盒混排的排版方式，我们先从文字来讲起。</p>
-<p>要想理解正常流，我们首先要回忆一下自己如何在纸上写文章。</p>
-<p>首先，纸是有固定宽度的，虽然纸有固定高度，但是我们可以通过下一页纸的方式来接续，因此我们不存在写不下的场景。</p>
-<p>我们书写文字的时候，是从左到右依次书写，每一个字跟上一个字都不重叠，文字之间有一定间距，当写满一行时，我们换到下一行去继续写。</p>
-<p>书写中文时，文字的上、下、中轴线都对齐，书写英文时，不同字母的高度不同，但是有一条基线对齐。</p>
-<p>实际上浏览器环境也很类似。但是因为浏览器支持改变排版方向，不一定是从左到右从上到下，所以我们把文字依次书写的延伸方向称为主轴或者主方向，换行延伸的方向，跟主轴垂直交叉，称为交叉轴或者交叉方向。</p>
-<p>我们一般会从某个字体文件中获取某个特定文字的相关信息。我们获取到的信息大概类似下面：</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/06/01/0619d38f00d539f7b6773e541ce6fa01.png"></p>
-<p>纵向版本:</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/c3/96/c361c7ff3a11216c139ed462b9d5f196.png"></p>
-<p>这两张图片来自著名开源字体解析库 freetype，实际上，各个库对字体的理解大同小异，我们注意一下，advance 代表每一个文字排布后在主轴上的前进距离，它跟文字的宽 / 高不相等，是字体中最重要的属性。</p>
-<p>除了字体提供的字形本身包含的信息，文字排版还受到一些 CSS 属性影响，如 line-height、letter-spacing、word-spacing 等。</p>
-<p>在正常流的文字排版中，多数元素被当作长方形盒来排版，而只有 display 为 inline 的元素，是被拆成文本来排版的（还有一种 run-in 元素，它有时作为盒，有时作为文字，不太常用，这里不详细讲了）。</p>
-<p>display 值为 inline 的元素中的文字排版时会被直接排入文字流中，inline 元素主轴方向的 margin 属性和 border 属性（例如主轴为横向时的 margin-left 和 margin-right）也会被计算进排版前进距离当中。</p>
-<p>注意，当没有强制指定文字书写方向时，在左到右文字中插入右到左向文字，会形成一个双向文字盒，反之亦然。</p>
-<p>这样，即使没有元素包裹，混合书写方向的文字也可以形成一个盒结构，我们在排版时，遇到这样的双向文字盒，会先排完盒内再排盒外。</p>
-<h3 id="正常流中的盒"><a href="#正常流中的盒" class="headerlink" title="正常流中的盒"></a>正常流中的盒</h3><p>在正常流中，display 不为 inline 的元素或者伪元素，会以盒的形式跟文字一起排版。多数 display 属性都可以分成两部分：内部的排版和是否 inline，带有 inline- 前缀的盒，被称作行内级盒。</p>
-<p>根据盒模型，一个盒具有 margin、border、padding、width/height 等属性，它在主轴方向占据的空间是由对应方向的这几个属性之和决定的，而 vertical-align 属性决定了盒在交叉轴方向的位置，同时也会影响实际行高。</p>
-<p>所以，浏览器对行的排版，一般是先行内布局，再确定行的位置，根据行的位置计算出行内盒和文字的排版位置。块级盒比较简单，它总是单独占据一整行，计算出交叉轴方向的高度即可。</p>
-<h3 id="绝对定位元素"><a href="#绝对定位元素" class="headerlink" title="绝对定位元素"></a>绝对定位元素</h3><p>position 属性为 absolute 的元素，我们需要根据它的包含块来确定位置，这是完全跟正常流无关的一种独立排版模式，逐层找到其父级的 position 非 static 元素即可。</p>
-<h3 id="浮动元素排版"><a href="#浮动元素排版" class="headerlink" title="浮动元素排版"></a>浮动元素排版</h3><p>float 元素非常特别，浏览器对 float 的处理是先排入正常流，再移动到排版宽度的最左 / 最右（这里实际上是主轴的最前和最后）。移动之后，float 元素占据了一块排版的空间，因此，在数行之内，主轴方向的排版距离发生了变化，直到交叉轴方向的尺寸超过了浮动元素的交叉轴尺寸范围，主轴排版尺寸才会恢复。float 元素排布完成后，float 元素所在的行需要重新确定位置。</p>
-<h3 id="其它的排版"><a href="#其它的排版" class="headerlink" title="其它的排版"></a>其它的排版</h3><p>CSS 的每一种排版都有一个很复杂的规定，实际实现形式也各不相同。比如如 Flex 排版，支持了 flex 属性，flex 属性将每一行排版后的剩余空间平均分配给主轴方向的 width/height 属性。浏览器支持的每一种排版方式，都是按照对应的标准来实现的。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一部分，我们以正常流为主，介绍了浏览器的排版基本概念及一些算法。这里，我主要介绍了正常流中的文字排版、正常流中的盒、绝对定位元素、浮动元素排版这几种情况。最后，我还简单介绍了一下 Flex 排版。这属于进阶版的排版方式了，你可以了解一下。</p>
+          <p>这几年由于区块链的大热，以太坊独特的 solidity 语言实现智能合约功能，<strong>图灵完备</strong>这个词走进大家的视线。</p>
+<p>没有计算机专业知识的同学其实很难理解这个词的意思，其实计算机专业的同学都没有深入理解图灵机，图灵完备，图灵测试等概念包含的内涵。为了方便理解区块链技术，理解智能合约，笔者准备分几篇文章来带大家从浅入深，一步一步带你深入理解图灵机，相信通过这几篇文章能就能够理解什么是图灵完备。</p>
+<blockquote>
+<p>大家知道任何伟大艺术的诞生背后都有迷人的时代背景，伟大的科学思想也是一样。从达芬奇到蒙拉丽莎的微笑；从牛顿到万有引力；从爱因斯坦到相对论；伟大的天才图灵和这些大师一样有同样让人着迷的时代和故事。</p>
+</blockquote>
+<h3 id="图灵的生平"><a href="#图灵的生平" class="headerlink" title="图灵的生平"></a>图灵的生平</h3><p>艾伦·麦席森·图灵（Alan Mathison Turing，1912 年 6 月 23 日－1954 年 6 月 7 日），英国数学家、逻辑学家，<strong>被称为计算机科学理论之父，人工智能之父。</strong></p>
+<p>1931 年，图灵考入剑桥大学国王学院，由于成绩优异而获得数学奖学金。</p>
+<p>1936 年 5 月，年仅 24 岁的图灵发表一篇题为《论数字计算在决断难题中的应用》的论文，论文中提出一种计算装置，后被称为<strong>“图灵机”</strong>，图灵机不是具体的计算机，而是一种计算概念、计算理论。</p>
+<p>1938 年在普林斯顿获博士学位，其论文题目为“以序数为基础的逻辑系统”，在数理逻辑研究中产生了深远的影响；同年图灵回到英国，在剑桥大学国王学院任研究员。</p>
+<p>第二次世界大战期间，1939 年图灵到英国外交部通信处从事军事工作，主要是破译敌方密码的工作。由于破译工作的需要，他参与了世界上最早的电子计算机的研制工作。他的工作取得了极好的成就，破译了德国人 Enigma 密码，于 1945 年获政府的最高奖——大英帝国荣誉勋章。</p>
+<p><img data-src="https://upload-images.jianshu.io/upload_images/10096448-17f4b1ad3b7968f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/519/format/webp" alt="img"></p>
+<p>图灵破解密码</p>
+<p>1945 年，图灵结束了在外交部的工作，他试图恢复战前在理论计算机科学方面的研究，具体研制出新的计算机来。</p>
+<p>1950 年他发表论文《计算机器与智能》（ Computing Machinery and Intelligence），为后来的人工智能科学提供了开创性的构思。提出著名的<strong>图灵测试</strong>。</p>
+<p>1950 年，1950 年 10 月，图灵发表论文《机器能思考吗》。这一划时代的作品，使图灵赢得了“人工智能之父”的桂冠。此时，人工智能也进入了实践研制阶段。随着这几年 AI 技术的不断成熟，人们越来越认识到图灵思想的深刻性：它们至今仍然是人工智能的主要思想之一。</p>
+<p>1954 年 6 月 7 日，年仅 41 岁的图灵被发现死于家中的床上，床头还放着一个被咬了一口有毒的苹果。这就是现在大名鼎鼎的苹果电脑公司 logo 的来源。</p>
+<h3 id="时代背景"><a href="#时代背景" class="headerlink" title="时代背景"></a>时代背景</h3><p>从图灵的生平中，我们知道，他出生在 20 世纪初，1912 年。 在世界国家格局上，这个时候刚刚爆发第一次世界大战（1913~1921），紧接着 1939 年至 1945 年第二次世界大战，大家知道，这两次世界大战倒逼了很多科技的发展，二战期间恰好是图灵青年时代。</p>
+<p>在科技文明发展上，由于逻辑的数学化，促使了数理逻辑学科的诞生和发展。但同时这个时期数学上发生了第三次数学危机，具体介绍在下方。图灵在剑桥读大学期间，修读了“数学基础”课程，授课人是纽曼，纽曼整个课程包含对哥德尔不完备性定理的证明和尚未解决的判定性问题。</p>
+<p>这些科技事件的背后，其实是人们在认知上，对<strong>可计算性理论</strong>的研究，图灵正是这个问题终结者。</p>
+<p>随便提一下，爱因斯坦 1905 年提出狭义相对论，1927 年年仅 15 岁的图灵为了帮助母亲理解相对论，还写过论文的摘要。</p>
+<h4 id="可计算性理论"><a href="#可计算性理论" class="headerlink" title="可计算性理论"></a>可计算性理论</h4><p>在 20 世纪以前，人们普遍认为，所有的问题类都是有算法的，人们的计算研究就是找出算法来。1900 年，当时著名的大数学家希尔伯特在世纪之交的数学家大会上给国际数学界提出了著名的 23 个数学问题。 其中第十问题是这样的：</p>
+<blockquote>
+<p>存在不存在一种有限的、机械的步骤能够判断“丢番图方程”是否存在解？</p>
+</blockquote>
+<p>“丢番图方程”指：有一个或者几个变量的整系数方程，它们的求解仅仅在整数范围内进行。 上面这个问题简单点解释是：随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解。</p>
+<p>这个问题在 1970 年，苏联一个数学家证明了其实很多数学问题，是没有答案，甚至没有答案的问题比有答案的问题还要多。</p>
+<p>这里就提出来了有限的、机械的证明步骤的问题，其实就是算法。但在当时，人们还不知道“算法”是什么。实际上，当时数学领域中已经有很多问题都是跟“算法”密切相关的，因而，科学的 “算法” 定义呼之欲出。之后到了 30 年代的时候，终于有两个人分别提出了精确定义算法的方法，一个人是图灵，一个人是丘奇。而其中图灵提出来的图灵机模型直观形象。</p>
+<p>图灵思考这个问题的方式和常人不一样，在写前面提到的论文《论可计算数及其在判定性问题上的应用》的时候，图灵在思考三个问题</p>
+<blockquote>
+<ol>
+<li>世界上是否所有的数学问题都有明确的答案？</li>
+<li>如果有明确的答案，是否可以通过有限步骤的计算得到答案？</li>
+<li>对于那些有可能在有限步骤计算出来的学习问题，是否有一种假想的机械，让它不断运行，最后机器停下来的时候，那个数学答案就计算出来了？</li>
+</ol>
+</blockquote>
+<p>图灵这样的天才考虑问题的认知是高屋建瓴的。 图灵首先考虑的是是否所有数学问题都用解，如果这个问题不解决，辛辛苦苦解题，最后发现无解，一切的努力都是浪费时间和精力。</p>
+<p>对于存在答案的数学问题，只有部分是可以在有限步骤内完成，这样把计算机的边界确定下来了。</p>
+<p>确定了边界之后，就要设计一种通用、有效、等价的机器，保证可以按照这个方法做事，最后得到答案。而图灵机就是图灵设计出来的这样的一个机器，严格来讲是一种数学模型、计算理论模型。</p>
+<p>从图灵机提出到现在已经过去了 80 多年，今天所有的计算机，包括量子计算机都没有超出图灵机的理论范畴。</p>
+<h4 id="第三次数学危机与停机问题"><a href="#第三次数学危机与停机问题" class="headerlink" title="第三次数学危机与停机问题"></a>第三次数学危机与停机问题</h4><p>第三次数学危机产生于十九世纪末和二十世纪初，当时正是数学空前兴旺发达的时期。首先是逻辑的数学化，促使了数理逻辑这门学科诞生。</p>
+<p>早在 19 世纪末的时候，康托尔为集合论做了奠基性的研究。人们发现，运用集合这个概念可以概括所有的数学，也就是说集合是一切数学的基础。然而就当这座大厦即将完工的时候，一件可怕的事情发生了，罗素提出来的罗素悖论粉碎了数学家的梦想。</p>
+<p>关于罗素悖论的一个通俗化版本是：</p>
+<blockquote>
+<p>“村子里有一个理发师，他给自己定了一条规矩：‘不给那些所有给自己理发的人理发’。 现在就要问，这个理发师该不该给自己理发？”。 如果你尝试回答这个问题就会发现奇怪的事情：这个问题本身似乎是不可能的！</p>
+</blockquote>
+<p>为什么要第三次数学危机呢？ 因为有个很重要的概念：<strong>停机问题</strong>，停机问题是逻辑数学中可计算性理论中很重要的问题，也是第三次数学危机的解决方案。 <strong>停机问题</strong>通俗地说，停机问题就是判断任意一个程序是否能在有限的时间之内结束运行的问题。该问题等价于如下的判定问题：是否存在一个程序 P，对于任意输入的程序 w，能够判断 w 会在有限时间内结束或者死循环。</p>
+<p>有人猜测图灵机模型是图灵在思考<strong>停机问题</strong>而顺带设计出来的，是很有道理的。</p>
+<h3 id="人工智能"><a href="#人工智能" class="headerlink" title="人工智能"></a>人工智能</h3><p>图灵在剑桥大学国王学院期间，研究过一本叫做《量子力学的数学基础》的新书，这本书由年轻的匈牙利数学家约翰·冯·诺依曼所著。图灵意识到计算可以用确定性的机械运动来进行表示。其实我们现在的电子计算机虽然不是我们传统意义上的机械，但是 CPU 内部的电子运动等价于机械运动。</p>
+<p>同时图灵也意识到人的思想、意识来自于量子力学中的测不准原理，这不光是微观世界，同时也是这个宇宙本身的规律。所以图灵意识到计算是确定性的，可判定的，而意识是不定的，不可计算的。</p>
+<p>在 AI 人工智能有巨大发展的今天，很多人担心计算机是否会和人一样有意识，其实图灵在 80 多年前已经考虑过这个问题了。</p>
+<p>前面提到，图灵在 1950 年写过一篇论文《计算机器与智能》，在这篇论文中，图灵测试一词被提出来：</p>
+<blockquote>
+<p>指测试者与被测试者（一个人和一台机器）隔开的情况下，通过一些装置（如键盘）向被测试者随意提问。进行多次测试后，如果有超过 30%的测试者不能确定出被测试者是人还是机器，那么这台机器就通过了测试，并被认为具有人类智能</p>
+</blockquote>
+<p>这个测试有多难？目前我们所有的人工智能都没有完成这个测试。最近 2018 年 3 月份的谷歌 I/O 大会上演示的 AI 产品，据说“部分通过图灵测试”。这个部分到底有多少也未可知。</p>
+<h3 id="总结与启示"><a href="#总结与启示" class="headerlink" title="总结与启示"></a>总结与启示</h3><p>从人类科技发展的历史上来看，19 世纪末到 20 世纪中期，是第二次工业革命和第三工业革命过渡的时期。第二次工业革命主要电和磁、内燃机的发明和使用，发展到这个时候科学家对世界的认知越来越多，越来越清晰，物理学和数学等自然科学发展迅速。这个时候的数学家发现很多现象可以用数学模型来表示，从物体的运动到星球的运动、从热能到动能的转换、从电到磁的转换等等。那问题来了是否所有的现象都可以用数学模型来表达呢？真是这个问题，让人们对数学很多根本性问题进行思考和研究。</p>
+<p>中国有句古话说：乱世出英雄。在图灵的时代，在科学历史上出了很多的科学英雄，包括爱因斯坦、冯诺依曼、图灵、哥德尔等等，一方面是时代背景使然，一方面真是他们的天赋和努力让以信息化为代表的第三次工业革命的进程大大加快了。</p>
+<p>从这些巨匠的思考问题，解决问题的方法和认知来看是超出常人的。从对<strong>可计算性理论</strong>的思考，给了我们很大的启示：</p>
+<ol>
+<li>要学会抽象，看问题高屋建瓴，学会从上帝视角看问题</li>
+<li>知道做事情的边界是非常重要的，可以指导人们在正确的范围内做事情，可以减少很多无谓的付出。</li>
+<li>做事情要有方法论，理解计算的等价性</li>
+<li>要学好数学</li>
+</ol>
 
       
     </div>
@@ -313,7 +342,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -381,20 +410,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

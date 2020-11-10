@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/" class="post-title-link" itemprop="url">浏览器DOM API</a>
+            <a href="/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/" class="post-title-link" itemprop="url">Generator函数的语法</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-09-26 21:09:19" itemprop="dateCreated datePublished" datetime="2020-09-26T21:09:19+08:00">2020-09-26</time>
+              <time title="创建时间：2020-10-13 15:10:07" itemprop="dateCreated datePublished" datetime="2020-10-13T15:10:07+08:00">2020-10-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-09 17:48:04" itemprop="dateModified" datetime="2020-11-09T17:48:04+08:00">2020-11-09</time>
+                <time title="修改时间：2020-11-09 17:49:42" itemprop="dateModified" datetime="2020-11-09T17:49:42+08:00">2020-11-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
+                  <a href="/categories/ES6/" itemprop="url" rel="index"><span itemprop="name">ES6</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,171 +262,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>DOM API 是最早被设计出来的一批 API，也是用途最广的 API，所以早年的技术社区，常常用 DOM 来泛指浏览器中所有的 API。不过今天这里我们要介绍的 DOM，指的就是狭义的文档对象模型。</p>
-<h3 id="DOM-API-介绍"><a href="#DOM-API-介绍" class="headerlink" title="DOM API 介绍"></a>DOM API 介绍</h3><p>首先我们先来讲一讲什么叫做文档对象模型，</p>
-<p>顾名思义，文档对象模型是用来描述文档，这里的文档，是特指 HTML 文档（也用于 XML 文档，但是本课不讨论 XML）。同时它又是一个“对象模型”，这意味着它使用的是对象这样的概念来描述 HTML 文档。</p>
-<p>说起 HTML 文档，这是大家最熟悉的东西了，我们都知道，HTML 文档是一个由标签嵌套而成的树形结构，因此，DOM 也是使用树形的对象模型来描述一个 HTML 文档。</p>
-<p>DOM API 大致会包含四个部分。</p>
-<ul>
-<li>节点：DOM 树形结构中的节点相关 API</li>
-<li>事件：触发和监听事件相关 API</li>
-<li>Range：操作文字范围相关 API</li>
-<li>遍历：遍历 DOM 需要的工具 API</li>
-</ul>
-<p>事件相关 API 和事件模型，我们会用单独的文章讲解，所以我们本篇文章重点会为你介绍节点和遍历相关 API。</p>
-<p>DOM API 数量很多，我希望给你提供一个理解 DOM API 设计的思路，避免单靠机械的方式去死记硬背。</p>
-<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>DOM 的树形结构所有的节点由统一的接口 Node，我们按照继承关系，介绍一下节点的类型</p>
-<p><img data-src="https://static001.geekbang.org/resource/image/6e/f6/6e278e450d8cc7122da3616fd18b9cf6.png"></p>
-<p>在这些节点中，除了 Document 和 DocumentFrangment，都有与之对应的 HTML 写法，我们可以看一下。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Element: &lt;tagname&gt;...&lt;/tagname&gt;</span><br><span class="line">Text: text</span><br><span class="line">Comment: &lt;!-- comments --&gt;</span><br><span class="line">DocumentType: &lt;!Doctype html&gt;</span><br><span class="line">ProcessingInstruction: &lt;?a 1?&gt;</span><br></pre></td></tr></table></figure>
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
+<p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
+<p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
+<p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，<code>function</code>关键字与函数名之间有一个星号；二是，函数体内部使用<code>yield</code>表达式，定义不同的内部状态（<code>yield</code>在英语里的意思就是“产出”）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
 
-<p>我们在编写 HTML 代码并且运行后，就会在内存中得到这样一棵 DOM 树，HTML 的写法会被转化成对应的文档模型，而我们则可以通过 JavaScript 等语言去访问这个文档模型。</p>
-<p>这里我们每天都需要用到，要重点掌握的是：Document、Element、Text 节点。</p>
-<p>DocumentFragment 也非常有用，它常常被用来高性能地批量添加节点。因为 Comment、DocumentType 和 ProcessingInstruction 很少需要运行时去修改和操作，所以有所了解即可。</p>
-<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>Node 是 DOM 树继承关系的根节点，它定义了 DOM 节点在 DOM 树上的操作，首先，Node 提供了一组属性，来表示它在 DOM 树中的关系，它们是：</p>
-<ul>
-<li>parentNode</li>
-<li>childNodes</li>
-<li>firstChild</li>
-<li>lastChild</li>
-<li>nextSibling</li>
-<li>previousSibling</li>
-</ul>
-<p>从命名上，我们可以很清晰地看出，这一组属性提供了前、后、父、子关系，有了这几个属性，我们可以很方便地根据相对位置获取元素。当然，Node 中也提供了操作 DOM 树的 API，主要有下面几种。</p>
-<ul>
-<li>appendChild</li>
-<li>insertBefore</li>
-<li>removeChild</li>
-<li>replaceChild</li>
-</ul>
-<p>这个命名跟上面一样，我们基本可以知道 API 的作用。这几个 API 的设计可以说是饱受诟病。其中最主要的批评是它不对称——只有 before，没有 after，而 jQuery 等框架都对其做了补充。</p>
-<p>实际上，appendChild 和 insertBefore 的这个设计，是一个“最小原则”的设计，这两个 API 是满足插入任意位置的必要 API，而 insertAfter，则可以由这两个 API 实现出来。</p>
-<p>我个人其实不太喜欢这个设计，对我而言，insertAt(pos) 更符合审美一些。当然，不论喜不喜欢，这个标准已经确定，我们还是必须要掌握它。</p>
-<p>这里从设计的角度还想要谈一点，那就是，所有这几个修改型的 API，全都是在父元素上操作的，比如我们要想实现“删除一个元素的上一个元素”，必须要先用 parentNode 获取其父元素。</p>
-<p>这样的设计是符合面向对象的基本原则的。还记得我们在 JavaScript 对象部分讲的对象基本特征吗？“拥有哪些子元素”是父元素的一种状态，所以修改状态，应该是父元素的行为。这个设计我认为是 DOM API 中好的部分。</p>
-<p>到此为止，Node 提供的 API 已经可以很方便（大概吧）地对树进行增、删、遍历等操作了。</p>
-<p>除此之外，Node 还提供了一些高级 API，我们来认识一下它们。</p>
-<ul>
-<li>compareDocumentPosition 是一个用于比较两个节点中关系的函数。</li>
-<li>contains 检查一个节点是否包含另一个节点的函数。</li>
-<li>isEqualNode 检查两个节点是否完全相同。</li>
-<li>isSameNode 检查两个节点是否是同一个节点，实际上在 JavaScript 中可以用“===”。</li>
-<li>cloneNode 复制一个节点，如果传入参数 true，则会连同子元素做深拷贝。</li>
-</ul>
-<p>DOM 标准规定了节点必须从文档的 create 方法创建出来，不能够使用原生的 JavaScript 的 new 运算。于是 document 对象有这些方法。</p>
-<ul>
-<li>createElement</li>
-<li>createTextNode</li>
-<li>createCDATASection</li>
-<li>createComment</li>
-<li>createProcessingInstruction</li>
-<li>createDocumentFragment</li>
-<li>createDocumentType</li>
-<li>上面的这些方法都是用于创建对应的节点类型。你可以自己尝试一下。</li>
-</ul>
-<h3 id="Element-与-Attribute"><a href="#Element-与-Attribute" class="headerlink" title="Element 与 Attribute"></a>Element 与 Attribute</h3><p>Node 提供了树形结构上节点相关的操作。而大部分时候，我们比较关注的是元素。Element 表示元素，它是 Node 的子类。</p>
-<p>元素对应了 HTML 中的标签，它既有子节点，又有属性。所以 Element 子类中，有一系列操作属性的方法。</p>
-<p>我们需要注意，对 DOM 而言，Attribute 和 Property 是完全不同的含义，只有特性场景下，两者才会互相关联（这里在后面我会详细讲解，今天的文章里我就不展开了）。</p>
-<p>首先，我们可以把元素的 Attribute 当作字符串来看待，这样就有以下的 API：</p>
-<ul>
-<li>getAttribute</li>
-<li>setAttribute</li>
-<li>removeAttribute</li>
-<li>hasAttribute</li>
-</ul>
-<p>如果你追求极致的性能，还可以把 Attribute 当作节点：</p>
-<ul>
-<li>getAttributeNode</li>
-<li>setAttributeNode</li>
-</ul>
-<p>此外，如果你喜欢 property 一样的访问 attribute，还可以使用 attributes 对象，</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.attributes.class = “a”</span><br><span class="line"><span class="comment">// 等效于</span></span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(“<span class="class"><span class="keyword">class</span>”, “<span class="title">a</span>”)。</span></span><br></pre></td></tr></table></figure>
+<p>上面代码定义了一个 Generator 函数<code>helloWorldGenerator</code>，它内部有两个<code>yield</code>表达式（<code>hello</code>和<code>world</code>），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
+<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
+<p>下一步，必须调用遍历器对象的<code>next</code>方法，使得指针移向下一个状态。也就是说，每次调用<code>next</code>方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个<code>yield</code>表达式（或<code>return</code>语句）为止。换言之，Generator 函数是分段执行的，<code>yield</code>表达式是暂停执行的标记，而<code>next</code>方法可以恢复执行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;hello&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;world&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;ending&#x27;, done: true &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="查找元素"><a href="#查找元素" class="headerlink" title="查找元素"></a>查找元素</h3><p>document 节点提供了查找元素的能力。比如有下面的几种。</p>
-<ul>
-<li>querySelector</li>
-<li>querySelectorAll</li>
-<li>getElementById</li>
-<li>getElementsByName</li>
-<li>getElementsByTagName</li>
-<li>getElementsByClassName</li>
-</ul>
-<p>我们需要注意，getElementById、getElementsByName、getElementsByTagName、getElementsByClassName，这几个 API 的性能高于 querySelector。</p>
-<p>而 getElementsByName、getElementsByTagName、getElementsByClassName 获取的集合并非数组，而是一个能够动态更新的集合。</p>
-<p>我们看一个例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> collection = <span class="built_in">document</span>.getElementsByClassName(<span class="string">&#x27;winter&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(collection.length);</span><br><span class="line"><span class="keyword">var</span> winter = <span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">winter.setAttribute(<span class="string">&#x27;class&#x27;</span>, <span class="string">&#x27;winter&#x27;</span>);</span><br><span class="line"><span class="built_in">document</span>.documentElement.appendChild(winter)<span class="built_in">console</span>.log(collection.length);</span><br></pre></td></tr></table></figure>
+<p>上面代码一共调用了四次<code>next</code>方法。</p>
+<p>第一次调用，Generator 函数开始执行，直到遇到第一个<code>yield</code>表达式为止。<code>next</code>方法返回一个对象，它的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>hello</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
+<p>第二次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到下一个<code>yield</code>表达式。<code>next</code>方法返回的对象的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>world</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
+<p>第三次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到<code>return</code>语句（如果没有<code>return</code>语句，就执行到函数结束）。<code>next</code>方法返回的对象的<code>value</code>属性，就是紧跟在<code>return</code>语句后面的表达式的值（如果没有<code>return</code>语句，则<code>value</code>属性的值为<code>undefined</code>），<code>done</code>属性的值<code>true</code>，表示遍历已经结束。</p>
+<p>第四次调用，此时 Generator 函数已经运行完毕，<code>next</code>方法返回对象的<code>value</code>属性为<code>undefined</code>，<code>done</code>属性为<code>true</code>。以后再调用<code>next</code>方法，返回的都是这个值。</p>
+<p>总结一下，调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的<code>next</code>方法，就会返回一个有着<code>value</code>和<code>done</code>两个属性的对象。<code>value</code>属性表示当前的内部状态的值，是<code>yield</code>表达式后面那个表达式的值；<code>done</code>属性是一个布尔值，表示是否遍历结束。</p>
+<p>ES6 没有规定，<code>function</code>关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br></pre></td></tr></table></figure>
 
-<p>在这段代码中，我们先获取了页面的 className 为 winter 的元素集合，不出意外的话，应该是空。</p>
-<p>我们通过 console.log 可以看到集合的大小为 0。之后我们添加了一个 class 为 winter 的 div，这时候我们再看集合，可以发现，集合中出现了新添加的元素。</p>
-<p>这说明浏览器内部是有高速的索引机制，来动态更新这样的集合的。所以，尽管 querySelector 系列的 API 非常强大，我们还是应该尽量使用 getElement 系列的 API。</p>
-<h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><p>前面已经提到过，通过 Node 的相关属性，我们可以用 JavaScript 遍历整个树。实际上，DOM API 中还提供了 NodeIterator 和 TreeWalker 来遍历树。</p>
-<p>比起直接用属性来遍历，NodeIterator 和 TreeWalker 提供了过滤功能，还可以把属性节点也包含在遍历之内。</p>
-<p>NodeIterator 的基本用法示例如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> iterator = <span class="built_in">document</span>.createNodeIterator(<span class="built_in">document</span>.body, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT, <span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line"><span class="keyword">var</span> node;</span><br><span class="line"><span class="keyword">while</span> ((node = iterator.nextNode())) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在<code>function</code>关键字后面。本书也采用这种写法。</p>
+<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h4><p>由于 Generator 函数返回的遍历器对象，只有调用<code>next</code>方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。<code>yield</code>表达式就是暂停标志。</p>
+<p>遍历器对象的<code>next</code>方法的运行逻辑如下。</p>
+<ol>
+<li>遇到<code>yield</code>表达式，就暂停执行后面的操作，并将紧跟在<code>yield</code>后面的那个表达式的值，作为返回的对象的<code>value</code>属性值</li>
+<li>下一次调用<code>next</code>方法时，再继续往下执行，直到遇到下一个<code>yield</code>表达式。</li>
+<li>如果没有再遇到新的<code>yield</code>表达式，就一直运行到函数结束，直到<code>return</code>语句为止，并将<code>return</code>语句后面的表达式的值，作为返回的对象的<code>value</code>属性值。</li>
+<li>如果该函数没有<code>return</code>语句，则返回的对象的<code>value</code>属性值为<code>undefined</code>。</li>
+</ol>
+<p>需要注意的是，<code>yield</code>表达式后面的表达式，只有当调用<code>next</code>方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">gen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">123</span> + <span class="number">456</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这个 API 的设计非常老派，这么讲的原因主要有两点，一是循环并没有类似“hasNext”这样的方法，而是直接以 nextNode 返回 null 来标志结束，二是第二个参数是掩码，这两个设计都是传统 C 语言里比较常见的用法。</p>
-<p>放到今天看，这个迭代器无法匹配 JavaScript 的迭代器语法，而且 JavaScript 位运算并不高效，掩码的设计就徒增复杂性了。</p>
-<p>这里请你注意一下这个例子中的处理方法，通常掩码型参数，我们都是用按位或运算来叠加。而针对这种返回 null 表示结束的迭代器，我使用了在 while 循环条件中赋值，来保证循环次数和调用 next 次数严格一致（但这样写可能违反了某些编码规范）。</p>
-<p>我们再来看一下 TreeWalker 的用法。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> walker = <span class="built_in">document</span>.createTreeWalker(<span class="built_in">document</span>.body, NodeFilter.SHOW_ELEMENT, <span class="literal">null</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">var</span> node;</span><br><span class="line"><span class="keyword">while</span>(node = walker.nextNode())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.tagName === <span class="string">&quot;p&quot;</span>)</span><br><span class="line">        node.nextSibling();</span><br><span class="line">    <span class="built_in">console</span>.log(node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>yield</code>后面的表达式<code>123 + 456</code>，不会立即求值，只会在<code>next</code>方法将指针移到这一句时，才会求值。</p>
+<p><code>yield</code>表达式与<code>return</code>语句既有相似之处，也有区别。相似之处在于，都能返回紧跟在语句后面的那个表达式的值。区别在于每次遇到<code>yield</code>，函数暂停执行，下一次再从该位置继续向后执行，而<code>return</code>语句不具备位置记忆的功能。一个函数里面，只能执行一次（或者说一个）<code>return</code>语句，但是可以执行多次（或者说多个）<code>yield</code>表达式。正常函数只能返回一个值，因为只能执行一次<code>return</code>；Generator 函数可以返回一系列的值，因为可以有任意多个<code>yield</code>。从另一个角度看，也可以说 Generator 生成了一系列的值，这也就是它的名称的来历（英语中，generator 这个词是“生成器”的意思）。</p>
+<p>Generator 函数可以不用<code>yield</code>表达式，这时就变成了一个单纯的暂缓执行函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;执行了！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> generator = f();</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  generator.next();</span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
 
-<p>比起 NodeIterator，TreeWalker 多了在 DOM 树上自由移动当前节点的能力，一般来说，这种 API 用于“跳过”某些节点，或者重复遍历某些节点。</p>
-<p>总的来说，我个人不太喜欢 TreeWalker 和 NodeIterator 这两个 API，建议需要遍历 DOM 的时候，直接使用递归和 Node 的属性。</p>
-<h3 id="Range"><a href="#Range" class="headerlink" title="Range"></a>Range</h3><p>Range API 是一个比较专业的领域，如果不做富文本编辑类的业务，不需要太深入。这里我们就仅介绍概念和给出基本用法的示例，你只要掌握即可。</p>
-<p>Range API 表示一个 HTML 上的范围，这个范围是以文字为最小单位的，所以 Range 不一定包含完整的节点，它可能是 Text 节点中的一段，也可以是头尾两个 Text 的一部分加上中间的元素。</p>
-<p>我们通过 Range API 可以比节点 API 更精确地操作 DOM 树，凡是 节点 API 能做到的，Range API 都可以做到，而且可以做到更高性能，但是 Range API 使用起来比较麻烦，所以在实际项目中，并不常用，只有做底层框架和富文本编辑对它有强需求。</p>
-<p>创建 Range 一般是通过设置它的起止来实现，我们可以看一个例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> range = <span class="keyword">new</span> Range(),</span><br><span class="line">  firstText = p.childNodes[<span class="number">1</span>],</span><br><span class="line">  secondText = em.firstChild;</span><br><span class="line">range.setStart(firstText, <span class="number">9</span>); <span class="comment">// do not forget the leading space</span></span><br><span class="line">range.setEnd(secondText, <span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+<p>上面代码中，函数<code>f</code>如果是普通函数，在为变量<code>generator</code>赋值时就会执行。但是，函数<code>f</code>是一个 Generator 函数，就变成只有调用<code>next</code>方法时，函数<code>f</code>才会执行。</p>
+<p>另外需要注意，<code>yield</code>表达式只能用在 Generator 函数里面，用在其他地方都会报错。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// SyntaxError: Unexpected number</span></span><br></pre></td></tr></table></figure>
 
-<p>此外，通过 Range 也可以从用户选中区域创建，这样的 Range 用于处理用户选中区域:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> range = <span class="built_in">document</span>.getSelection().getRangeAt(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>上面代码在一个普通函数中使用<code>yield</code>表达式，结果产生一个句法错误。</p>
+<p>下面是另外一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  a.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&#x27;number&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr))&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>更改 Range 选中区段内容的方式主要是取出和插入，分别由 extractContents 和 insertNode 来实现。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fragment = range.extractContents();</span><br><span class="line">range.insertNode(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;aaaa&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>上面代码也会产生句法错误，因为<code>forEach</code>方法的参数是一个普通函数，但是在里面使用了<code>yield</code>表达式（这个函数里面还使用了<code>yield*</code>表达式，详细介绍见后文）。一种修改方法是改用<code>for</code>循环。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> length = a.length;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = a[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1, 2, 3, 4, 5, 6</span></span><br></pre></td></tr></table></figure>
 
-<p>最后我们看一个完整的例子。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> range = <span class="keyword">new</span> Range(),</span><br><span class="line">  firstText = p.childNodes[<span class="number">1</span>],</span><br><span class="line">  secondText = em.firstChild;</span><br><span class="line">range.setStart(firstText, <span class="number">9</span>); <span class="comment">// do not forget the leading space</span></span><br><span class="line">range.setEnd(secondText, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fragment = range.extractContents();</span><br><span class="line">range.insertNode(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;aaaa&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>另外，<code>yield</code>表达式如果用在另一个表达式之中，必须放在圆括号里面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这个例子展示了如何使用 range 来取出元素和在特定位置添加新元素。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在今天的文章中，我们一起了解了 DOM API 的内容。DOM API 大致会包含 4 个部分。</p>
-<ul>
-<li>节点：DOM 树形结构中的节点相关 API。</li>
-<li>事件：触发和监听事件相关 API。</li>
-<li>Range：操作文字范围相关 API。</li>
-<li>遍历：遍历 DOM 需要的 API。</li>
-</ul>
-<p>DOM API 中还提供了 NodeIterator 和 TreeWalker 来遍历树。比起直接用属性来遍历，NodeIterator 和 TreeWalker 提供了过滤功能，还可以把属性节点也包含在遍历之内。</p>
-<p>除此之外，我们还谈到了 Range 的一些基础知识点，这里你掌握即可。</p>
-<h3 id="补充阅读：命名空间"><a href="#补充阅读：命名空间" class="headerlink" title="补充阅读：命名空间"></a>补充阅读：命名空间</h3><p>我们本课介绍的所有 API，特意忽略了命名空间。</p>
-<p>在 HTML 场景中，需要考虑命名空间的场景不多。最主要的场景是 SVG。创建元素和属性相关的 API 都有带命名空间的版本：</p>
-<ul>
-<li>document<ul>
-<li>createElementNS</li>
-<li>createAttributeNS</li>
-</ul>
-</li>
-<li>Element<ul>
-<li>getAttributeNS</li>
-<li>setAttributeNS</li>
-<li>getAttributeNodeNS</li>
-<li>setAttributeNodeNS</li>
-<li>removeAttributeNS</li>
-<li>hasAttributeNS</li>
-<li>attributes.setNamedItemNS</li>
-<li>attributes.getNamedItemNS</li>
-<li>attributes.removeNamedItemNS</li>
-</ul>
-</li>
-</ul>
-<p>若要创建 Document 或者 Doctype，也必须要考虑命名空间问题。DOM 要求从 document.implementation 来创建。</p>
-<ul>
-<li>document.implementation.createDocument</li>
-<li>document.implementation.createDocumentType</li>
-</ul>
-<p>除此之外，还提供了一个快捷方式，你也可以动手尝试一下。</p>
-<ul>
-<li>document.implementation.createHTMLDocument</li>
-</ul>
+<p><code>yield</code>表达式用作函数参数或放在赋值表达式的右边，可以不加括号。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo(<span class="keyword">yield</span> <span class="string">&quot;a&quot;</span>, <span class="keyword">yield</span> <span class="string">&quot;b&quot;</span>); <span class="comment">// OK</span></span><br><span class="line">  <span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -445,7 +333,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -513,20 +401,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

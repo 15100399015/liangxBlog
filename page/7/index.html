@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">浏览器工作流程-CSS解析</a>
+            <a href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/" class="post-title-link" itemprop="url">浏览器工作流程-渲染</a>
         </h2>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-11-09 15:11:55 / 修改时间：17:47:58" itemprop="dateCreated datePublished" datetime="2020-11-09T15:11:55+08:00">2020-11-09</time>
+              <time title="创建时间：2020-11-09 15:55:55 / 修改时间：17:47:52" itemprop="dateCreated datePublished" datetime="2020-11-09T15:55:55+08:00">2020-11-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,8 +240,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -256,67 +256,55 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在上一节课中，我已经讲了浏览器的 DOM 构建过程，但是这个构建的 DOM，实际上信息是不全的，它只有节点和属性，不包含任何的样式信息。</p>
-<p>我们这一节课就来讲讲：浏览器是如何把 CSS 规则应用到节点上，并给这棵朴素的 DOM 树添加上 CSS 属性的。</p>
-<h3 id="整体过程"><a href="#整体过程" class="headerlink" title="整体过程"></a>整体过程</h3><p>首先我们还是要感性地理解一下这个过程。</p>
-<p>首先 CSS 选择器这个名称，可能会给你带来一定的误解，觉得好像 CSS 规则是 DOM 树构建好了以后，再进行选择并给它添加样式的。实际上，这个过程并不是这样的。</p>
-<p>我们回忆一下我们在浏览器第一节课讲的内容，浏览器会尽量流式处理整个过程。我们上一节课构建 DOM 的过程是：从父到子，从先到后，一个一个节点构造，并且挂载到 DOM 树上的，那么这个过程中，我们是否能同步把 CSS 属性计算出来呢？</p>
-<p>答案是肯定的。</p>
-<p>在这个过程中，我们依次拿到上一步构造好的元素，去检查它匹配到了哪些规则，再根据规则的优先级，做覆盖和调整。所以，从这个角度看，所谓的选择器，应该被理解成“匹配器”才更合适。</p>
-<p>我在 CSS 语法部分，已经总结了选择器的各种符号，这里再把它列出来，我们回顾一下。</p>
-<ul>
-<li><code>空格</code>: 后代，选中它的子节点和所有子节点的后代节点。</li>
-<li><code>&gt;</code>: 子代，选中它的子节点。</li>
-<li><code>+</code>：直接后继选择器，选中它的下一个相邻节点。</li>
-<li><code>~</code>：后继，选中它之后所有的相邻节点。</li>
-<li><code>||</code>：列，选中表格中的一列。</li>
-</ul>
-<p>关于选择器的知识，我会在 CSS 的部分继续讲解。这里我们主要介绍浏览器是如何实现这些规则的。</p>
-<p>不知道你有没有发现，这里的选择器有个特点，那就是选择器的出现顺序，必定跟构建 DOM 树的顺序一致。这是一个 CSS 设计的原则，即保证选择器在 DOM 树构建到当前节点时，已经可以准确判断是否匹配，不需要后续节点信息。</p>
-<p>也就是说，未来也不可能会出现“父元素选择器”这种东西，因为父元素选择器要求根据当前节点的子节点，来判断当前节点是否被选中，而父节点会先于子节点构建。</p>
-<p>理解了 CSS 构建的大概过程，我们下面来看看具体的操作。</p>
-<p>首先，我们必须把 CSS 规则做一下处理。作为一门语言，CSS 需要先经过词法分析和语法分析，变成计算机能够理解的结构。</p>
-<p>这部分具体的做法属于编译原理的内容，这里就不做赘述了。我们这里假设 CSS 已经被解析成了一棵可用的抽象语法树。</p>
-<p>我们在之前的 CSS 课程中已经介绍过 compound-selector 的概念，一个 compound-selector 是检查一个元素的规则，而一个复合型选择器，则是由数个 compound-selector 通过前面讲的符号连接起来的。</p>
-<h3 id="后代选择器-“空格”"><a href="#后代选择器-“空格”" class="headerlink" title="后代选择器 “空格”"></a>后代选择器 “空格”</h3><p>我们先来分析一下后代选择器，我们来一起看一个例子：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span> <span class="selector-class">.cls</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
+<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
+<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
+<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
+<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
+<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
+<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
+<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
+<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
+<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
+<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
+<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
+<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
+<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
+<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
+<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
+<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
+<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
+<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
+<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
+<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
+<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
+<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
+<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
+<p>我们来举个例子：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>可以把一个 CSS 选择器按照 compound-selector 来拆成数段，每当满足一段条件的时候，就前进一段。</p>
-<p>比如，在上面的例子中，当我们找到了匹配 a#b 的元素时，我们才会开始检查它所有的子代是否匹配 .cls。</p>
-<p>除了前进一段的情况，我们还需要处理后退的情况，比如，我们这样一段代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>3<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
 
-<p>当遇到 时，必须使得规则 a#b .cls 回退一步，这样第三个 span 才不会被选中。后代选择器的作用范围是父节点的所有子节点，因此规则是在匹配到本标签的结束标签时回退。</p>
-<h3 id="后继选择器“-”"><a href="#后继选择器“-”" class="headerlink" title="后继选择器“ ~ ”"></a>后继选择器“ ~ ”</h3><p>接下来我们看下后继选择器，跟后代选择器不同的地方是，后继选择器只作用于一层，我们来看一个例子：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.cls</span>~* &#123;</span></span><br><span class="line"><span class="css">        <span class="selector-tag">border</span><span class="selector-pseudo">:solid</span> 1<span class="selector-tag">px</span> <span class="selector-tag">green</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        3</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>4<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>5<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这里 .cls 选中了 span 2 然后 span 3 是它的后继，但是 span 3 的子节点 span 4 并不应该被选中，而 span 5 也是它的后继，因此应该被选中。</p>
-<p>按照 DOM 树的构造顺序，4 在 3 和 5 中间，我们就没有办法像前面讲的后代选择器一样通过激活或者关闭规则来实现匹配。</p>
-<p>但是这里有个非常方便的思路，就是给选择器的激活，带上一个条件：父元素。</p>
-<p>注意，这里后继选择器，当前半段的 .cls 匹配成功时，后续 * 所匹配的所有元素的父元素都已经确定了（后继节点和当前节点父元素相同是充分必要条件）。在我们的例子中，那个 div 就是后继节点的父元素。</p>
-<h3 id="子代选择器“-gt-”"><a href="#子代选择器“-gt-”" class="headerlink" title="子代选择器“ &gt;”"></a>子代选择器“ &gt;”</h3><p>我们继续看，子代选择器是如何实现的。</p>
-<p>实际上，有了前面讲的父元素这个约束思路，我们很容易实现子代选择器。区别仅仅是拿当前节点作为父元素，还是拿当前节点的父元素作为父元素。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">div</span>&gt;<span class="selector-class">.cls</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="selector-tag">border</span><span class="selector-pseudo">:solid</span> 1<span class="selector-tag">px</span> <span class="selector-tag">green</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        3</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>4<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>5<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>我们看这段代码，当 DOM 树构造到 div 时，匹配了 CSS 规则的第一段，因为是子代选择器，我们激活后面的 .cls 选择条件，并且指定父元素必须是当前 div。于是后续的构建 DOM 树构建过程中，span 2 就被选中了。</p>
-<h3 id="直接后继选择器“-”"><a href="#直接后继选择器“-”" class="headerlink" title="直接后继选择器“ +”"></a>直接后继选择器“ +”</h3><p>直接后继选择器的实现是上述中最为简单的了，因为它只对唯一一个元素生效，所以不需要像前面几种一样反复激活和关闭规则。</p>
-<p>一个最简单的思路是，我们可以把它当作检查元素自身的选择器来处理。即我们把 #id+.cls 都当做检查某一个元素的选择器。</p>
-<p>另外的一种思路是：给后继选择器加上一个 flag，使它匹配一次后失效。你可以尝试一下，告诉我结果。</p>
-<h3 id="列选择器“-”"><a href="#列选择器“-”" class="headerlink" title="列选择器“ || ”"></a>列选择器“ || ”</h3><p>列选择器比较特别，它是专门针对表格的选择器，跟表格的模型建立相关，我们这里不详细讲了。</p>
-<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>我们不要忘记，CSS 选择器还支持逗号分隔，表示“或”的关系。这里最简单的实现是把逗号视为两条规则的一种简易写法。</p>
-<p>比如：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span>,</span><br><span class="line"><span class="selector-class">.cls</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们当作两条规则来处理：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>还有一个情况，就是选择器可能有重合，这样，我们可以使用树形结构来进行一些合并，来提高效率：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#a</span> <span class="selector-class">.cls</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#a</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#a</span> &gt; <span class="selector-tag">span</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里实际上可以把选择器构造成一棵树：</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一节我们讲解了 CSS 计算的过程。CSS 计算是把 CSS 规则应用到 DOM 树上，为 DOM 结构添加显示相关属性的过程。在这一节中，我们主要介绍了选择器的几种复合结构应该如何实现。</p>
-<p>在这一步骤之后，我们得到了一棵带有 CSS 属性的树，为我们后续打下了基础。</p>
-<p>最后留一个问题，你认为 CSS 语法解析成什么结构，最适合我们进行 CSS 计算。</p>
+<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
+<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
+<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
+<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
+<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
+<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
+<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
+<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
+<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
+<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
+<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
+<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
+<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
+<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
+<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
+<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
+<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
 
       
     </div>
@@ -335,7 +323,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -403,20 +391,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
