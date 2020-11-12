@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">持续集成与持续部署</a>
+            <a href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" class="post-title-link" itemprop="url">什么是图灵完备？</a>
         </h2>
 
         <div class="post-meta">
@@ -217,23 +217,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-11-09 14:18:20" itemprop="dateCreated datePublished" datetime="2020-11-09T14:18:20+08:00">2020-11-09</time>
+              <time title="创建时间：2020-11-09 09:27:39 / 修改时间：17:51:31" itemprop="dateCreated datePublished" datetime="2020-11-09T09:27:39+08:00">2020-11-09</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:49:15" itemprop="dateModified" datetime="2020-11-10T10:49:15+08:00">2020-11-10</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E7%A8%8B%E4%BD%93%E7%B3%BB/" itemprop="url" rel="index"><span itemprop="name">工程体系</span></a>
+                  <a href="/categories/%E5%9B%BE%E7%81%B5/" itemprop="url" rel="index"><span itemprop="name">图灵</span></a>
                 </span>
             </span>
 
@@ -246,8 +240,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,120 +256,76 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>DevOps、持续集成、持续交付、持续部署、敏捷等词语大家应该都耳熟能详了，说到底就是快速交付价值，从工程上、管理上、组织上、工具上来提高效率，打造可靠的、快速的产品（项目）交付过程。本书将围绕项目管理、自动化部署、自动化发布、自动化测试、容器云来实现持续集成、持续交付及持续部署，因为它不是一本理论图书，不打算大谈道理，我们将直接谈论持续集成、持续交付、持续部署的价值，抛出问题，说思路，讲方案，讲实际操作。希望能够帮助广大读者快速在企业落地持续集成、持续交付与持续部署。</p>
-<h3 id="CI-amp-CD-的价值"><a href="#CI-amp-CD-的价值" class="headerlink" title="CI&amp;CD 的价值"></a>CI&amp;CD 的价值</h3><ul>
-<li>持续集成（Continuous Integration，CI）是软件开发实践，在持续集成中，团队成员频繁集成它们的工作成果，一般每人每天至少集成一次，或者多次，每次集成会经过自动构建（包括静态扫描、安全扫描、自动测试等过程）的检验，以尽快发现集成错误。许多团队发现这种方法可以显著减少集成引起的问题，并可以加快团队合作软件开发的速度（以上引用自 Martin Fowler 对持续集成的定义）。</li>
-<li>持续交付（Continuous Delivery）是指频繁地将软件的新版本交付给质量团队或者用户，以供评审，如果评审通过，代码就进入生产阶段。</li>
-<li>持续部署（Continuous Deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境中。</li>
-</ul>
-<p>通过上面的定义我们不难发现，持续突出的就是一个快字，商业软件的快速落地需求推动了软件工程的发展。可持续的、快速迭代的软件过程是当今主流开发规约。尤其在互联网行业，快速响应即是生命线。从一个想法到产品落地都处在冲锋的过程中，机会稍纵即逝。响应用户反馈也是万分敏捷，早晨的反馈在当天就会上线发布，快得让用户感觉倍受重视。“快”已经成为商业竞争力。这一切都要求企业具备快速响应的能力，这正是推动持续集成、持续交付、持续部署的动力。</p>
-<p>产品或者项目的参与者应该能够深刻体会到团队协作时，工作交接（系统集成）部分最容易出问题，会消耗大量的沟通成本与时间成本，直接拖慢进度。所以，一个行之有效的项目管理过程（包括沟通管理、流程管理）在大型项目中效果明显。当前敏捷开发是主流，持续集成、持续交付与持续部署正好能够帮助高效地实施敏捷过程，促进开发、运维和质量保障（QA）部门之间的沟通、协作与整合。</p>
-<h3 id="CI-amp-CD-带来的变化"><a href="#CI-amp-CD-带来的变化" class="headerlink" title="CI&amp;CD 带来的变化"></a>CI&amp;CD 带来的变化</h3><p>通常把开发工作过程分为编码、构建、集成、测试、交付、部署几个阶段（见图 1-1），持续集成、持续交付、持续部署刚好覆盖这些阶段。从提高效率上来讲，对每个阶段的优化都可以缩短软件交付时间。持续集成、持续交付及持续部署的过程即是一个软件开发优化过程。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-958984fefb4525db84839cdc619294bf_720w.jpg"></p>
-<p>墨菲定律大家都不陌生，越是担心什么就越会发生什么；在多团队协作时，比如系统对接时，我们都会担心对接是否顺利，往往也不枉我们担心，时常我们会被集成折磨得焦头烂额。有很多团队只是担心，并没有拿出有效的措施去避免这种事情发生，以至于延长了交付时间。既然担心，我们何不及早集成，把问题先暴露出来？</p>
-<p>目前多数公司都已经使用了版本管理工具来管理源码，比如 GitLab、SVN 等版本管理工具。在版本管理这一块，公司会根据自己的实际情况来制订版本管理办法。对于持续集成来说，业内建议只维护一个源码仓库，降低版本管理的复杂度。开发人员持续提交自己的修改，自动触发编译，自动集成，自动进行自动化的测试，及早反馈集成过程中的问题，就能更好地防止出现平时不集成、集成就出问题的现象。</p>
-<p>通过自动化的持续集成，把管理流程固化；保证集成的有序性、可靠性；减少版本发布的不合规性（开发或者测试手动打包，可能一天打多个包，更新多次，测试不充分），保证版本可控，问题可追溯（至于哪个版本出现的问题，可以回溯）。</p>
-<h3 id="CI-amp-CD-实施现状"><a href="#CI-amp-CD-实施现状" class="headerlink" title="CI&amp;CD 实施现状"></a>CI&amp;CD 实施现状</h3><p>在日常生活中处处都体现着一个“快”字，互联网更是对快追求到极致。持续集成、持续交付、持续部署在互联网行业更为广泛。作者没有统计哪些公司在用，只是圈子中朋友公司都实施了持续集成，具备持续交付能力。至于持续部署就没这么广泛了，毕竟持续部署不仅仅是技术问题，还涉及管理、营运等问题。尤其是一些金融企业、大型国企，开发团队外包，测试外包，运营半外包，安全要求高，很难快速实施。多数能够在测试环境中建立起 CI&amp;CD 就已经很不错了。</p>
-<p>阿里云、腾讯云、网易蜂巢等国内云，都提供了从 GitLab 下拉代码、编译打包、单元测试、镜像制作、容器发布的功能。这个过程实际上就是持续集成、持续交付的过程，同时具有持续部署的能力。基本上，持续集成、持续交付、持续部署是一种服务能力，是云平台必须具备的能力。</p>
-<p>下面引自 2017 年 DevOps 现状调查报告。</p>
-<p>统计资料显示，DevOps 正在各个行业、各种规模的企业中落地。DevOps 团队的比例在 2014 年是 16%，在 2015 年是 19%，在 2016 年是 22%，在 2017 年已经增长到 27%，越来越多的企业和团队开始拥抱 DevOps。图 1-2 是 2017 年 DevOps 现状调查报告统计的从业分布情况。</p>
-<p>完整的报告可以从 qcloudimg 网站下载。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-b6711ac5c1f0729cf29b830bade2e49b_720w.jpg"></p>
-<p>在本书撰写过程中 2018 年 DevOps 现状调查报告也已经出来，图 1-3 是精英级执行团队使用 DevOps 后的效率。精英级执行团队在以下几个方面有着突出的表现。</p>
-<ul>
-<li>代码发布频率高 46 倍。</li>
-<li>代码从提交至发布的速度快 2555 倍。</li>
-<li>故障变更率降低 1/7。</li>
-<li>事故恢复时间快 2604 倍。</li>
-</ul>
-<p>另外，云计算持续增长（见图 1-4）。有 17%的调查者仍然没有使用云厂商的服务。AWS 最受欢迎，占比为 52%，Azure 屈居次席，占比为 34%。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-26406fab0121c4640689dd0b59cb9c4b_720w.jpg"></p>
-<h3 id="CI-amp-CD-技术栈"><a href="#CI-amp-CD-技术栈" class="headerlink" title="CI&amp;CD 技术栈"></a>CI&amp;CD 技术栈</h3><p>目前持续集成、持续交付、持续部署在开源社区都是热点，用户可以方便地利用这些开源组件来构建自己企业的持续集成、持续交付及持续部署平台。</p>
-<p>持续集成工具中以 Jenkins 使用最为广泛，由 Jenkins 来作业化持续集成过程；利用 GitLab 来管理程序版本；利用 Gerrit 来做代码审核；利用 Sonar 进行代码质量扫描；利用 JUnit 进行单元测试；利用 Docker compose 来构建镜像；利用 Docker 来部署容器；利用 Kubernetes、Rancher 等进行服务编排。图 1-5 显示了常见的 CI&amp;CD 技术栈。</p>
-<p><img data-src="https://pic2.zhimg.com/80/v2-b71a61ad92b47b87bd7be277d4a99d11_720w.jpg"></p>
-<p>后续讲解 CI&amp;CD 落地时会运用到其中的一些技术与工具。当然，基本上都运用开源工具，这也有助于企业在落地时节省费用。</p>
-<h3 id="大规模部署的烦恼"><a href="#大规模部署的烦恼" class="headerlink" title="大规模部署的烦恼"></a>大规模部署的烦恼</h3><p>对于同样的功能，在用户量不同的系统中，工作量是完全不同的，后台为性能考虑而设计的架构完全不一样。对于 CI&amp;CD 也是如此，小规模的很容易，配几个作业就可以完成工作，但对于大规模的 CI&amp;CD，一旦系统数量、实例数量上去后各种问题就都来了。下面列举几个主要的问题。</p>
+          <p>这是一篇旨在帮助理解图灵机及相关概念是什么，而非证明其正确性的回答，它包含以下内容：</p>
 <ol>
-<li><p>更新问题。更新一次要耗费大量精力，很多企业都是晚上更新，员工得通宵加班，还不能保证更新没问题，不具备快速大批量部署的能力。</p>
-</li>
-<li><p>部署包（jar 包、war 包、ear 包等）的管理问题。为了保证版本可追溯，出错后能够回滚，我们需要保存各个历史版本，而且方便下载。</p>
-</li>
-<li><p>版本的安全性。传统上以 Java 语言开发的系统多数以 jar 包、war 包、ear 包的方式发布，容易被篡改（人为修改，传输过程不完整）；通常我们用 md5 来验证完整性，但包与 md5 对应关系的管理并没有系统化，往往在出问题后人工进行 md5 验证。</p>
-</li>
-<li><p>主机管理问题。系统部署到哪些机器上需要进行主机管理？在部署时人工选择部署到哪台主机显然不是一种明智的方式，能否自动进行调度？同时，不会产生有些主机性能堪忧、有些主机空闲导致的负载不均情况。</p>
-</li>
-<li><p>端口管理问题，在部署 Java 项目时我们并不建议设置太多的 JVM 内存，因此一台主机上往往能够部署多个应用实例，同一台机器上多个实例的开放端口就必须不一致，于是端口又成了需要管理的资源。有人会说可以选用虚拟机，一台虚拟机上只部署一个实例。当然，这也是可以的。实际上，多数企业也是这么做的。这种做法也有弊端，虚拟机虽然帮助做了隔离，但会损失一些主机性能；虚拟机要使用内网 IP，这样 IP 又成了稀有资源，当部署多个实例时 IP 会不够用。</p>
-</li>
-<li><p>负载均衡管理问题。不管是在主机上部署多个实例，还是利用虚拟机来部署多个实例，在做集群时，都会通过代理（Nginx、Apache、LVS……）软件来做负载均衡，因此我们需要把各实例的访问地址配置到负载器的配置文件中。实例数少的时候手工配置还可以接受，多了就没法手工配置了。当然，方法也会有，比如用 Etcd+Confd+Nginx（HAProxy）来做服务发现，我们需要自己部署一套工具，并进行维护，复杂的框架提高了对运维人员的要求。</p>
-</li>
-<li><p>服务伸缩问题。当服务访问量上去后，要能够具备快速扩充的能力；当访问量下去后，要能够具备缩小服务规模的能力，收放自如。这种弹性的服务能力显然是通过工具来完成的，手动完成是不可能的。</p>
-</li>
-<li><p>IP 管理问题。当大规模部署后，IP 资源会成为稀有资源，如何用更少的 IP 来部署更多的服务？IP 的分配及管理显然不能人工完成，那样效率太过低下，这就需要一个 IP 管理工具。</p>
-</li>
+<li>什么是图灵机</li>
+<li>图灵机可以解决什么问题</li>
+<li>什么是图灵完备</li>
+<li>直观理解图灵完备——Brainfuck 语言</li>
 </ol>
-<p>如果有一个系统能够一站式解决以上问题，那真是太完美了。因为没有这样的系统，所以很多公司开发了他们的运维平台，专门用来解决大规模部署问题。但对于中小公司来说，技术与人力投入往往受限，没有这个能力、精力或者财力去建立一个智能的运维平台。但是我们可以利用开源工具、开源技术来搭建一个相对完善的持续集成、持续部署体系。</p>
-<h3 id="实施云平台化"><a href="#实施云平台化" class="headerlink" title="实施云平台化"></a>实施云平台化</h3><p>虚拟化、云平台化为大规模部署提供了方便，尤其是在硬件资源管理及网络管理方面。互联网的火热更是推动了云的快速发展，基本上各大互联网企业都已经完成了云平台化，生产力也在不断提升。以 Docker 为代表的容器化技术出现后，云变得更灵活，容器化已经成为大潮，Docker 也占据了容器市场的绝对份额。容器部署方式能够满足快速大批量部署的要求，充分利用物理机器资源。以 Docker 为例，Docker 容器技术让应用一次构建，到处（物理机、虚拟机、公有云、私有云、Windows 系统、Linux 系统等）可运行，加快了本地开发和构建，实现了快速交付和部署；同时还可以在操作系统层面提供资源隔离服务。</p>
-<p>为了提高服务水平，企业服务需要能够快速水平扩展，在系统设计层面也大举采用 SOA 框架，这种框架天生适合使用容器大规模部署。当然，也存在一些问题，比如管理大量的服务实例成为一个挑战，运维、监控、问题分析等变得复杂。那么如何管理这些容器呢？于是就产生了大量的容器管理工具，支持 Docker 容器管理的工具使用得比较广的有 Swarm、Mesos、Kubernetes、Rancher 等工具。这些工具能够帮我们方便管理容器，虽然有一些问题的解决方式并不完美，但这也给运维开发、测试开发提供了更多的想象空间与工作机会。目前容器管理工具 Kubernetes 影响最大，但 Kubernetes 的学习与运维成本相对较高，需要专业人士的支持。目前国内大型互联网公司基本都基于 Kubernetes 来管理大量容器，包括 BAT、京东等企业。腾讯的蓝鲸（DevOps）也基于 Kubernetes，已经开始市场化；淘宝的云效也是与蓝鲸同类型的产品。</p>
-<p>对于中小型企业来说，上 Kubernetes 显得有点操之过急，需要有技术储备与维护团队，学习成本相对也会高一点，因此应该选择简单的、快速能够落地的、能够满足企业要求的、有一定市场的工具。当然，最好还是开源的，社区也支持的。所以我们选择 Rancher，据说早期云效也是整合 Rancher 的，作者也在基于 Rancher 做整合，利用 Rancher 实现容器的管理，利用 Jenkins 构建，利用 GitLab 实现源码管理，再加上静态扫描、自动化测试、性能测试、日志管理等功能，整合成 DevOps，足够运行、管理上千个实例级别的容器实例。实际上，拥有 DevOps 并且已经容器化，就相当于已经拥有一个相对智能化的私有云平台（不是真正意义上的云，并没有对物理资源进行管理，抽象成服务）。图 1-6 是作者早期开发的 DevOps 静态架构。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-d0bd916daf8680bb7b549a67dfc6752f_720w.jpg"></p>
-<p>此平台类似于一个私有云平台，基本涵盖了系统的生命周期：编译、打包、发布、测试、上线、运维、下线。同时把硬件资源管理起来，这些硬件对用户透明。平台主要分 3 层。</p>
-<ul>
-<li>基础组件层，提供了存储、网络与运算功能。对于上层来说，硬件只是一个服务而已。</li>
-<li>服务组件层，提供了运维与监控功能。对于大规模系统营运来说，系统监控、问题诊断分析变得复杂，必须在系统层面给予帮助，结合平台能力，让用户分析问题变得简单。那种从服务器上看日志的老旧方式一去不复返了。</li>
-<li>DevOps 用户层，直接面向运维人员，做到持续集成、持续交付、持续部署，在平台中完成各种测试。支持多种形式的发布，减少上线风险。</li>
-</ul>
-<p>图 1-7 是上述平台用到的技术栈。下面对用到的部分工具进行简单说明。</p>
-<p><img data-src="https://pic2.zhimg.com/80/v2-04844cd0f7bc996f21043a601acfb1f1_720w.jpg"></p>
-<ul>
-<li>Rancher：一个开源的企业级容器管理平台。通过 Rancher，企业再也不必自己使用一系列的开源软件去从头搭建容器服务平台。Rancher 提供了在生产环境中使用的管理 Docker 和 Kubernetes 的全栈化容器部署与管理平台。</li>
-<li>Jenkins：用于构建管理，定义管理工作过程。</li>
-<li>Docker compose：一种定义编排容器的工具，以 YAML 或者 XML 的格式展示编排内容。</li>
-<li>Maven：源码编译工具。</li>
-<li>GitLab：源码管理工具。</li>
-<li>Gerrit：代码审核工具。</li>
-<li>Sonar：代码静态扫描工具。</li>
-<li>robot：自动化测试工具。</li>
-<li>Ceph：分布式存储产品。</li>
-<li>Spring Boot：DevOps 集成开发技术框架。</li>
-<li>React：门户开发框架。</li>
-<li>Redux：门户开发框架。</li>
-<li>MySQL：数据库。</li>
-<li>MyBatis：ORM 框架。</li>
-<li>Kibana、Logstash、Elastic：用于统一进行日志管理、日志存储、日志分析。</li>
-</ul>
-<p>本书讲到的 CI&amp;CD 刚好是这个 DevOps 的一个子集，我们将围绕上述架构及技术栈展开，</p>
-<p>本书不仅讲解如何实现，还会结合实例展示如何落地。这些对于大多数中小型企业来说已经足够支撑业务。企业给 CI&amp;CD 加上 Web 版本的门户、集中的账户管理体系以及运维监控体系，即可打造一个智能的 DevOps 平台。</p>
-<p>图 1-8 是 CI&amp;CD 流程，后面的实例也将围绕这个流程。</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-ce251210246218a21194dba51d686f82_720w.jpg"></p>
-<p>下面先简单介绍该流程。</p>
+<hr>
+<h3 id="什么是图灵机"><a href="#什么是图灵机" class="headerlink" title="什么是图灵机"></a>什么是图灵机</h3><p>图灵机（Turing Machine）是图灵在 1936 年发表的 “On Computable Numbers, with an Application to the Entscheidungsproblem”（《论可计算数及其在判定性问题上的应用》）中提出的 <strong>数学模型</strong>。既然是数学模型，它就并非一个实体概念，而是架空的一个想法。在书中图灵描述了它是什么，并且证明了，只要图灵机可以被实现，就可以用来解决任何可计算问题</p>
+<p>图灵机的结构包括以下几个部分：</p>
 <ol>
-<li>程序员提交代码。</li>
-<li>Gerrit 做代码审核，通过提交到 GitLab，能通过邮件通知相关人员。</li>
-<li>Sonar 做代码静态扫描，并把结果通知相关人员。</li>
-<li>在 GitLab 中贴标签（通过 WebHook 触发 Jenkins 作业）或者手动在 Jenkins 中触发作业，Maven 开始下拉代码进行编译，然后进行单元测试和打包。</li>
-<li>打包完成后利用 Docker cli 构建镜像。</li>
-<li>把镜像上传到镜像仓库中。</li>
-<li>Jenkins 作业触发 Rancher 在测试环境中启动容器，首先下拉镜像，然后根据配置启动容器。</li>
-<li>Rancher 自动或者按规则调度容器在哪台机器上运行。</li>
-<li>Rancher 负责容器生命周期管理（启动、监控、健康检查、扩展等）。</li>
-<li>进行自动化测试。</li>
-<li>测试通过后，Jenkins 触发 Rancher 在生产环境中启动或者更新测试通过的服务，当然，也可以手动在 Rancher 中进行发布，当实例增加时只需要填写实例数量即可快速扩展，在发布时可以支持灰度发布、蓝绿发布等个性化的发布需求。</li>
+<li>一条无限长的纸带（tape），纸带被分成一个个相邻的格子（square），每个格子都可以写上至多一个字符（symbol）。</li>
+<li>一个字符表（alphabet），即字符的集合，它包含纸带上可能出现的所有字符。其中包含一个特殊的空白字符（blank），意思是此格子没有任何字符。</li>
+<li>一个读写头（head），可理解为指向其中一个格子的指针。它可以读取/擦除/写入当前格子的内容，此外也可以每次向左/右移动一个格子。</li>
+<li>一个状态寄存器（state register），它追踪着每一步运算过程中，整个机器所处的状态（运行/终止）。当这个状态从运行变为终止，则运算结束，机器停机并交回控制权。如果你了解有限状态机，它便对应着有限状态机里的状态。</li>
+<li>一个有限的指令集（instructions table），它记录着读写头在特定情况下应该执行的行为。可以想象读写头随身有一本操作指南，里面记录着很多条类似于“当你身处编号 53 的格子并看到其内容为 0 时，擦除，改写为 1，并向右移一格。此外，令下一状态为运行。”这样的命令。其实某种意义上，这个指令集就对应着程序员所写下的程序了。</li>
 </ol>
-<p>注意：</p>
-<ol>
-<li><p>我们一直不加上云平台这个名称，是因为云平台的定义太广，我们并没有产品接入功能，比如提供数据存储服务、缓存服务，以及提供大数据运算能力。</p>
-</li>
-<li><p>当然，我们也具备云要提供的很多服务，所以在把下面要讲的一套东西落地后，也可以冠以云平台之名，其他的功能可以慢慢补上来。“欲立新功，行之有名；立人之先，憨享其成。”</p>
-</li>
-</ol>
-<p>由于要用的工具比较多，这些工具多由外国人开发，译过来叫法比较多，因此为了方便讲述，下面介绍术语。</p>
+<p><img data-src="https://pic1.zhimg.com/80/v2-6d57f9001041416d43e886f14fd43f84_720w.jpg?source=1940ef5c"></p>
+<p>在计算开始前，纸带可以是完全空白，也可以在某些格子里预先就有写上部分字符作为输入。运算开始时，读写头从某一位置开始，严格按照此刻的配置（configuration），即：</p>
 <ul>
-<li>服务：完成某一功能的程序。</li>
-<li>服务实例：程序部署单元，比如一个订单程序由 Tomcat 启动，一个这样的部署单元（一个 JVM 实例）称为一个服务实例。</li>
-<li>容器：如 Docker 容器。</li>
-<li>容器实例：镜像的运行态叫容器实例，如果运行一个 Nginx 镜像，那么这就是一个容器实例，我们利用镜像运行两个 Nginx，那么实例数为 2；这些实例称为容器实例，一定语境下直接称为实例。</li>
+<li>当前所处位置</li>
+<li>当前格子内容</li>
 </ul>
-<h3 id="本章小结"><a href="#本章小结" class="headerlink" title="本章小结"></a>本章小结</h3><p>本章简单叙述了进行 CI&amp;CD 的价值，以及通过 CI&amp;CD 的实施能够帮我们解决什么问题。结合当前的 CI&amp;CD 技术栈，我们知道要朝哪个方向去发力建立自己的私有云平台。利用当前的开源技术实现 CI&amp;CD，运行自己的私有云平台，加速企业的系统集成效率，缩短部署时间，提高成功率。</p>
+<p>来一步步的对照着指令集去进行操作，直到状态变为停止，运算结束。而后纸带上留下的信息，即字符的序列（比如类似“…011001…”）便作为输出，由人来解码为自然语言。</p>
+<p>要重申一下，以上只是图灵机模型的内容，而非具体的实现。所谓的纸带和读写头都只是图灵提出的抽象概念。为便于理解打一个比方。算盘虽然不是图灵机（因为它没有无限长的纸带，即无限的存储空间），但它的行为与图灵机一致。每一串算珠都是纸带上的一格，一串算珠上展示的数字便记录着当前格中的字符（可以是空白，可以是 12345 ）。人类的手即是读写头，可以更改每串算珠的状态。算盘的运行遵循人脑中的算法，当算法结束，算盘停机。</p>
+<hr>
+<h3 id="图灵机可以解决什么问题"><a href="#图灵机可以解决什么问题" class="headerlink" title="图灵机可以解决什么问题"></a>图灵机可以解决什么问题</h3><p>在文章中，图灵所做的事是证明了， <strong>假设</strong>上述模型里所说的功能都能被以某种形式物理实现，<strong>那么</strong>任意可计算问题都可以被解决。这里所说的可计算问题，涉及到计算理论（Computation Theory）的概念。这个领域的概念很繁杂，先简单梳理一下。在计算机领域，或者说自动机领域，我们研究的一切问题都是计算问题（Computational Problem）。它泛指一切与计算相关的问题。</p>
+<p>计算问题的一些举例：</p>
+<ul>
+<li>给定一个正整数 n，判断它是否是质数</li>
+<li>给定一个 01 序列，把它们按位取反</li>
+<li>给定一个字符串，判断某个字符是否存在，及查找存在位置</li>
+<li>给定一个逻辑蕴含的命题，求它的逆否命题</li>
+</ul>
+<p>非计算问题的例子：</p>
+<ul>
+<li>今晚吃什么</li>
+<li>为什么太阳从东边升起</li>
+</ul>
+<p>计算问题有的可以解决，有的不可解决。这就引出了计算问题的可计算性（Computability）。它可以被理解为“是否存在一个算法，能解决在任何输入下的此计算问题”。如上面的问题 1，我们当然可以找到一个算法来解决判断任意正整数 n 是否为质数的问题（比如从 2 遍历到 n-1，看 n 是否可以整除它）。所以，问题 1 就是可计算的。</p>
+<p>也有一些不可计算的计算问题，比如著名的停机问题（Halting Problem）。它的表述是这样的：给定一段程序的描述和该程序的一个有效输入，运行此程序，那么程序最终是会终止，还是会死循环下去？</p>
+<p>这个问题很绕人，有点像那个著名的理发师悖论，但它确实是一个计算问题。更具体的，它是一个不可判定问题（Undecidable Problem）。即不存在一个<strong>通用</strong>算法，可以在任意输入下解决此问题。图灵在文章里很优雅的用反证法推翻了假设“假设有这么一个算法可以解决任何停机问题”，从而证明了这样的算法并不存在。具体证明过程网上的资料非常丰富，我就不再花篇幅了。</p>
+<p>回到这一节的主题。简而言之，对于一个问题，对于任意输入，只要人类可以保证算出结果（不管花多少时间），那么图灵机就可以保证算出结果（不管花多少时间）。</p>
+<hr>
+<h3 id="什么是图灵完备"><a href="#什么是图灵完备" class="headerlink" title="什么是图灵完备"></a>什么是图灵完备</h3><p>图灵完备性（Turing Completeness）是针对一套数据操作规则而言的概念。数据操作规则可以是一门编程语言，也可以是计算机里具体实现了的指令集。当这套规则可以实现图灵机模型里的全部功能时，就称它具有图灵完备性。直白一点说，图灵完备性就是我给你一工具箱的东西，包括无限内存、if/else 控制流、while 循环……那么你现在图灵完备了吗？</p>
+<p>概念本身倒是非常直观，但整件事似乎还是让人云里雾里。我曾经一直不懂的就是为什么图灵给出的那个命题是正确的。换句话说，凭什么有了纸带以及其他的那一套东西，就可以自信解决任意可计算问题呢？尽管我不能通读他的那篇论文里的证明，但是通过一门叫做 Brainfuck 的编程语言，还是可以获得一些直觉。</p>
+<h3 id="直观理解图灵完备——Brainfuck-语言"><a href="#直观理解图灵完备——Brainfuck-语言" class="headerlink" title="直观理解图灵完备——Brainfuck 语言"></a>直观理解图灵完备——Brainfuck 语言</h3><p>如今主流的编程语言（C++，Java，Python，以及等等等等）都是图灵完备的语言。关于语言优劣之争也只是在其封装、优化等方面，以及因为这些区别而产生的“不同语言适用于不同情况”的争执。如果我们回到最底层，就会发现它们可以实现的功能其实完全一样，并且本质上就是一个图灵机。</p>
+<p>在 1993 年，Urban Müller 发明了 Brainfuck 语言。这门语言可以说是编程语言界的 helloworld 了——它一共只含有 8 个有效字符，每个有效字符就是一条指令。语言虽然极致轻量，它却是一门图灵完备的编程语言。如果能理解它的工作原理，那么对于理解图灵机是有很大帮助的。</p>
+<p>先贴上一段 BF 的代码，体验一下它的画风：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">++++++++[&gt;++++[&gt;++&gt;+++&gt;+++&gt;+&lt;&lt;&lt;&lt;-]&gt;+&gt;+&gt;-&gt;&gt;+[&lt;]&lt;-]&gt;&gt;.&gt;---.+++++++..+++.&gt;&gt;.&lt;-.&lt;.+++</span><br><span class="line">.------.--------.&gt;&gt;+.&gt;++.</span><br></pre></td></tr></table></figure>
+
+<p>这个程序编译运行后，控制台打印 “Hello World!”。</p>
+<p>BF 的工作机制与图灵机高度一致。首先它存储数据的方式是一个不限长的一维整数数组，里面的数值全部初始化为 0。此外，有一数据指针，每一时刻都指向数组的某一任意元素。指针可以向左/右移动，也可以读取/修改当前值。</p>
+<p>语言里的 8 个有效字符分别是：</p>
+<ul>
+<li><code>&gt;</code>：指针向右移动一格</li>
+<li><code>&lt;</code>：指针向左移动一格</li>
+<li><code>+</code>：使指针当前格数值加一</li>
+<li><code>-</code>：使指针当前格数值减一</li>
+<li><code>.</code>：把当前格数值按 ASCII 表输出到终端</li>
+<li><code>,</code>：从终端接受一 byte 的数据，存储其 ASCII 数值到当前格</li>
+<li><code>[</code>：当指针当前值为 0 时，程序跳转至与之对应的 <code>]</code> 之后；否则程序正常执行</li>
+<li><code>]</code>：程序跳转回与之对应的 <code>[</code> 处</li>
+</ul>
+<p>有了这些工具，我们可以很快做出一个计算乘法的程序。因为 ASCII 表中 ‘A’ 对应的值为 65，可以使用 5 * 13 算出 65 并输出得到字符 ‘A’。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+++++</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">&gt;+++++++++++++</span><br><span class="line">&lt;-</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">&gt;.</span><br></pre></td></tr></table></figure>
+
+<p>把指针初始处的格子命名为 cell 0，cell 0 右边的那个格子命名为 cell 1。那么第一句将其递增 5 次变为 5。然后，循环执行“右移指针，递增 13 次， 左移指针，递减 1 次”。当 cell 0 的值最终被递减为 0 的时候，循环结束。此时 cell 1 的值执行了 5 次“递增 13 次”的操作，即 65。指针右移至 cell 1，输出此格子，则在终端会看到 ‘A’。</p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-6dc2cf6ed68844fa4fdc8a555dba3576_720w.jpg?source=1940ef5c"></p>
+<p>我写这个例子的目的是演示只用图灵机的模型，就可以确实计算出乘法的结果。那么自然更加复杂的计算也可以被拆解成图灵机操作（尽管可能非常琐碎）。此外，这个语言因为简洁，也是第一次练习写编译器的一个非常好的选择。</p>
 
       
     </div>
@@ -394,7 +344,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -462,7 +412,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

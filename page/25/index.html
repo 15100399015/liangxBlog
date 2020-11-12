@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/" class="post-title-link" itemprop="url">Generator函数的语法</a>
+            <a href="/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/" class="post-title-link" itemprop="url">浏览器工作流程-构建DOM树</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-10-13 15:10:07" itemprop="dateCreated datePublished" datetime="2020-10-13T15:10:07+08:00">2020-10-13</time>
+              <time title="创建时间：2020-09-27 15:52:32" itemprop="dateCreated datePublished" datetime="2020-09-27T15:52:32+08:00">2020-09-27</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-09 17:49:42" itemprop="dateModified" datetime="2020-11-09T17:49:42+08:00">2020-11-09</time>
+                <time title="修改时间：2020-11-09 17:47:35" itemprop="dateModified" datetime="2020-11-09T17:47:35+08:00">2020-11-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ES6/" itemprop="url" rel="index"><span itemprop="name">ES6</span></a>
+                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%9E%84%E5%BB%BADOM%E6%A0%91/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,59 +262,112 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
-<p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
-<p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
-<p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，<code>function</code>关键字与函数名之间有一个星号；二是，函数体内部使用<code>yield</code>表达式，定义不同的内部状态（<code>yield</code>在英语里的意思就是“产出”）。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
+          <p>在上一篇文章中，简要介绍了浏览器的工作大致可以分为六个阶段，同时也讲完了通讯部分，浏览器使用 HTTP 协议或者 HTTPS 协议，向服务器请求页面的过程</p>
+<p>今天我们主要来看两个过程，如何解析请求回来的 HTML 代码，DOM 树又是如何被构建的</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/34/5a/34231687752c11173b7776ba5f4a0e5a.png"></p>
+<h3 id="解析代码"><a href="#解析代码" class="headerlink" title="解析代码"></a>解析代码</h3><p>我们在前面讲到了 HTTP 的构成，但是我们有一个部分没有详细讲解 ，那就是 Response 的 Body 部分，这正是因为 HTTP Response 的 body ，就要交给我们今天学习的内容区处理，</p>
+<p>HTML 的结构不算太复杂，我们日常开发需要的 90% 的词（指编译原理的术语 token，标识最小的有意义的单元）。种类大约只有标签开始，属性，标签结束，注释，CDATA 节点这几种</p>
+<p>实际上有点麻烦的是，由于 HTML 跟 SGML 的千丝万缕的联系，我们需要做不少容错处理。</p>
+<h4 id="1-词（token）是如何被拆分的"><a href="#1-词（token）是如何被拆分的" class="headerlink" title="1-词（token）是如何被拆分的"></a>1-词（token）是如何被拆分的</h4><p>首先我们来看看一个非常标准的标签会被如何拆分成词</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;a&quot;</span>&gt;</span>text text text<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>上面代码定义了一个 Generator 函数<code>helloWorldGenerator</code>，它内部有两个<code>yield</code>表达式（<code>hello</code>和<code>world</code>），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
-<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
-<p>下一步，必须调用遍历器对象的<code>next</code>方法，使得指针移向下一个状态。也就是说，每次调用<code>next</code>方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个<code>yield</code>表达式（或<code>return</code>语句）为止。换言之，Generator 函数是分段执行的，<code>yield</code>表达式是暂停执行的标记，而<code>next</code>方法可以恢复执行。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;hello&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;world&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;ending&#x27;, done: true &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+<p>如果我们从最小有意义单元来定义拆分系统，第一个词（token）是什么呢？显然，作为一个词（token），整个 p 标签确实是过大了（它甚至可以嵌套）</p>
+<p>那么，只有 p 标签的开头是不是合适？，我们考虑到起始标签也会包含属性的，最小有意义单元其实应该是 “&lt;p”，所以 “&lt;p” 就是我们的第一个词（token）</p>
+<p>我们继续拆分，可以把这段代码一次拆成词（token）</p>
+<ul>
+<li>&lt;p：开始标签的开始；</li>
+<li>class=“a”：属性；</li>
+<li>&gt;：开始标签的结束；</li>
+<li>text text text：文本；</li>
+<li></p> ：标签结束。
 
-<p>上面代码一共调用了四次<code>next</code>方法。</p>
-<p>第一次调用，Generator 函数开始执行，直到遇到第一个<code>yield</code>表达式为止。<code>next</code>方法返回一个对象，它的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>hello</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
-<p>第二次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到下一个<code>yield</code>表达式。<code>next</code>方法返回的对象的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>world</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
-<p>第三次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到<code>return</code>语句（如果没有<code>return</code>语句，就执行到函数结束）。<code>next</code>方法返回的对象的<code>value</code>属性，就是紧跟在<code>return</code>语句后面的表达式的值（如果没有<code>return</code>语句，则<code>value</code>属性的值为<code>undefined</code>），<code>done</code>属性的值<code>true</code>，表示遍历已经结束。</p>
-<p>第四次调用，此时 Generator 函数已经运行完毕，<code>next</code>方法返回对象的<code>value</code>属性为<code>undefined</code>，<code>done</code>属性为<code>true</code>。以后再调用<code>next</code>方法，返回的都是这个值。</p>
-<p>总结一下，调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的<code>next</code>方法，就会返回一个有着<code>value</code>和<code>done</code>两个属性的对象。<code>value</code>属性表示当前的内部状态的值，是<code>yield</code>表达式后面那个表达式的值；<code>done</code>属性是一个布尔值，表示是否遍历结束。</p>
-<p>ES6 没有规定，<code>function</code>关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这是一段最简单的例子，类似的还有什么呢，现在我们可以来看看这些词（token）长成啥样子：</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/f9/84/f98444aa3ea7471d2414dd7d0f5e3a84.png"></p>
+<p>根据这样的分析，现在我们讲讲浏览器是如何用代码实现，我们设想，代码开始从 HTTP 协议收到的字符流读取字符。</p>
+<p>在接受第一个字符之前，我们完全无法判断这是哪一个词（token），不过，随着我们接受的字符越来越多，拼出其他的内容可能性就越来越少。</p>
+<p>比如假设我们接受了一个字符“ &lt; ” 我们一下子就知道这不是一个文本节点啦。</p>
+<p>之后我们再读一个字符，比如就是 x，那么我们一下子就知道这不是注释或 CDATA 了，接下来我们就一直读，直到遇到“&gt;”或者空格，这样就得到了一个完整的词（token）了。</p>
+<p>实际上，我们每读入一个字符，其实都要做一次决策，而且这些决定是跟“当前状态”有关的。在这样的条件下，浏览器工程师要想实现把字符流解析成词（token），最常见的方案就是使用状态机。</p>
+<h4 id="2-状态机"><a href="#2-状态机" class="headerlink" title="2-状态机"></a>2-状态机</h4><p>绝大多数语言的语法部分都是用状态机实现的，那么我们把部分词（token）的解析画成一个状态机看看</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/8b/b0/8b43d598bc1f83a8a1e7e8f922013ab0.png"></p>
+<p>当然了，我们这里的分析比较粗略，真正完整的 HTML 语法状态机，比我们描述的要复杂的多，有关更详细的内容，你可以参考 HTML 官方文档，HTML 官方文档规定了 80 个状态</p>
+<p>这里我们为了了解原理， 用这个简单的状态机足够说明问题了</p>
+<p>状态机的初始状态，我们仅仅区分“&lt;”和非“&lt;”；</p>
+<ul>
+<li>如果获得的是一个 非 &lt; 字符，那么可以认为进入了一个文本节点</li>
+<li>如果获得的是一个 &lt; 字符，那么进入一个标签状态</li>
+</ul>
+<p>不过当我们在标签状态时，则会面临一些可能性</p>
+<ul>
+<li>比如下一个字符是“ ! ” ，那么很可能是进入了注释节点或者 CDATA 节点。</li>
+<li>如果下一个字符是 “/ ”，那么可以确定进入了一个结束标签。</li>
+<li>如果下一个字符是字母，那么可以确定进入了一个开始标签。</li>
+<li>如果我们要完整处理各种 HTML 标准中定义的东西，那么还要考虑“ ? ”“% ”等内容。</li>
+</ul>
+<p>我们可以看到，用状态机做词法分析，其实正是把每个词的“特殊字符”逐个拆开成独立状态，然后再把所有的词的特征字符链合起来，形成一个联通图结构</p>
+<p>由于状态机设计属于编译原理的基本知识，这里我们仅作一个简要的介绍</p>
+<p>接下来就是代码实现的事情了，在 C/C++和 JavaScript 中，实现状态机的方式大同小异，我们把每个函数当作一个状态，参数是接受的字符，返回值是一个状态函数，（这里我希望再次强调下，状态机真的是一种没有办法封装的东西，所以我们永远不要试图封装一个状态机）</p>
+<p>为了方便理解和实验，我们这里用 JavaScript 来讲解，图上的 data 状态大概就像下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="function"><span class="keyword">function</span> (<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&amp;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> characterReferenceInData;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> tagOpen;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">&quot;\0&quot;</span>) &#123;</span><br><span class="line">    error();</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == EOF) &#123;</span><br><span class="line">    emitToken(EOF);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> tagOpenState = <span class="function"><span class="keyword">function</span> <span class="title">tagOpenState</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> endTagOpenState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[A-Z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c.match(<span class="regexp">/[a-z]/</span>)) &#123;</span><br><span class="line">    token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">    token.name = c;</span><br><span class="line">    <span class="keyword">return</span> tagNameState;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (c == <span class="string">&quot;?&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> bogusCommentState;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    error();</span><br><span class="line">    <span class="keyword">return</span> dataState;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//……</span></span><br></pre></td></tr></table></figure>
 
-<p>由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在<code>function</code>关键字后面。本书也采用这种写法。</p>
-<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h4><p>由于 Generator 函数返回的遍历器对象，只有调用<code>next</code>方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。<code>yield</code>表达式就是暂停标志。</p>
-<p>遍历器对象的<code>next</code>方法的运行逻辑如下。</p>
-<ol>
-<li>遇到<code>yield</code>表达式，就暂停执行后面的操作，并将紧跟在<code>yield</code>后面的那个表达式的值，作为返回的对象的<code>value</code>属性值</li>
-<li>下一次调用<code>next</code>方法时，再继续往下执行，直到遇到下一个<code>yield</code>表达式。</li>
-<li>如果没有再遇到新的<code>yield</code>表达式，就一直运行到函数结束，直到<code>return</code>语句为止，并将<code>return</code>语句后面的表达式的值，作为返回的对象的<code>value</code>属性值。</li>
-<li>如果该函数没有<code>return</code>语句，则返回的对象的<code>value</code>属性值为<code>undefined</code>。</li>
-</ol>
-<p>需要注意的是，<code>yield</code>表达式后面的表达式，只有当调用<code>next</code>方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">gen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">123</span> + <span class="number">456</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码给出了状态机的两个状态示例，data 即为初始状态，tagOpenStart 是接受了个“&lt;”字符，来判断标签类型的状态</p>
+<p>这里的状态机，每一个状态是一个函数，通过 “if else”来区分下一个字符做状态迁移，这里的所谓的状态迁移，就是当前状态函数返回下一个状态函数</p>
+<p>这样，我们的状态迁移代码非常的简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> state = data;</span><br><span class="line"><span class="keyword">var</span> char;</span><br><span class="line"><span class="keyword">while</span> ((char = getInput())) state = state(char);</span><br></pre></td></tr></table></figure>
 
-<p>上面代码中，<code>yield</code>后面的表达式<code>123 + 456</code>，不会立即求值，只会在<code>next</code>方法将指针移到这一句时，才会求值。</p>
-<p><code>yield</code>表达式与<code>return</code>语句既有相似之处，也有区别。相似之处在于，都能返回紧跟在语句后面的那个表达式的值。区别在于每次遇到<code>yield</code>，函数暂停执行，下一次再从该位置继续向后执行，而<code>return</code>语句不具备位置记忆的功能。一个函数里面，只能执行一次（或者说一个）<code>return</code>语句，但是可以执行多次（或者说多个）<code>yield</code>表达式。正常函数只能返回一个值，因为只能执行一次<code>return</code>；Generator 函数可以返回一系列的值，因为可以有任意多个<code>yield</code>。从另一个角度看，也可以说 Generator 生成了一系列的值，这也就是它的名称的来历（英语中，generator 这个词是“生成器”的意思）。</p>
-<p>Generator 函数可以不用<code>yield</code>表达式，这时就变成了一个单纯的暂缓执行函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;执行了！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> generator = f();</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  generator.next();</span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
+<p>这段代码的关键一句是“start = start(char)”，不论我们用何种方式来读取字符串流，我们都可以通过 state 来处理输入的字符流，这里用循环是一个示例，真实场景中，可能是来自 TCP 的输出流</p>
+<p>状态函数通过代码中 emitToken 函数来输出解析好的 token（词），我们只需要覆盖 emitToken，即可对指定对解析结果的处理方式</p>
+<p>词法分析器接收字符的方式很简单，就像下面这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//状态函数们……</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ……</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ……</span></span><br><span class="line">  <span class="keyword">var</span> state = data;</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    state = state(char);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面代码中，函数<code>f</code>如果是普通函数，在为变量<code>generator</code>赋值时就会执行。但是，函数<code>f</code>是一个 Generator 函数，就变成只有调用<code>next</code>方法时，函数<code>f</code>才会执行。</p>
-<p>另外需要注意，<code>yield</code>表达式只能用在 Generator 函数里面，用在其他地方都会报错。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// SyntaxError: Unexpected number</span></span><br></pre></td></tr></table></figure>
+<p>至此，我们就把字符流拆成了词（token）了。</p>
+<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>接下来我们要把这些简单的词编程 DOM 树，这个过程我们是使用栈来实现的，任何语言几乎都有栈，下面我们还是用 JavaScript 来实现，JavaScript 中的栈只要用数组就好了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLSyntaticalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> stack = [<span class="keyword">new</span> HTMLDocument()];</span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">token</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">this</span>.getOutput = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> stack[<span class="number">0</span>];</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面代码在一个普通函数中使用<code>yield</code>表达式，结果产生一个句法错误。</p>
-<p>下面是另外一个例子。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  a.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&#x27;number&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr))&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们这样来设计 HTML 的语法分析器，receiveInput 负责接收此法部分产生的词（token），通常由 emitToken 来调用</p>
+<p>在接收的同时，即开始构建 Dom 树，所以我们主要构建 DOM 树的算法就写在 receiveInput 当中，当接收完所有的输入，栈顶就是最后的的根节点，我们 DOM 树的产出就是这个 stack 的第一项</p>
+<p>为了构建 DOM 树，我们需要一个 Node 类，接下来我们所有的节点都会在这个 Node 类的实例</p>
+<p>在完全符合标准的浏览器中，不一样的 HTML 节点对应了不同的 Node 子类，我们为了简化，就不完整实现这个继承体系了，我们仅仅把 Node 分为 Element 和 Text（如果是基于类的 OOP 的话，我们还需要抽象工厂来创建对象）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Element</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Text</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.value = value || <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面代码也会产生句法错误，因为<code>forEach</code>方法的参数是一个普通函数，但是在里面使用了<code>yield</code>表达式（这个函数里面还使用了<code>yield*</code>表达式，详细介绍见后文）。一种修改方法是改用<code>for</code>循环。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> length = a.length;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = a[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1, 2, 3, 4, 5, 6</span></span><br></pre></td></tr></table></figure>
+<p>前面我们的词（token）中，以下两个是需要成对匹配的：</p>
+<ul>
+<li>tag start</li>
+<li>tag end</li>
+</ul>
+<p>根据一些编译原理中常见的技巧，我们使用的栈正是用于匹配开始和结束标签的方案</p>
+<p>对于 Text 节点，我们则需要把相邻的 Text 节点组合起来，我们的做法是当词（token）入栈时，检查栈顶是否是 Text 节点，如果是的话就合并 Text 节点</p>
+<p>同样我们来看看直观的解析过程</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">maaa</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>cool<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;a&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>另外，<code>yield</code>表达式如果用在另一个表达式之中，必须放在圆括号里面。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>yield</code>表达式用作函数参数或放在赋值表达式的右边，可以不加括号。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo(<span class="keyword">yield</span> <span class="string">&quot;a&quot;</span>, <span class="keyword">yield</span> <span class="string">&quot;b&quot;</span>); <span class="comment">// OK</span></span><br><span class="line">  <span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过这个栈，我们可以构建 DOM 树</p>
+<ul>
+<li><p>栈顶元素就是当前节点；</p>
+</li>
+<li><p>遇到属性，就添加到当前节点；</p>
+</li>
+<li><p>遇到文本节点，如果当前节点是文本节点，则跟文本节点合并，否则入栈成为当前节点的子节点；</p>
+</li>
+<li><p>遇到注释节点，作为当前节点的子节点；</p>
+</li>
+<li><p>遇到 tag start 就入栈一个节点，当前节点就是这个节点的父节点；</p>
+</li>
+<li><p>遇到 tag end 就出栈一个节点（还可以检查是否匹配）。</p>
+</li>
+</ul>
+<p>这里由一个视频可以让你直观的感受到这个过程</p>
+<p>当我们的源代码完全遵循 XHTML（这是一种比较严谨的 HTML 语法）时，这是非常简单的问题，然后 HTML 具有很强的容错能力，奥妙在于当 tag end 跟栈顶的 start tag 不匹配的时候如何处理</p>
+<p>于是，这又有一个极其复杂的规则，幸好 W3C 又一次很贴心地把全部规则都整理地很好，我们只要翻译成对应的代码就好了，以下这个网站呈现了全部规则。你可以点击查看。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction">http://www.w3.org/html/wg/drafts/html/master/syntax.html#tree-construction</a></li>
+</ul>
+<blockquote>
+<p>PS：<a target="_blank" rel="noopener" href="https://github.com/aimergenge/toy-html-parser">https://github.com/aimergenge/toy-html-parser</a></p>
+</blockquote>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>好了，总结一下。在今天的文章中，我带你继续探索了浏览器的工作原理，我们主要研究了解析代码和构建 DOM 树两个步骤。在解析代码的环节里，我们一起详细地分析了一个词（token）被拆分的过程，并且给出了实现它所需要的一个简单的状态机。</p>
+<p>在构建 DOM 树的环节中，基本思路是使用栈来构建 DOM 树为了方便你动手实践，我用 JavaScript 实现了这一过程。</p>
 
       
     </div>
@@ -333,7 +386,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -401,7 +454,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
