@@ -152,34 +152,6 @@
       </tags>
   </entry>
   <entry>
-    <title>KMP</title>
-    <url>/2020/10/29/KMP/</url>
-    <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
-<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解 KMP 的最大障碍就是 PMT，有些人看了很多 KMP 的文章后仍然搞不懂 PMT 中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
-<p>对于字符转 “abababca”，它的 PMT 如下表所示</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
-<p>就像图中所示，如果待匹配的模式字符串有 8 个字符，那么 PMT 就会有 8 个值。</p>
-<p>我先解释下字符串的前缀和后缀，如果字符串 A 和 B 存在 A=BS，其中 S 是任意的非空字符串，那么就称 B 为 A 的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中 S 是任意非空字符，那就称 B 为 A 的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>。然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
-<p>有了这个定义，就可以说明 PMT 中的值的意义了，<strong>PMT 中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长的元素就是字符串 “a” 了，长度为 1，所以对于”abc”而言， 它在 PMT 表中对应值就是 1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为 3。</p>
-<p>好了，解释清楚这个表是什么之后，我们再来看如何使用这个表来加速字符串的查找，以及这样用的道理是什么。如图 1.12 所示，要在主字符串”ababababca”中查找模式字符串”abababca”。如果在 j 处字符不匹配，那么由于前边所说的模式字符串 PMT 的性质，主字符串中 i 指针之前的 PMT[j −1] 位就一定与模式字符串的第 0 位至第 PMT[j−1] 位是相同的。这是因为主字符串在 i 位失配，也就意味着主字符串从 i−j 到 i 这一段是与模式字符串的 0 到 j 这一段是完全相同的。而我们上面也解释了，模式字符串从 0 到 j−1 ，在这个例子中就是”ababab”，其前缀集合与后缀集合的交集的最长元素为”abab”， 长度为 4。所以就可以断言，主字符串中 i 指针之前的 4 位一定与模式字符串的第 0 位至第 4 位是相同的，即长度为 4 的后缀与前缀相同。这样一来，我们就可以将这些字符段的比较省略掉。具体的做法是，保持 i 指针不动，然后将 j 指针指向模式字符串的 PMT[j −1]位即可。</p>
-<p>简言之，以图中的例子来说，在 i 处失配，那么主字符串和模式字符串的前边 6 位就是相同的。又因为模式字符串的前 6 位，它的前 4 位前缀和后 4 位后缀是相同的，所以我们推知主字符串 i 之前的 4 位和模式字符串开头的 4 位是相同的。就是图中的灰色部分。那这部分就不用再比较了。</p>
-<p><img data-src="https://pic4.zhimg.com/50/v2-03a0d005badd0b8e7116d8d07947681c_hd.jpg?source=1940ef5"></p>
-<p>有了上面的思路，我们就可以使用 PMT 加速字符串的查找了。我们看到如果是在 j 位 失配，那么影响 j 指针回溯的位置的其实是第 j −1 位的 PMT 值，所以为了编程的方便， 我们不直接使用 PMT 数组，而是将 PMT 数组向后偏移一位。我们把新得到的这个数组称为 next 数组。下面给出根据 next 数组进行字符串匹配加速的字符串匹配程序。其中要注意的一个技巧是，在把 PMT 进行向右偏移时，第 0 位的值，我们将其设成了-1，这只是为了编程的方便，并没有其他的意义。在本节的例子中，next 数组如下表所示。</p>
-<p><img data-src="https://pic1.zhimg.com/80/v2-40b4885aace7b31499da9b90b7c46ed3_720w.jpg?source=1940ef5c"></p>
-<p>具体的程序如下所示：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">kmp</span>(<span class="params">source, pattern</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 求出 pmt 表格</span></span><br><span class="line">  <span class="keyword">let</span> table = <span class="keyword">new</span> <span class="built_in">Array</span>(pattern.length).fill(<span class="number">0</span>);</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; pattern.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[i] === pattern[j]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">        table[i] = j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 匹配</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; source.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[j] === source[i]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === pattern.length) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(kmp(<span class="string">&quot;abababcaabababca&quot;</span>, <span class="string">&quot;abababca&quot;</span>));</span><br></pre></td></tr></table></figure>
-
-<p>好了，讲到这里，其实 KMP 算法的主体就已经讲解完了。你会发现，其实 KMP 算法的动机是很简单的，解决的方案也很简单。远没有很多教材和算法书里所讲的那么乱七八糟，只要搞明白了 PMT 的意义，其实整个算法都迎刃而解。</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>字符串算法</tag>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JavaScript面向对象还是基于对象？</title>
     <url>/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/</url>
     <content><![CDATA[<p>与其他语言相比，JavaScript 中的对象总是显得不那么合群。一些新人再学习 JavaScript 面向对象的时候，往往也会有疑惑</p>
@@ -287,6 +259,101 @@
       </tags>
   </entry>
   <entry>
+    <title>KMP</title>
+    <url>/2020/10/29/KMP/</url>
+    <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
+<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解 KMP 的最大障碍就是 PMT，有些人看了很多 KMP 的文章后仍然搞不懂 PMT 中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
+<p>对于字符转 “abababca”，它的 PMT 如下表所示</p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
+<p>就像图中所示，如果待匹配的模式字符串有 8 个字符，那么 PMT 就会有 8 个值。</p>
+<p>我先解释下字符串的前缀和后缀，如果字符串 A 和 B 存在 A=BS，其中 S 是任意的非空字符串，那么就称 B 为 A 的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中 S 是任意非空字符，那就称 B 为 A 的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>。然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
+<p>有了这个定义，就可以说明 PMT 中的值的意义了，<strong>PMT 中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长的元素就是字符串 “a” 了，长度为 1，所以对于”abc”而言， 它在 PMT 表中对应值就是 1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为 3。</p>
+<p>好了，解释清楚这个表是什么之后，我们再来看如何使用这个表来加速字符串的查找，以及这样用的道理是什么。如图 1.12 所示，要在主字符串”ababababca”中查找模式字符串”abababca”。如果在 j 处字符不匹配，那么由于前边所说的模式字符串 PMT 的性质，主字符串中 i 指针之前的 PMT[j −1] 位就一定与模式字符串的第 0 位至第 PMT[j−1] 位是相同的。这是因为主字符串在 i 位失配，也就意味着主字符串从 i−j 到 i 这一段是与模式字符串的 0 到 j 这一段是完全相同的。而我们上面也解释了，模式字符串从 0 到 j−1 ，在这个例子中就是”ababab”，其前缀集合与后缀集合的交集的最长元素为”abab”， 长度为 4。所以就可以断言，主字符串中 i 指针之前的 4 位一定与模式字符串的第 0 位至第 4 位是相同的，即长度为 4 的后缀与前缀相同。这样一来，我们就可以将这些字符段的比较省略掉。具体的做法是，保持 i 指针不动，然后将 j 指针指向模式字符串的 PMT[j −1]位即可。</p>
+<p>简言之，以图中的例子来说，在 i 处失配，那么主字符串和模式字符串的前边 6 位就是相同的。又因为模式字符串的前 6 位，它的前 4 位前缀和后 4 位后缀是相同的，所以我们推知主字符串 i 之前的 4 位和模式字符串开头的 4 位是相同的。就是图中的灰色部分。那这部分就不用再比较了。</p>
+<p><img data-src="https://pic4.zhimg.com/50/v2-03a0d005badd0b8e7116d8d07947681c_hd.jpg?source=1940ef5"></p>
+<p>有了上面的思路，我们就可以使用 PMT 加速字符串的查找了。我们看到如果是在 j 位 失配，那么影响 j 指针回溯的位置的其实是第 j −1 位的 PMT 值，所以为了编程的方便， 我们不直接使用 PMT 数组，而是将 PMT 数组向后偏移一位。我们把新得到的这个数组称为 next 数组。下面给出根据 next 数组进行字符串匹配加速的字符串匹配程序。其中要注意的一个技巧是，在把 PMT 进行向右偏移时，第 0 位的值，我们将其设成了-1，这只是为了编程的方便，并没有其他的意义。在本节的例子中，next 数组如下表所示。</p>
+<p><img data-src="https://pic1.zhimg.com/80/v2-40b4885aace7b31499da9b90b7c46ed3_720w.jpg?source=1940ef5c"></p>
+<p>具体的程序如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">kmp</span>(<span class="params">source, pattern</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 求出 pmt 表格</span></span><br><span class="line">  <span class="keyword">let</span> table = <span class="keyword">new</span> <span class="built_in">Array</span>(pattern.length).fill(<span class="number">0</span>);</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; pattern.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[i] === pattern[j]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">        table[i] = j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 匹配</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; source.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[j] === source[i]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === pattern.length) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(kmp(<span class="string">&quot;abababcaabababca&quot;</span>, <span class="string">&quot;abababca&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>好了，讲到这里，其实 KMP 算法的主体就已经讲解完了。你会发现，其实 KMP 算法的动机是很简单的，解决的方案也很简单。远没有很多教材和算法书里所讲的那么乱七八糟，只要搞明白了 PMT 的意义，其实整个算法都迎刃而解。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>字符串算法</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Star Sky</title>
+    <url>/2020/11/10/SkySky/</url>
+    <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=31654478&auto=1&height=66"></iframe>
+
+<p><a href="https://music.163.com/#/song?id=31654478">https://music.163.com/#/song?id=31654478</a></p>
+<p>Here we are 我们在此地</p>
+<p>Riding the sky 翱翔于天际</p>
+<p>Painting the night with sun 绘夜空以晨旭</p>
+<p>You and I, Mirrors of light 你和我 交相辉映</p>
+<p>Twin flames of fire 如两团火焰</p>
+<p>Lit in another time and place 闪亮在彼时彼地</p>
+<p>I knew your name 我曾知你生名</p>
+<p>I knew your face 也曾忆你音容</p>
+<p>Your love and grace 与你爱和魅力</p>
+<p>Past and present now embrace 过往与现在汇聚</p>
+<p>Worlds collide in inner space 世界激荡于内心</p>
+<p>Unstoppable, the song we play 我们奏响的歌 永不停息</p>
+<p>（chorus）（合唱）</p>
+<p>Burn the page for me 忘记我的过去</p>
+<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
+<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
+<p>I cannot deliver your love 我不能接受你的爱</p>
+<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
+<p>turn that page for me 就让过往逝去</p>
+<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
+<p>I cannot find solace in your words 也找不到安慰的话语</p>
+<p>I cannot deliver you your love 我不能回应你的爱意</p>
+<p>or caress your soul 也不能抚慰你（的灵魂）</p>
+<p>Age to age 年复一年</p>
+<p>I feel the call 我感到那呼唤</p>
+<p>Memory of future dreams 未来梦想的记忆</p>
+<p>You and I, riding the sky 你和我 相依比翼</p>
+<p>Keeping the fire bright 让火焰永不熄</p>
+<p>From another time and place 在彼时彼地</p>
+<p>I know your name 我知你生名</p>
+<p>I know your face 将你容颜记</p>
+<p>Your touch and grace 和你的怀抱和魅力</p>
+<p>All of time can not erase 时间也无法抹去</p>
+<p>What our hearts remember stays 我们记得要留在哪里</p>
+<p>Forever on a song we play 永远留在 我们的那首歌里</p>
+<p>（chorus）（合唱）</p>
+<p>Burn the page for me 忘记我的过去</p>
+<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
+<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
+<p>I cannot deliver your love 我不能接受你的爱</p>
+<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
+<p>turn that page for me 就让过往逝去</p>
+<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
+<p>I cannot find solace in your words 也找不到安慰的话语</p>
+<p>I cannot deliver you your love 我不能回应你的爱意</p>
+<p>or caress your soul 也不能抚慰你（的灵魂）</p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><ul>
+<li>女神站在高山之巅，圣咏这和平和凡世绝美，众生顶礼</li>
+<li>我的学生都战死了，现在轮到我这个老师上去了！这是 1940 年一名中央航空教练员驾驶飞机冲向 32 架日本轰炸机前留在日记本上的最后一句话！传奇不该被遗忘！！</li>
+<li>不和亲，不赔款，不割地，不纳贡，天子守国门，君王死社稷！——明朝祖训 “朕死，无面目见祖宗，自去冠冕，以发覆面，任贼分尸，勿伤百姓一人。”——崇祯于 1644 年三月十九日凌晨于煤山自缢前，留在衣服上的那份遗诏。</li>
+<li>世界上通用的语言就两种：音乐和利剑。一样征服人，一样征服心。</li>
+<li>秦始皇：朕统六国，天下归一，筑长城以镇九州龙脉，卫我大秦、护我社稷。朕以始皇之名在此立誓！朕在，当守土开疆，扫平四夷，定我大秦万世之基！朕亡，亦将身化龙魂，佑我华夏永世不衰！此誓，日月为证，天地共鉴，仙魔鬼神共听之！</li>
+</ul>
+]]></content>
+      <categories>
+        <category>音乐</category>
+      </categories>
+      <tags>
+        <tag>音乐</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Proxy</title>
     <url>/2020/11/02/Proxy/</url>
     <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Proxy 用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”（meta programming），即对编程语言进行编程。</p>
@@ -363,73 +430,6 @@
       </categories>
       <tags>
         <tag>es6</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Star Sky</title>
-    <url>/2020/11/10/SkySky/</url>
-    <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=31654478&auto=1&height=66"></iframe>
-
-<p><a href="https://music.163.com/#/song?id=31654478">https://music.163.com/#/song?id=31654478</a></p>
-<p>Here we are 我们在此地</p>
-<p>Riding the sky 翱翔于天际</p>
-<p>Painting the night with sun 绘夜空以晨旭</p>
-<p>You and I, Mirrors of light 你和我 交相辉映</p>
-<p>Twin flames of fire 如两团火焰</p>
-<p>Lit in another time and place 闪亮在彼时彼地</p>
-<p>I knew your name 我曾知你生名</p>
-<p>I knew your face 也曾忆你音容</p>
-<p>Your love and grace 与你爱和魅力</p>
-<p>Past and present now embrace 过往与现在汇聚</p>
-<p>Worlds collide in inner space 世界激荡于内心</p>
-<p>Unstoppable, the song we play 我们奏响的歌 永不停息</p>
-<p>（chorus）（合唱）</p>
-<p>Burn the page for me 忘记我的过去</p>
-<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
-<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
-<p>I cannot deliver your love 我不能接受你的爱</p>
-<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
-<p>turn that page for me 就让过往逝去</p>
-<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
-<p>I cannot find solace in your words 也找不到安慰的话语</p>
-<p>I cannot deliver you your love 我不能回应你的爱意</p>
-<p>or caress your soul 也不能抚慰你（的灵魂）</p>
-<p>Age to age 年复一年</p>
-<p>I feel the call 我感到那呼唤</p>
-<p>Memory of future dreams 未来梦想的记忆</p>
-<p>You and I, riding the sky 你和我 相依比翼</p>
-<p>Keeping the fire bright 让火焰永不熄</p>
-<p>From another time and place 在彼时彼地</p>
-<p>I know your name 我知你生名</p>
-<p>I know your face 将你容颜记</p>
-<p>Your touch and grace 和你的怀抱和魅力</p>
-<p>All of time can not erase 时间也无法抹去</p>
-<p>What our hearts remember stays 我们记得要留在哪里</p>
-<p>Forever on a song we play 永远留在 我们的那首歌里</p>
-<p>（chorus）（合唱）</p>
-<p>Burn the page for me 忘记我的过去</p>
-<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
-<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
-<p>I cannot deliver your love 我不能接受你的爱</p>
-<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
-<p>turn that page for me 就让过往逝去</p>
-<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
-<p>I cannot find solace in your words 也找不到安慰的话语</p>
-<p>I cannot deliver you your love 我不能回应你的爱意</p>
-<p>or caress your soul 也不能抚慰你（的灵魂）</p>
-<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><ul>
-<li>女神站在高山之巅，圣咏这和平和凡世绝美，众生顶礼</li>
-<li>我的学生都战死了，现在轮到我这个老师上去了！这是 1940 年一名中央航空教练员驾驶飞机冲向 32 架日本轰炸机前留在日记本上的最后一句话！传奇不该被遗忘！！</li>
-<li>不和亲，不赔款，不割地，不纳贡，天子守国门，君王死社稷！——明朝祖训 “朕死，无面目见祖宗，自去冠冕，以发覆面，任贼分尸，勿伤百姓一人。”——崇祯于 1644 年三月十九日凌晨于煤山自缢前，留在衣服上的那份遗诏。</li>
-<li>世界上通用的语言就两种：音乐和利剑。一样征服人，一样征服心。</li>
-<li>秦始皇：朕统六国，天下归一，筑长城以镇九州龙脉，卫我大秦、护我社稷。朕以始皇之名在此立誓！朕在，当守土开疆，扫平四夷，定我大秦万世之基！朕亡，亦将身化龙魂，佑我华夏永世不衰！此誓，日月为证，天地共鉴，仙魔鬼神共听之！</li>
-</ul>
-]]></content>
-      <categories>
-        <category>音乐</category>
-      </categories>
-      <tags>
-        <tag>音乐</tag>
       </tags>
   </entry>
   <entry>
@@ -725,6 +725,38 @@
       </tags>
   </entry>
   <entry>
+    <title>分支界限法</title>
+    <url>/2020/11/07/%E5%88%86%E6%94%AF%E7%95%8C%E9%99%90%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>类似于回溯法，也是一种在问题的空间树 T 上搜索问题的解的算法，但在一般情况下，分支界限方与回溯法的求解目标不同，回溯法的求解目标是找出 T 中满足约束条件的所有解，而分支界限发的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一个目标函数值达到极大或极小的解，即在某种意义上的最优解</p>
+<h4 id="分支搜索法"><a href="#分支搜索法" class="headerlink" title="分支搜索法"></a>分支搜索法</h4><p>所谓 “分支” 就是采用广度优先搜索策略，依次搜索 E-结点的所有分支，也就是所有相邻节点，抛弃不满足约束条件的节点，其余节点加入活节点表，然后从表中选择一个节点作为下一个 E-节点，继续搜索</p>
+<p>选择一个 E-节点的方式不同，则会有几种不同的分支搜索方式，</p>
+<ul>
+<li>FIFO 搜索</li>
+<li>LIFO 搜索</li>
+<li>优先队列式搜索</li>
+</ul>
+<h4 id="分支界限搜索法"><a href="#分支界限搜索法" class="headerlink" title="分支界限搜索法"></a>分支界限搜索法</h4><h3 id="分支界限搜索法的一般过程"><a href="#分支界限搜索法的一般过程" class="headerlink" title="分支界限搜索法的一般过程"></a>分支界限搜索法的一般过程</h3><p>由于求解目标不同，导致分支限界法与回溯法在解空间树 T 上的搜索方式也不相同。回溯法以深度优先的方式搜索解空间树 T，而分支限界法则以广度优先或以最小耗费优先的方式搜索解空间树 T。</p>
+<p>分支限界法的搜索策略是：在扩展结点处，先生成其所有的儿子结点（分支），然后再从当前的活结点表中选择下一个扩展对点。为了有效地选择下一扩展结点，以加速搜索的进程，在每一活结点处，计算一个函数值（限界），并根据这些已计算出的函数值，从当前活结点表中选择一个最有利的结点作为扩展结点，使搜索朝着解空间树上有最优解的分支推进，以便尽快地找出一个最优解。</p>
+<p>分支限界法常以广度优先或以最小耗费（最大效益）优先的方式搜索问题的解空间树。问题的解空间树是表示问题解空间的一棵有序树，常见的有子集树和排列树。在搜索问题的解空间树时，分支限界法与回溯法对当前扩展结点所使用的扩展方式不同。在分支限界法中，每一个活结点只有一次机会成为扩展结点。活结点一旦成为扩展结点，就一次性产生其所有儿子结点。在这些儿子结点中，那些导致不可行解或导致非最优解的儿子结点被舍弃，其余儿子结点被子加入活结点表中。此后，从活结点表中取下一结点成为当前扩展结点，并重复上述结点扩展过程。这个过程一直持续到找到所求的解或活结点表为空时为止。</p>
+<h3 id="回溯法和分支限界法的一些区别"><a href="#回溯法和分支限界法的一些区别" class="headerlink" title="回溯法和分支限界法的一些区别"></a>回溯法和分支限界法的一些区别</h3><p>有一些问题其实无论用回溯法还是分支限界法都可以得到很好的解决，但是另外一些则不然。也许我们需要具体一些的分析——到底何时使用分支限界而何时使用回溯呢？</p>
+<p>回溯法和分支限界法的一些区别：</p>
+<ul>
+<li>方法对解空间树的搜索方式</li>
+<li>存储结点的常用数据结构</li>
+<li>结点存储特性常用应用</li>
+</ul>
+<p>回溯法深度优先搜索堆栈活结点的所有可行子结点被遍历后才被从栈中弹出找出满足约束条件的所有解</p>
+<p>分支限界法广度优先或最小消耗优先搜索队列、优先队列每个结点只有一次成为活结点的机会找出满足约束条件的一个解或特定意义下的最优解</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>五大常用经典算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>分治算法</title>
     <url>/2020/11/05/%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在计算机科学中，分治法是一种很重要的算法，字面上的解释是 “分而治之”，就是把一个复杂问题分成两个或更多的相同或类似的子问题，再把子问题分成更小的子问题……直到最后的子问题可以简单的直接求解，原问题的解即是子问题的解的合并，这个技巧是很多高效算法的基础，如排序算法（快速排序，归并排序）,傅立叶变换(快速傅立叶变换)……</p>
@@ -772,38 +804,6 @@
 <li>然后考虑随着问题规模增大时的求解方法</li>
 <li>找到求解的递归函数式后（各种规模或因子），设计递归程序即可。</li>
 </ol>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分支界限法</title>
-    <url>/2020/11/07/%E5%88%86%E6%94%AF%E7%95%8C%E9%99%90%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>类似于回溯法，也是一种在问题的空间树 T 上搜索问题的解的算法，但在一般情况下，分支界限方与回溯法的求解目标不同，回溯法的求解目标是找出 T 中满足约束条件的所有解，而分支界限发的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一个目标函数值达到极大或极小的解，即在某种意义上的最优解</p>
-<h4 id="分支搜索法"><a href="#分支搜索法" class="headerlink" title="分支搜索法"></a>分支搜索法</h4><p>所谓 “分支” 就是采用广度优先搜索策略，依次搜索 E-结点的所有分支，也就是所有相邻节点，抛弃不满足约束条件的节点，其余节点加入活节点表，然后从表中选择一个节点作为下一个 E-节点，继续搜索</p>
-<p>选择一个 E-节点的方式不同，则会有几种不同的分支搜索方式，</p>
-<ul>
-<li>FIFO 搜索</li>
-<li>LIFO 搜索</li>
-<li>优先队列式搜索</li>
-</ul>
-<h4 id="分支界限搜索法"><a href="#分支界限搜索法" class="headerlink" title="分支界限搜索法"></a>分支界限搜索法</h4><h3 id="分支界限搜索法的一般过程"><a href="#分支界限搜索法的一般过程" class="headerlink" title="分支界限搜索法的一般过程"></a>分支界限搜索法的一般过程</h3><p>由于求解目标不同，导致分支限界法与回溯法在解空间树 T 上的搜索方式也不相同。回溯法以深度优先的方式搜索解空间树 T，而分支限界法则以广度优先或以最小耗费优先的方式搜索解空间树 T。</p>
-<p>分支限界法的搜索策略是：在扩展结点处，先生成其所有的儿子结点（分支），然后再从当前的活结点表中选择下一个扩展对点。为了有效地选择下一扩展结点，以加速搜索的进程，在每一活结点处，计算一个函数值（限界），并根据这些已计算出的函数值，从当前活结点表中选择一个最有利的结点作为扩展结点，使搜索朝着解空间树上有最优解的分支推进，以便尽快地找出一个最优解。</p>
-<p>分支限界法常以广度优先或以最小耗费（最大效益）优先的方式搜索问题的解空间树。问题的解空间树是表示问题解空间的一棵有序树，常见的有子集树和排列树。在搜索问题的解空间树时，分支限界法与回溯法对当前扩展结点所使用的扩展方式不同。在分支限界法中，每一个活结点只有一次机会成为扩展结点。活结点一旦成为扩展结点，就一次性产生其所有儿子结点。在这些儿子结点中，那些导致不可行解或导致非最优解的儿子结点被舍弃，其余儿子结点被子加入活结点表中。此后，从活结点表中取下一结点成为当前扩展结点，并重复上述结点扩展过程。这个过程一直持续到找到所求的解或活结点表为空时为止。</p>
-<h3 id="回溯法和分支限界法的一些区别"><a href="#回溯法和分支限界法的一些区别" class="headerlink" title="回溯法和分支限界法的一些区别"></a>回溯法和分支限界法的一些区别</h3><p>有一些问题其实无论用回溯法还是分支限界法都可以得到很好的解决，但是另外一些则不然。也许我们需要具体一些的分析——到底何时使用分支限界而何时使用回溯呢？</p>
-<p>回溯法和分支限界法的一些区别：</p>
-<ul>
-<li>方法对解空间树的搜索方式</li>
-<li>存储结点的常用数据结构</li>
-<li>结点存储特性常用应用</li>
-</ul>
-<p>回溯法深度优先搜索堆栈活结点的所有可行子结点被遍历后才被从栈中弹出找出满足约束条件的所有解</p>
-<p>分支限界法广度优先或最小消耗优先搜索队列、优先队列每个结点只有一次成为活结点的机会找出满足约束条件的一个解或特定意义下的最优解</p>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -1427,12 +1427,6 @@
       <tags>
         <tag>数据结构</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>测试文章</title>
-    <url>/2020/11/12/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>测试文章</p>
-]]></content>
   </entry>
   <entry>
     <title>浏览器DOM API</title>
