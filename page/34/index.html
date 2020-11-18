@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
+            <a href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/" class="post-title-link" itemprop="url">类型兼容性</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-09-18 15:38:10" itemprop="dateCreated datePublished" datetime="2020-09-18T15:38:10+08:00">2020-09-18</time>
+              <time title="创建时间：2020-09-21 09:57:05" itemprop="dateCreated datePublished" datetime="2020-09-21T09:57:05+08:00">2020-09-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:49:37" itemprop="dateModified" datetime="2020-11-10T10:49:37+08:00">2020-11-10</time>
+                <time title="修改时间：2020-11-10 10:49:50" itemprop="dateModified" datetime="2020-11-10T10:49:50+08:00">2020-11-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,15 +262,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>单例模式的定义是：保证一个类仅有一个实例，并提供一个访问它的全局访问点</p>
-<p>单例模式是一种常用的模式，有一些对象我们往往只需要一个比如，线程池，全局缓存，浏览器中的 window 对象等，在 JavaScript 开发中，单例模式的用途同样非常广泛，试想一下，当我们点击登录按钮的时候，页面中会出现一个登录浮窗，而这个登录浮窗是唯一的，无论单击多少次登录按钮，这个浮窗只会被创建一次，那么这个登录浮窗就是和使用单例模式来创建</p>
-<h3 id="实现单例模式"><a href="#实现单例模式" class="headerlink" title="实现单例模式"></a>实现单例模式</h3><p>要实现一个单例模式其实并不复杂，无非是用一个变量来标指当前是否已经为某个类创建过对象，如果是，则在下一次获取该类的实例时，直接返回之前创建的对象，代码如下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Stingleton = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Stingleton.prototype.instance = <span class="literal">null</span>;</span><br><span class="line">Stingleton.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line">Stingleton.getInstance = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="built_in">this</span>.instance)&#123;</span><br><span class="line">        <span class="built_in">this</span>.instance = <span class="keyword">new</span> Stingleton(name)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.instance</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = Stingleton.getInstance(<span class="string">&quot;sven1&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> b = Stingleton.getInstance(<span class="string">&quot;sven2&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a === b)</span><br></pre></td></tr></table></figure>
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>TypeScript 里的类型兼容性是基于结构子类型的。 结构类型是一种只使用其成员来描述类型的方式。 它正好与名义（nominal）类型形成对比。（译者注：在基于名义类型的类型系统中，数据类型的兼容性或等价性是通过明确的声明和/或类型的名称来决定的。这与结构性类型系统不同，它是基于类型的组成结构，且不要求明确地声明。） 看下面的例子：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Named &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line"><span class="comment">// OK, because of structural typing</span></span><br><span class="line">p = <span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
 
-<p>或者</p>
+<p>在使用基于名义类型的语言，比如 C#或 Java 中，这段代码会报错，因为 Person 类没有明确说明其实现了 Named 接口。</p>
+<p>TypeScript 的结构性子类型是根据 JavaScript 代码的典型写法来设计的。 因为 JavaScript 里广泛地使用匿名对象，例如函数表达式和对象字面量，所以使用结构类型系统来描述这些类型比使用名义类型系统更好。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+              <a class="btn" href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -293,7 +292,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/33/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><a class="page-number" href="/page/36/">36</a><a class="extend next" rel="next" href="/page/35/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/33/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/35/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -361,7 +360,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

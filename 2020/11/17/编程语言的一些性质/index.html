@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.1950ys.top","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="图灵完备性 命令式——图灵机 goto if 和 while   声明式——lambda 递归    图灵完备性应该是大家经常会听说的一个概念，所有的编程语言它必备的一个条件就是图灵完备性，图灵完备性最早的提出是由我们计算机界的老祖宗图灵，他在这个研究数学上的可计算性的时候提出的这样的一个概念， 图灵完备性有几个不同的表达方式，比如说跟图灵机完全等效的，这就是图灵完备的，当然这个定义特别的不直观，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程语言的一些性质">
+<meta property="og:url" content="https://blog.1950ys.top/2020/11/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%B4%A8/index.html">
+<meta property="og:site_name" content="Liangx">
+<meta property="og:description" content="图灵完备性 命令式——图灵机 goto if 和 while   声明式——lambda 递归    图灵完备性应该是大家经常会听说的一个概念，所有的编程语言它必备的一个条件就是图灵完备性，图灵完备性最早的提出是由我们计算机界的老祖宗图灵，他在这个研究数学上的可计算性的时候提出的这样的一个概念， 图灵完备性有几个不同的表达方式，比如说跟图灵机完全等效的，这就是图灵完备的，当然这个定义特别的不直观，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-17T02:35:16.000Z">
+<meta property="article:modified_time" content="2020-11-18T03:50:56.655Z">
+<meta property="article:author" content="liangx">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.1950ys.top/2020/11/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%B4%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>编程语言的一些性质 | Liangx</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liangx</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">凉寻的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/15100399015" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%B4%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="liangx">
+      <meta itemprop="description" content="爱前端、爱分享、爱互联网">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liangx">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          编程语言的一些性质
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-17 10:35:16" itemprop="dateCreated datePublished" datetime="2020-11-17T10:35:16+08:00">2020-11-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-18 11:50:56" itemprop="dateModified" datetime="2020-11-18T11:50:56+08:00">2020-11-18</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%B4%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%B4%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="图灵完备性"><a href="#图灵完备性" class="headerlink" title="图灵完备性"></a>图灵完备性</h3><ul>
+<li>命令式——图灵机<ul>
+<li>goto</li>
+<li>if 和 while</li>
+</ul>
+</li>
+<li>声明式——lambda<ul>
+<li>递归</li>
+</ul>
+</li>
+</ul>
+<p>图灵完备性应该是大家经常会听说的一个概念，所有的编程语言它必备的一个条件就是图灵完备性，图灵完备性最早的提出是由我们计算机界的老祖宗图灵，他在这个研究数学上的可计算性的时候提出的这样的一个概念，</p>
+<p>图灵完备性有几个不同的表达方式，比如说跟图灵机完全等效的，这就是图灵完备的，当然这个定义特别的不直观，它虽然很严格，但是它并不直观，如果给大家一个直观的表述就是：“所有的可计算的问题都可用来描述的，这样的语言就是具备图灵完备性的”</p>
+<p>经历了一代一代的计算机语言的发展，其实图灵完备性逐渐的收敛到了几个固定的模式。所有的命令式语言，基本上是从图灵机理论来的图灵完备性，所以它实现图灵完备的方式，要么是使用 goto 语句，要么是使用 if 语句加 while 语句，经过一些数学家的证明这两个模式都是可以实现完整的图灵完备性的，</p>
+<p>然后这个声明式语言，那么他来自于另一个数学家的成果，叫做 lambda 演算，这是丘奇提出来的，lambda 演算你可以理解为它是数学上定义的一种所谓的 lambda 函数，它和我们今天的函数是比较相似的，但它的基本意思就是一种替换的关系，lambda 它可以通过递归来实现图灵完备，</p>
+<p>这两位数学家都是在很早的时间相继发表的这个成果，所以在可计算性上面呢，基本上计算机语言也是有两个流派，一个是 goto 和 if 和 while，另一个是用递归来产生图灵完备性，这两个方式在很多现代语言里基本上是都支持的，所以大家在使用的时候可以去经常去判断它们的适用的场景，然后选择合适的方式去实现它，</p>
+<h3 id="静态与动态"><a href="#静态与动态" class="headerlink" title="静态与动态"></a>静态与动态</h3><p>咱们经常会说这个语言是个动态语言那个语言它是静态语言，然后有的时候我们说类型这个是动态类型，那个是静态类型，那动态和静态在计算机领域里面这个术语是什么意思呢？我们给大家一些直观的印象去讲这件事情，</p>
+<p>动态其实你可以理解为它一定是在用户的设备上面去运行的或者是在在线的服务器上面去运行的，那么它运行的时机就是在产品实际的应用运行时，那么它在这个动态基本上对应了一个概念叫 run time 就是运行时，运行时的这个概念反过来它也跟我们前面的两个场景是非常的相关联的，</p>
+<p>静态最显著的一个特征就是在程序员的设备上运行的，那么它的运行时机也就是在产品的开发时发生的，我们一般来说会把它称作静态，比如静态类型检查就是在你编写这段代码的时候你就已经可以获得类型的检查了，静态它通常也对应着一个术语叫 compound time 就是编译时，这个也来自于非常古老的一些编译型语言的这样的一个概念啊，</p>
+<p>从 C 语言时代就开始流行这个 compound time 和 run time 这样的一种对应关系了，像 JavaScript 这种解释执行的语言其实它没有 compound time 的，咱们现在虽然有的也会用 webpack 去 build 一下，但是其实它是没有真正的 compound time 的，所以说其实今天这个 run time 跟 compound time 的对应已经不准确了，但是我们仍然会愿意沿用这个 compound time 的这个习惯认为 JavaScript 它也是有一个我们在开发时的这样的一个时间</p>
+<p>我们也会有时候会用 compared time 的这个词来讲 JavaScript 的里面的一些特性</p>
+<p>这就是所谓的动态与静态的区分了</p>
+<h3 id="类型系统"><a href="#类型系统" class="headerlink" title="类型系统"></a>类型系统</h3><p>关于类型系统其实非常的复杂，这里我还是给大家介绍一些基本的概念，首先是动态类型系统与静态类型系统，这个就是跟刚才我们去解释动态与静态是非常一致的。动态系统就是在用户的机器上，用户的内存里面能够找到的这个类型那么它就是动态类型系统，那与之相对的静态类型系统就是只在程序员编写代码的时候能够保留的类型信息，我们就叫它静态类型系统，典型的动态类型系统，比如 JavaScript 的就是动态类型系统，我们在代码里面，可以把这个类型当字符串去取出来，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span>(<span class="string">&quot;string&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>然后典型的静态类型系统就像 C++ 这种，它其实最终编译到目标机器的代码的时候，所有的类型信息都已经被丢掉了，所以说我们去区分动态和静态的，其实最简单的办法就是区分它在谁的电脑上能够保留下来啊，而像 Java 一类的语言呢，因为它提供了反射机制，所以我会更愿意把它称作一种半动态半静态的类型系统，就是在编译时主要的类型检查和这个类型的这个操作都已经在编译时被处理掉了，但是如果你想在运行时去获得这个类型的一些信息，你还是可以通过反射去获取的，这个就是一些比较新的语言会采取的一种方式，</p>
+<p>然后还有一个就是强类型与弱类型，在很多时候常常跟动态与静态去混淆，其实强类型与弱类型它只是在说明在这个编程语言里类型转换发生的形式，</p>
+<p>强类型的语言它的类型转化是不会默认发生的，像这个 JavaScript 就是一个典型的弱类型的语言，最著名的比如说我们的用一个 string 和一个 number 相加，那么我们的 JavaScript 引擎会默认的把 number 转换成 string 类型之后，最后给你得到 string，而像这个==这种它是 JavaScript 里面的一个臭名昭著失败的语言特性，它在 string 和 boolean 之间，如果说你去==运算的话，它还会先把这个 boolean 转成 number，然后再去跟 string 去做是否相同的对比，这是一个非常奇怪的设计</p>
+<p>然后再说回这个类型，就往往会产生一些复合类型，比如说我们可以定一个结构体一个对象，那么它的这个 a 属性，它必须属于类型 T1，然后我们有一些函数，因为像 JavaScript 语言，它的函数是可以作为参数传递的，所以这个函数也有个类型，这个我们一般把它称作函数签名，函数签名里包含参数类型和返回值类型两个部分。那参数类型它又是一个列表，所以说函数类型它可能就会有这个 T1，T2，然后变成 T3 这样的一种形式，然后就是子类型典型的语言就是 C++，它会有这个字类型的一个概念，当然了，所有的基于类的面向对象的语言呢，它都会把类的结构关系变成类型的关系啊，注意类和类型，其实是两个概念，那么有了子类型的这个概念呢，所以说在做类型转换的时候它就会有一些默认的行为，比如说能用父类型的地方它都能用子类型，</p>
+<p>然后还有一种就是泛型，在一些语言里面现在又多了一种范式叫做泛型编程，还可以把类型当做一个参数一样的东西去传递给我们的某一段代码结构，这个代码结构有可能是类，也有可能是函数，分别对应着泛型类和泛型函数，然后泛型跟子类型相结合就会产生什么逆变，协变这样的东西，这里呢也不给大家展开去细讲了，有兴趣的同学，可以去看 TypeScript 泛型相关的内容</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="liangx 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="liangx 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/" rel="prev" title="泛用语言分类方法">
+      <i class="fa fa-chevron-left"></i> 泛用语言分类方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" rel="next" title="有限状态机是什么">
+      有限状态机是什么 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">图灵完备性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E4%B8%8E%E5%8A%A8%E6%80%81"><span class="nav-number">2.</span> <span class="nav-text">静态与动态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">类型系统</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="liangx"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">liangx</p>
+  <div class="site-description" itemprop="description">爱前端、爱分享、爱互联网</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/15100399015" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;15100399015" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1474862431@qq.com" title="E-Mail → mailto:1474862431@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liangx</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'oN9c5z0Ppc0d9k3bWlICbwbQ-gzGzoHsz',
+      appKey     : '1znvAAYuK3Kq9MFcrNltFAbs',
+      placeholder: "有什么想法吗？",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
