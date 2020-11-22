@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">泛用语言分类方法</a>
+            <a href="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/" class="post-title-link" itemprop="url">状态机</a>
         </h2>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-11-17 09:39:40 / 修改时间：11:22:04" itemprop="dateCreated datePublished" datetime="2020-11-17T09:39:40+08:00">2020-11-17</time>
+              <time title="创建时间：2020-11-18 13:42:04 / 修改时间：13:59:46" itemprop="dateCreated datePublished" datetime="2020-11-18T13:42:04+08:00">2020-11-18</time>
             </span>
 
           
@@ -231,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -247,27 +247,68 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>从这节课开始我们进入到重学 JavaScript 的内容，在所有的重学系列的课程中，我们都是回假设大家已经对，JavaScript，Css，html 有了一定的了解，而我们重学的过程其实是在帮助我们在这些过去的知识里面建立一个新的秩序，也就是建立知识体系的过程，重学 JavaScript 部分，将会带着大家以 js 的语法为线索，从细到粗的跟大家完成学习一遍 JavaScript 的语言知识，第一节课我们回先讲一点编程语言的基本知识</p>
-<h3 id="语言分类"><a href="#语言分类" class="headerlink" title="语言分类"></a>语言分类</h3><ul>
-<li><p>自然语言</p>
-<p>  自然语言（Natural Language）就是人类讲的语言，比如汉语、英语和法语。这类语言不是人为设计（虽然有人试图强加一些规则）而是自然进化的。</p>
-</li>
-<li><p>形式语言</p>
-<p>  形式语言（Formal Language）是为了特定应用而人为设计的语言。例如数学家用的数字和运算符号、化学家用的分子式等。编程语言也是一种形式语言，是专门设计用来表达计算过程的形式语言。形式语言有严格的语法（Syntax）规则，例如，3+3=6是一个语法正确的数学等式，而3=+6$则不是，H2O是一个正确的分子式，而2Zz则不是。语法规则是由关于符号（Token）和结构（Structure）的规则所组成的。Token的概念相当于自然语言中的单词和标点、数学式中的数和运算符、化学分子式中的元素名和数字。关于Token的规则称为词法（Lexical）规则，而关于语句结构的规则称为语法（Grammar）规则。</p>
-</li>
-</ul>
-<h3 id="形式语言的表示方法"><a href="#形式语言的表示方法" class="headerlink" title="形式语言的表示方法"></a>形式语言的表示方法</h3><p>一个形式语言可以通过多种方法来限定自身，比如：</p>
+          <blockquote>
+<p>状态机是什么？状态机应该如何去应用呢？状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
+</blockquote>
+<p>在工作过程中，意外接触了一个词——“状态机”，这是个什么意思，可以为我们做产品提供怎样的用处？</p>
+<p><strong>作为产品，为什么需要学习状态机呢？</strong></p>
+<p>在刚进入公司的时候，根据公司产品做流程图的时候，发现自己经常会漏了这样或那样的状态，导致整体流程会有问题。后来知道了状态机这样的东西，发现用这幅图就可以很清晰的表达整个状态的流转。当然这个不是做好一款产品的必备品，但是却可以让你更加轻松的同技术等人员交流。</p>
+<p>一、什么是状态机？</p>
+<p>就是就是状态转移图。</p>
+<p>如果流程围绕某个事物的状态变化进行，显而易见，该轮到状态机图上场了。一个状态机图中只描述一个事物，该事物有多个状态，不同的动作作用到状态上导致状态的转换。</p>
+<p>举个最简单的例子：</p>
+<p>人有三个状态：</p>
 <ul>
-<li>枚举出各个字串（只适用于有限字串集合）。-</li>
-<li>通过形式文法来产生（参见<strong>乔姆斯基谱系</strong>）。</li>
-<li>通过正则表达式来产生。</li>
-<li>通过某种自动机来识别，比如图灵机、有限状态自动机。</li>
+<li>健康</li>
+<li>感冒</li>
+<li>康复中</li>
 </ul>
-<h3 id="形式语言编程方面的应用"><a href="#形式语言编程方面的应用" class="headerlink" title="形式语言编程方面的应用"></a>形式语言编程方面的应用</h3><p>主要：语法（编程语言和编译器）<br>编译器通常有两个不同的部分组成。</p>
-<p>一个词法分析器，由一个像lex的工具形成。识别编程语言的语法标记。例如：标识符或关键字，在一个简单的语言表达形式中，通常是正则表达式工具。在最基本的概念，</p>
-<p>一个解析器由一个类似Yacc的解析生成器构成。试图判断源程序是否有效。当然，编译器做的不仅仅是解析源代码，他们通常把它翻译成一些可执行格式。因此，一个解析器通常输出多是或否的回答，一个典型的抽象语法树，这是由编译器后续阶段用于最终生成机器代码，包含直接运行在硬件执行，或一些中间代码需要虚拟机执行。</p>
-<h3 id="乔姆斯基谱系"><a href="#乔姆斯基谱系" class="headerlink" title="乔姆斯基谱系"></a>乔姆斯基谱系</h3><p>乔姆斯基体系是由诺·乔姆斯基于1956年提出的，是刻画形式文法表达能力的一个分类谱系。</p>
-<p>太深奥看不懂，以后再说，，，，</p>
+<p>触发的条件有</p>
+<ul>
+<li>淋雨(t1)</li>
+<li>吃药(t2)</li>
+<li>打针(t3)</li>
+<li>休息(t4)</li>
+</ul>
+<p>所以状态机就是健康-&gt;(t4)-&gt;健康；健康-&gt;(t1)-&gt;感冒；感冒-&gt;(t3)-&gt;健康；感冒-&gt;(t2)-&gt;康复中；康复中-&gt;(t4)-&gt;健康等等。就是这样状态在不同的条件下，跳转到自己或不同状态的图。</p>
+<p>状态机可归纳为 4 个要素，即<strong>现态、条件、动作、次态</strong>。这样的归纳，主要是出于对状态机的内在因果关系的考虑。<strong>“现态”和“条件”是因，“动作”和“次态”是果</strong>。</p>
+<p>详解如下：</p>
+<ol>
+<li>现态：是指当前所处的状态。</li>
+<li>条件：又称为“事件”，当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。</li>
+<li>动作：条件满足后执行的动作，动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。</li>
+<li>次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</li>
+</ol>
+<p>在了解关于状态机的文章后，结合自己的平时的学习总结，我发现：<strong>在平时的业务过程中，判断即对应状态机理论中的条件，我们做什么操作改变状态即理论中的动作</strong>，同时状态必须要有始有终，否则会出现状态卡住，无法继续正常推进。</p>
+<p>状态机的开始一般用空心圆表示，代表状态图的起始位置。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/d85d69eb32524248948b04def94de314.jpeg" alt="img"></p>
+<p>结尾一般用实心圆点表示，是一个状态的终止点。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/02677f6905fd4ffdbbf5129eff72cd78.jpeg" alt="img"></p>
+<p>二、那么状态机怎样去应用呢？</p>
+<p>以物理课学的灯泡图为例：就是一个最基本的小型状态机，这个例子人人里的很多大神都已经举过了，这里就简单说下。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/18bd7c123ed34779b7a987181ad226ed.jpeg" alt="img"></p>
+<p>这里就是两个状态：① 打开开关，灯泡亮；② 关闭开关，灯泡灭。</p>
+<p>可以画出以下的状态机图：</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/0e3c08e476844dd99026db2709c03464.jpeg" alt="img"></p>
+<p>如果进度卡住，该怎么办？</p>
+<p>这里有个比较形象的案例就是淘宝的自动确认收货，卖家发货后状态变为待收货，若买家迟迟不点确认收货的话，那么流程就停止在这里，卖家也迟迟收不到货款。</p>
+<p>因此，在这里，淘宝做了一个条件，判断时间是否达到 15 天，如果达到 15 天，做出确认收货的动作，使得状态得到流转。</p>
+<p>以小灯泡为例：假设为了节约，小灯泡开了超过 8 个小时就自动关闭，除非再次做打开开关的操作，画出此时的状态机图如下：</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/258a535c301c4c6ca40a5877f5d2707a.jpeg" alt="img"></p>
+<p>同样的状态判断应用了很多场景，例如：患者购买服务或商品时，订单由待支付-已支付的状态中的通过时间条件来实现状态得到继续流转。</p>
+<p>但是，判断不是状态机必要的，如：正常小灯泡的两种状态，可以不需要经过判断。起始和终止状态可能是相同的，也可能是不同的，即同一种状态可能是起始状态，也可能为终止状态。</p>
+<p>在这里以外卖 app 为例：制作了一个订单的简单的状态机图，以订单的状态变更推动。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/5dde037d12804ddabdb50f69a5080fd8.png" alt="img"></p>
+<p>三、总结</p>
+<p>新入门时，对状态机和业务流程图总是傻傻分不清楚，因此对于状态机和流程图进行了了解和归纳。</p>
+<p>总的来说，状态机图和业务流程图有些类似，但是又有不同：</p>
+<ul>
+<li>两者是两种不同的思维方式；</li>
+<li>两者思考的出发点不一样，因而两者所表达的目的也是不同的；</li>
+<li>两者的各个节点都是不同的，流程图为动作，状态机为状态。</li>
+</ul>
+<p>一般情况下，我们使用的均为有限状态机。状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
+<p>同时，使用状态机和相关人员，尤其是开发，进行表达时，也可以更加清晰，提升沟通效率。</p>
 
       
     </div>
@@ -286,7 +327,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -354,7 +395,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

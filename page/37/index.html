@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/" class="post-title-link" itemprop="url">前端测试开篇</a>
+            <a href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/" class="post-title-link" itemprop="url">类型兼容性</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-09-19 16:52:25" itemprop="dateCreated datePublished" datetime="2020-09-19T16:52:25+08:00">2020-09-19</time>
+              <time title="创建时间：2020-09-21 09:57:05" itemprop="dateCreated datePublished" datetime="2020-09-21T09:57:05+08:00">2020-09-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:50:56" itemprop="dateModified" datetime="2020-11-10T10:50:56+08:00">2020-11-10</time>
+                <time title="修改时间：2020-11-10 10:49:50" itemprop="dateModified" datetime="2020-11-10T10:49:50+08:00">2020-11-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">前端自动化测试</span></a>
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,14 +262,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="什么是自动化测试"><a href="#什么是自动化测试" class="headerlink" title="什么是自动化测试"></a>什么是自动化测试</h3><blockquote>
-<p>在软件测试中，测试自动化（英语：Test automation）是一种测试方法，使用特定的软件，去控制测试流程，并比较实际的结果与预期结果之间的差异。通过将测试自动化，可以让正式的测试过程中的必要测试，可以反复进行；通过这种方法，也可以将难以手动进行的测试，交由软件来做。测试自动化的最大优势就是可以快速而且反复的进行测试。</p>
-</blockquote>
-<p>简单理解，自动化测试是指软件测试的自动化，让软件代替人工测试，可以快速，反复进行</p>
-<p>关于自动化测试有一个金字塔理论，把测试从上到下分为 /UI（用户界面测试）/Service（服务测试） /Unit（单元测试 ）。如图所示，越往金字塔底层，测试的效率越高，测试质量保障程度越高，测试的成本越低。怎么理解这句话呢？前端项目通常 UI 变化频繁，一旦发生变化，UI 测试用例就无法执行且难以维护，所以 UI 自动化测试的成本高，收益小；相比 UI 测试，Service 测试更加简单直接且变化不会很频繁；单元测试主要对公共函数、方法进行测试，测试用例复用度高且更能保证代码质量。</p>
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>TypeScript 里的类型兼容性是基于结构子类型的。 结构类型是一种只使用其成员来描述类型的方式。 它正好与名义（nominal）类型形成对比。（译者注：在基于名义类型的类型系统中，数据类型的兼容性或等价性是通过明确的声明和/或类型的名称来决定的。这与结构性类型系统不同，它是基于类型的组成结构，且不要求明确地声明。） 看下面的例子：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Named &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line"><span class="comment">// OK, because of structural typing</span></span><br><span class="line">p = <span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
+
+<p>在使用基于名义类型的语言，比如 C#或 Java 中，这段代码会报错，因为 Person 类没有明确说明其实现了 Named 接口。</p>
+<p>TypeScript 的结构性子类型是根据 JavaScript 代码的典型写法来设计的。 因为 JavaScript 里广泛地使用匿名对象，例如函数表达式和对象字面量，所以使用结构类型系统来描述这些类型比使用名义类型系统更好。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/#more" rel="contents">
+              <a class="btn" href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -292,7 +292,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -360,7 +360,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

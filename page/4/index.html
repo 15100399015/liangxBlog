@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" class="post-title-link" itemprop="url">一般命令式编程语言</a>
+            <a href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">有限状态机是什么</a>
         </h2>
 
         <div class="post-meta">
@@ -217,10 +217,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-11-16 10:13:36 / 修改时间：10:55:12" itemprop="dateCreated datePublished" datetime="2020-11-16T10:13:36+08:00">2020-11-16</time>
+              <time title="创建时间：2020-11-17 16:16:04" itemprop="dateCreated datePublished" datetime="2020-11-17T16:16:04+08:00">2020-11-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-18 13:36:27" itemprop="dateModified" datetime="2020-11-18T13:36:27+08:00">2020-11-18</time>
+              </span>
 
           
   
@@ -231,8 +237,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -247,16 +253,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>一般的命令式语言的一种设计方式</p>
-<p>一般来说我们的命令式语言它可能有一些细微的结构上的不一致，但是总体上来讲，它的结构都分成 5 个层级</p>
-<ol>
-<li>Atom（原子级）：原子级是一个语言的最小组成单位，它通常包含一些关键字包含着一些直接量包含着一些变量名这样的一些基本单位，典型的就是我们的变量名，字符串直接量，数字直接量</li>
-<li>Expression（表达式）：原子级的结构通过运算符相连接，然后加上一些辅助的符号，那么它就会构成一个表达式的结构，表达式它通常是一个可以级联的结构，比如说我们的 JavaScript 有四则运算，按位与，移位运算，比较运算，或，非，等</li>
-<li>Statement（语句）：表达式加上一些特定的标识符和一些特定的关键字和一些特定的符号形成一种结构我们把它叫做语句，大家比较熟悉的可能有 if（条件语句），while，for（循环语句），一个有语句的语言其实已经是一个可以达成图灵完备并且去执行的语言了，</li>
-<li>Structure（结构化）：一般的语言还会有结构化的层级比如我们 JavaScript 里就会有 Function，Class 这样的一些设计，它可以我们组织代码，把代码分成不同的块，分成不同的可复用的结构，同样他也会使用关键字来形成结构化的结构</li>
-<li>组织代码，有点语言有，有的不在语言里面在一些辅助性的设施里面，</li>
-</ol>
-
+          <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
+<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
+<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
+<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
+<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
+<p>它有三个特征：</p>
+<ul>
+<li>状态总数（state）是有限的。</li>
+<li>任一时刻，只处在一种状态之中。</li>
+<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
+</ul>
+<p>有限状态机一般都有以下特点：</p>
+<ul>
+<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
+<li>事物拥有的状态总数是有限的；</li>
+<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
+<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
+<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h3 id="编码演示"><a href="#编码演示" class="headerlink" title="编码演示"></a>编码演示</h3>
       
     </div>
 
@@ -274,7 +290,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -342,7 +358,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

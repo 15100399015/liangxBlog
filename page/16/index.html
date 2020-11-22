@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" class="post-title-link" itemprop="url">什么是图灵完备？</a>
+            <a href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/" class="post-title-link" itemprop="url">浏览器工作流程-排版</a>
         </h2>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-11-09 09:27:39 / 修改时间：17:51:31" itemprop="dateCreated datePublished" datetime="2020-11-09T09:27:39+08:00">2020-11-09</time>
+              <time title="创建时间：2020-11-09 15:51:17 / 修改时间：17:47:41" itemprop="dateCreated datePublished" datetime="2020-11-09T15:51:17+08:00">2020-11-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -227,7 +227,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E7%81%B5/" itemprop="url" rel="index"><span itemprop="name">图灵</span></a>
+                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
                 </span>
             </span>
 
@@ -240,8 +240,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%8E%92%E7%89%88/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -256,76 +256,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这是一篇旨在帮助理解图灵机及相关概念是什么，而非证明其正确性的回答，它包含以下内容：</p>
-<ol>
-<li>什么是图灵机</li>
-<li>图灵机可以解决什么问题</li>
-<li>什么是图灵完备</li>
-<li>直观理解图灵完备——Brainfuck 语言</li>
-</ol>
-<hr>
-<h3 id="什么是图灵机"><a href="#什么是图灵机" class="headerlink" title="什么是图灵机"></a>什么是图灵机</h3><p>图灵机（Turing Machine）是图灵在 1936 年发表的 “On Computable Numbers, with an Application to the Entscheidungsproblem”（《论可计算数及其在判定性问题上的应用》）中提出的 <strong>数学模型</strong>。既然是数学模型，它就并非一个实体概念，而是架空的一个想法。在书中图灵描述了它是什么，并且证明了，只要图灵机可以被实现，就可以用来解决任何可计算问题</p>
-<p>图灵机的结构包括以下几个部分：</p>
-<ol>
-<li>一条无限长的纸带（tape），纸带被分成一个个相邻的格子（square），每个格子都可以写上至多一个字符（symbol）。</li>
-<li>一个字符表（alphabet），即字符的集合，它包含纸带上可能出现的所有字符。其中包含一个特殊的空白字符（blank），意思是此格子没有任何字符。</li>
-<li>一个读写头（head），可理解为指向其中一个格子的指针。它可以读取/擦除/写入当前格子的内容，此外也可以每次向左/右移动一个格子。</li>
-<li>一个状态寄存器（state register），它追踪着每一步运算过程中，整个机器所处的状态（运行/终止）。当这个状态从运行变为终止，则运算结束，机器停机并交回控制权。如果你了解有限状态机，它便对应着有限状态机里的状态。</li>
-<li>一个有限的指令集（instructions table），它记录着读写头在特定情况下应该执行的行为。可以想象读写头随身有一本操作指南，里面记录着很多条类似于“当你身处编号 53 的格子并看到其内容为 0 时，擦除，改写为 1，并向右移一格。此外，令下一状态为运行。”这样的命令。其实某种意义上，这个指令集就对应着程序员所写下的程序了。</li>
-</ol>
-<p><img data-src="https://pic1.zhimg.com/80/v2-6d57f9001041416d43e886f14fd43f84_720w.jpg?source=1940ef5c"></p>
-<p>在计算开始前，纸带可以是完全空白，也可以在某些格子里预先就有写上部分字符作为输入。运算开始时，读写头从某一位置开始，严格按照此刻的配置（configuration），即：</p>
+          <p>我们书接上文。浏览器进行到这一步，我们已经给 DOM 元素添加了用于展现的 CSS 属性，接下来，浏览器的工作就是确定每一个元素的位置了。我们的基本原则仍然不变，就是尽可能流式地处理上一步骤的输出。</p>
+<p>在构建 DOM 树和计算 CSS 属性这两个步骤，我们的产出都是一个一个的元素，但是在排版这个步骤中，有些情况下，我们就没法做到这样了。</p>
+<p>尤其是表格相关排版、Flex 排版和 Grid 排版，它们有一个显著的特点，那就是子元素之间具有关联性。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>首先我们先来介绍一些基本概念，使你可以感性地认识一下我们平常说的各种术语。</p>
+<p><strong>“排版”</strong>这个概念最初来自活字印刷，是指我们把一个一个的铅字根据文章顺序，放入板框当中的步骤，排版的意思是确定每一个字的位置。</p>
+<p>在现代浏览器中，仍然借用了这个概念，但是排版的内容更加复杂，包括文字、图片、图形、表格等等，我们把浏览器确定它们位置的过程，叫作排版。</p>
+<p>浏览器最基本的排版方案是正常流排版，它包含了顺次排布和折行等规则，这是一个跟我们提到的印刷排版类似的排版方案，也跟我们平时书写文字的方式一致，所以我们把它叫做正常流。</p>
+<p>浏览器的文字排版遵循公认的文字排版规范，文字排版是一个复杂的系统，它规定了行模型和文字在行模型中的排布。行模型规定了行顶、行底、文字区域、基线等对齐方式。（你还记得小时候写英语的英语本吗？英语本上的四条线就是一个简单的行模型。）</p>
+<p>此外，浏览器支持不同语言，因为不同语言的书写顺序不一致，所以浏览器的文本排版还支持双向文字系统。</p>
+<p>浏览器又可以支持元素和文字的混排，元素被定义为占据长方形的区域，还允许边框、边距和留白，这个就是所谓的盒模型。</p>
+<p>在正常流的基础上，浏览器还支持两类元素：绝对定位元素和浮动元素。</p>
 <ul>
-<li>当前所处位置</li>
-<li>当前格子内容</li>
+<li>绝对定位元素把自身从正常流抽出，直接由 top 和 left 等属性确定自身的位置，不参加排版计算，也不影响其它元素。绝对定位元素由 position 属性控制。</li>
+<li>浮动元素则是使得自己在正常流的位置向左或者向右移动到边界，并且占据一块排版空间。浮动元素由 float 属性控制。</li>
 </ul>
-<p>来一步步的对照着指令集去进行操作，直到状态变为停止，运算结束。而后纸带上留下的信息，即字符的序列（比如类似“…011001…”）便作为输出，由人来解码为自然语言。</p>
-<p>要重申一下，以上只是图灵机模型的内容，而非具体的实现。所谓的纸带和读写头都只是图灵提出的抽象概念。为便于理解打一个比方。算盘虽然不是图灵机（因为它没有无限长的纸带，即无限的存储空间），但它的行为与图灵机一致。每一串算珠都是纸带上的一格，一串算珠上展示的数字便记录着当前格中的字符（可以是空白，可以是 12345 ）。人类的手即是读写头，可以更改每串算珠的状态。算盘的运行遵循人脑中的算法，当算法结束，算盘停机。</p>
-<hr>
-<h3 id="图灵机可以解决什么问题"><a href="#图灵机可以解决什么问题" class="headerlink" title="图灵机可以解决什么问题"></a>图灵机可以解决什么问题</h3><p>在文章中，图灵所做的事是证明了， <strong>假设</strong>上述模型里所说的功能都能被以某种形式物理实现，<strong>那么</strong>任意可计算问题都可以被解决。这里所说的可计算问题，涉及到计算理论（Computation Theory）的概念。这个领域的概念很繁杂，先简单梳理一下。在计算机领域，或者说自动机领域，我们研究的一切问题都是计算问题（Computational Problem）。它泛指一切与计算相关的问题。</p>
-<p>计算问题的一些举例：</p>
-<ul>
-<li>给定一个正整数 n，判断它是否是质数</li>
-<li>给定一个 01 序列，把它们按位取反</li>
-<li>给定一个字符串，判断某个字符是否存在，及查找存在位置</li>
-<li>给定一个逻辑蕴含的命题，求它的逆否命题</li>
-</ul>
-<p>非计算问题的例子：</p>
-<ul>
-<li>今晚吃什么</li>
-<li>为什么太阳从东边升起</li>
-</ul>
-<p>计算问题有的可以解决，有的不可解决。这就引出了计算问题的可计算性（Computability）。它可以被理解为“是否存在一个算法，能解决在任何输入下的此计算问题”。如上面的问题 1，我们当然可以找到一个算法来解决判断任意正整数 n 是否为质数的问题（比如从 2 遍历到 n-1，看 n 是否可以整除它）。所以，问题 1 就是可计算的。</p>
-<p>也有一些不可计算的计算问题，比如著名的停机问题（Halting Problem）。它的表述是这样的：给定一段程序的描述和该程序的一个有效输入，运行此程序，那么程序最终是会终止，还是会死循环下去？</p>
-<p>这个问题很绕人，有点像那个著名的理发师悖论，但它确实是一个计算问题。更具体的，它是一个不可判定问题（Undecidable Problem）。即不存在一个<strong>通用</strong>算法，可以在任意输入下解决此问题。图灵在文章里很优雅的用反证法推翻了假设“假设有这么一个算法可以解决任何停机问题”，从而证明了这样的算法并不存在。具体证明过程网上的资料非常丰富，我就不再花篇幅了。</p>
-<p>回到这一节的主题。简而言之，对于一个问题，对于任意输入，只要人类可以保证算出结果（不管花多少时间），那么图灵机就可以保证算出结果（不管花多少时间）。</p>
-<hr>
-<h3 id="什么是图灵完备"><a href="#什么是图灵完备" class="headerlink" title="什么是图灵完备"></a>什么是图灵完备</h3><p>图灵完备性（Turing Completeness）是针对一套数据操作规则而言的概念。数据操作规则可以是一门编程语言，也可以是计算机里具体实现了的指令集。当这套规则可以实现图灵机模型里的全部功能时，就称它具有图灵完备性。直白一点说，图灵完备性就是我给你一工具箱的东西，包括无限内存、if/else 控制流、while 循环……那么你现在图灵完备了吗？</p>
-<p>概念本身倒是非常直观，但整件事似乎还是让人云里雾里。我曾经一直不懂的就是为什么图灵给出的那个命题是正确的。换句话说，凭什么有了纸带以及其他的那一套东西，就可以自信解决任意可计算问题呢？尽管我不能通读他的那篇论文里的证明，但是通过一门叫做 Brainfuck 的编程语言，还是可以获得一些直觉。</p>
-<h3 id="直观理解图灵完备——Brainfuck-语言"><a href="#直观理解图灵完备——Brainfuck-语言" class="headerlink" title="直观理解图灵完备——Brainfuck 语言"></a>直观理解图灵完备——Brainfuck 语言</h3><p>如今主流的编程语言（C++，Java，Python，以及等等等等）都是图灵完备的语言。关于语言优劣之争也只是在其封装、优化等方面，以及因为这些区别而产生的“不同语言适用于不同情况”的争执。如果我们回到最底层，就会发现它们可以实现的功能其实完全一样，并且本质上就是一个图灵机。</p>
-<p>在 1993 年，Urban Müller 发明了 Brainfuck 语言。这门语言可以说是编程语言界的 helloworld 了——它一共只含有 8 个有效字符，每个有效字符就是一条指令。语言虽然极致轻量，它却是一门图灵完备的编程语言。如果能理解它的工作原理，那么对于理解图灵机是有很大帮助的。</p>
-<p>先贴上一段 BF 的代码，体验一下它的画风：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">++++++++[&gt;++++[&gt;++&gt;+++&gt;+++&gt;+&lt;&lt;&lt;&lt;-]&gt;+&gt;+&gt;-&gt;&gt;+[&lt;]&lt;-]&gt;&gt;.&gt;---.+++++++..+++.&gt;&gt;.&lt;-.&lt;.+++</span><br><span class="line">.------.--------.&gt;&gt;+.&gt;++.</span><br></pre></td></tr></table></figure>
-
-<p>这个程序编译运行后，控制台打印 “Hello World!”。</p>
-<p>BF 的工作机制与图灵机高度一致。首先它存储数据的方式是一个不限长的一维整数数组，里面的数值全部初始化为 0。此外，有一数据指针，每一时刻都指向数组的某一任意元素。指针可以向左/右移动，也可以读取/修改当前值。</p>
-<p>语言里的 8 个有效字符分别是：</p>
-<ul>
-<li><code>&gt;</code>：指针向右移动一格</li>
-<li><code>&lt;</code>：指针向左移动一格</li>
-<li><code>+</code>：使指针当前格数值加一</li>
-<li><code>-</code>：使指针当前格数值减一</li>
-<li><code>.</code>：把当前格数值按 ASCII 表输出到终端</li>
-<li><code>,</code>：从终端接受一 byte 的数据，存储其 ASCII 数值到当前格</li>
-<li><code>[</code>：当指针当前值为 0 时，程序跳转至与之对应的 <code>]</code> 之后；否则程序正常执行</li>
-<li><code>]</code>：程序跳转回与之对应的 <code>[</code> 处</li>
-</ul>
-<p>有了这些工具，我们可以很快做出一个计算乘法的程序。因为 ASCII 表中 ‘A’ 对应的值为 65，可以使用 5 * 13 算出 65 并输出得到字符 ‘A’。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+++++</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">&gt;+++++++++++++</span><br><span class="line">&lt;-</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">&gt;.</span><br></pre></td></tr></table></figure>
-
-<p>把指针初始处的格子命名为 cell 0，cell 0 右边的那个格子命名为 cell 1。那么第一句将其递增 5 次变为 5。然后，循环执行“右移指针，递增 13 次， 左移指针，递减 1 次”。当 cell 0 的值最终被递减为 0 的时候，循环结束。此时 cell 1 的值执行了 5 次“递增 13 次”的操作，即 65。指针右移至 cell 1，输出此格子，则在终端会看到 ‘A’。</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-6dc2cf6ed68844fa4fdc8a555dba3576_720w.jpg?source=1940ef5c"></p>
-<p>我写这个例子的目的是演示只用图灵机的模型，就可以确实计算出乘法的结果。那么自然更加复杂的计算也可以被拆解成图灵机操作（尽管可能非常琐碎）。此外，这个语言因为简洁，也是第一次练习写编译器的一个非常好的选择。</p>
+<p>除了正常流，浏览器还支持其它排版方式，比如现在非常常用的 Flex 排版，这些排版方式由外部元素的 display 属性来控制（注意，display 同时还控制元素在正常流中属于 inline 等级还是 block 等级）。</p>
+<h3 id="正常流文字排版"><a href="#正常流文字排版" class="headerlink" title="正常流文字排版"></a>正常流文字排版</h3><p>我们会在 CSS 部分详细介绍正常流排版的行为，我们这里主要介绍浏览器中的正常流。正常流是唯一一个文字和盒混排的排版方式，我们先从文字来讲起。</p>
+<p>要想理解正常流，我们首先要回忆一下自己如何在纸上写文章。</p>
+<p>首先，纸是有固定宽度的，虽然纸有固定高度，但是我们可以通过下一页纸的方式来接续，因此我们不存在写不下的场景。</p>
+<p>我们书写文字的时候，是从左到右依次书写，每一个字跟上一个字都不重叠，文字之间有一定间距，当写满一行时，我们换到下一行去继续写。</p>
+<p>书写中文时，文字的上、下、中轴线都对齐，书写英文时，不同字母的高度不同，但是有一条基线对齐。</p>
+<p>实际上浏览器环境也很类似。但是因为浏览器支持改变排版方向，不一定是从左到右从上到下，所以我们把文字依次书写的延伸方向称为主轴或者主方向，换行延伸的方向，跟主轴垂直交叉，称为交叉轴或者交叉方向。</p>
+<p>我们一般会从某个字体文件中获取某个特定文字的相关信息。我们获取到的信息大概类似下面：</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/06/01/0619d38f00d539f7b6773e541ce6fa01.png"></p>
+<p>纵向版本:</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/c3/96/c361c7ff3a11216c139ed462b9d5f196.png"></p>
+<p>这两张图片来自著名开源字体解析库 freetype，实际上，各个库对字体的理解大同小异，我们注意一下，advance 代表每一个文字排布后在主轴上的前进距离，它跟文字的宽 / 高不相等，是字体中最重要的属性。</p>
+<p>除了字体提供的字形本身包含的信息，文字排版还受到一些 CSS 属性影响，如 line-height、letter-spacing、word-spacing 等。</p>
+<p>在正常流的文字排版中，多数元素被当作长方形盒来排版，而只有 display 为 inline 的元素，是被拆成文本来排版的（还有一种 run-in 元素，它有时作为盒，有时作为文字，不太常用，这里不详细讲了）。</p>
+<p>display 值为 inline 的元素中的文字排版时会被直接排入文字流中，inline 元素主轴方向的 margin 属性和 border 属性（例如主轴为横向时的 margin-left 和 margin-right）也会被计算进排版前进距离当中。</p>
+<p>注意，当没有强制指定文字书写方向时，在左到右文字中插入右到左向文字，会形成一个双向文字盒，反之亦然。</p>
+<p>这样，即使没有元素包裹，混合书写方向的文字也可以形成一个盒结构，我们在排版时，遇到这样的双向文字盒，会先排完盒内再排盒外。</p>
+<h3 id="正常流中的盒"><a href="#正常流中的盒" class="headerlink" title="正常流中的盒"></a>正常流中的盒</h3><p>在正常流中，display 不为 inline 的元素或者伪元素，会以盒的形式跟文字一起排版。多数 display 属性都可以分成两部分：内部的排版和是否 inline，带有 inline- 前缀的盒，被称作行内级盒。</p>
+<p>根据盒模型，一个盒具有 margin、border、padding、width/height 等属性，它在主轴方向占据的空间是由对应方向的这几个属性之和决定的，而 vertical-align 属性决定了盒在交叉轴方向的位置，同时也会影响实际行高。</p>
+<p>所以，浏览器对行的排版，一般是先行内布局，再确定行的位置，根据行的位置计算出行内盒和文字的排版位置。块级盒比较简单，它总是单独占据一整行，计算出交叉轴方向的高度即可。</p>
+<h3 id="绝对定位元素"><a href="#绝对定位元素" class="headerlink" title="绝对定位元素"></a>绝对定位元素</h3><p>position 属性为 absolute 的元素，我们需要根据它的包含块来确定位置，这是完全跟正常流无关的一种独立排版模式，逐层找到其父级的 position 非 static 元素即可。</p>
+<h3 id="浮动元素排版"><a href="#浮动元素排版" class="headerlink" title="浮动元素排版"></a>浮动元素排版</h3><p>float 元素非常特别，浏览器对 float 的处理是先排入正常流，再移动到排版宽度的最左 / 最右（这里实际上是主轴的最前和最后）。移动之后，float 元素占据了一块排版的空间，因此，在数行之内，主轴方向的排版距离发生了变化，直到交叉轴方向的尺寸超过了浮动元素的交叉轴尺寸范围，主轴排版尺寸才会恢复。float 元素排布完成后，float 元素所在的行需要重新确定位置。</p>
+<h3 id="其它的排版"><a href="#其它的排版" class="headerlink" title="其它的排版"></a>其它的排版</h3><p>CSS 的每一种排版都有一个很复杂的规定，实际实现形式也各不相同。比如如 Flex 排版，支持了 flex 属性，flex 属性将每一行排版后的剩余空间平均分配给主轴方向的 width/height 属性。浏览器支持的每一种排版方式，都是按照对应的标准来实现的。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一部分，我们以正常流为主，介绍了浏览器的排版基本概念及一些算法。这里，我主要介绍了正常流中的文字排版、正常流中的盒、绝对定位元素、浮动元素排版这几种情况。最后，我还简单介绍了一下 Flex 排版。这属于进阶版的排版方式了，你可以了解一下。</p>
 
       
     </div>
@@ -344,7 +313,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/15/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/17/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -412,7 +381,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

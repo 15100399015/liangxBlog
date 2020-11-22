@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/" class="post-title-link" itemprop="url">回溯法</a>
+            <a href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" class="post-title-link" itemprop="url">什么是图灵完备？</a>
         </h2>
 
         <div class="post-meta">
@@ -217,23 +217,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-11-05 15:22:20" itemprop="dateCreated datePublished" datetime="2020-11-05T15:22:20+08:00">2020-11-05</time>
+              <time title="创建时间：2020-11-09 09:27:39 / 修改时间：17:51:31" itemprop="dateCreated datePublished" datetime="2020-11-09T09:27:39+08:00">2020-11-09</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-09 17:47:25" itemprop="dateModified" datetime="2020-11-09T17:47:25+08:00">2020-11-09</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                  <a href="/categories/%E5%9B%BE%E7%81%B5/" itemprop="url" rel="index"><span itemprop="name">图灵</span></a>
                 </span>
             </span>
 
@@ -246,8 +240,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,17 +256,76 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
-<p>回溯法是一种优先搜索法，按选优条件向前搜索，但当探索到某一步时，发现原先选择并不优或达不到目标，就返回一步重新选择，这种走走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为 “回溯点”。</p>
-<p>许多复杂的，规模较大的问题都可以适用回溯法，有 “通用解提方法” 的美称</p>
-<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>在包含问题的所有解的空间树中，按照深度优先搜索的策略，从根节点出发深度探索解空间树，当探索到某一节点的时候，要先判断该节点是否包含问题的解，就从该节点继续探索下去，如果该节点不包含问题的解，则逐层向其祖先节点回溯，（其实回溯法就是对隐式图的深度优先搜索算法）</p>
-<p>若用回溯法求问题的所有解时，要回溯到根，其根节点的所有可行的子树都要以被搜索遍才结束</p>
-<p>而若使用回溯法求任一解时，只要搜索到问题的第一个解就可以结束</p>
-<h3 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h3><ol>
-<li>针对所给问题，确定问题的解空间：首先应明确定义问题的解空间，问题的解空间应至少包含问题的一个（最优）解。</li>
-<li>确定结点的扩展搜索规则</li>
-<li>以深度优先方式搜索解空间，并在搜索过程中用剪枝函数避免无效搜索。</li>
+          <p>这是一篇旨在帮助理解图灵机及相关概念是什么，而非证明其正确性的回答，它包含以下内容：</p>
+<ol>
+<li>什么是图灵机</li>
+<li>图灵机可以解决什么问题</li>
+<li>什么是图灵完备</li>
+<li>直观理解图灵完备——Brainfuck 语言</li>
 </ol>
+<hr>
+<h3 id="什么是图灵机"><a href="#什么是图灵机" class="headerlink" title="什么是图灵机"></a>什么是图灵机</h3><p>图灵机（Turing Machine）是图灵在 1936 年发表的 “On Computable Numbers, with an Application to the Entscheidungsproblem”（《论可计算数及其在判定性问题上的应用》）中提出的 <strong>数学模型</strong>。既然是数学模型，它就并非一个实体概念，而是架空的一个想法。在书中图灵描述了它是什么，并且证明了，只要图灵机可以被实现，就可以用来解决任何可计算问题</p>
+<p>图灵机的结构包括以下几个部分：</p>
+<ol>
+<li>一条无限长的纸带（tape），纸带被分成一个个相邻的格子（square），每个格子都可以写上至多一个字符（symbol）。</li>
+<li>一个字符表（alphabet），即字符的集合，它包含纸带上可能出现的所有字符。其中包含一个特殊的空白字符（blank），意思是此格子没有任何字符。</li>
+<li>一个读写头（head），可理解为指向其中一个格子的指针。它可以读取/擦除/写入当前格子的内容，此外也可以每次向左/右移动一个格子。</li>
+<li>一个状态寄存器（state register），它追踪着每一步运算过程中，整个机器所处的状态（运行/终止）。当这个状态从运行变为终止，则运算结束，机器停机并交回控制权。如果你了解有限状态机，它便对应着有限状态机里的状态。</li>
+<li>一个有限的指令集（instructions table），它记录着读写头在特定情况下应该执行的行为。可以想象读写头随身有一本操作指南，里面记录着很多条类似于“当你身处编号 53 的格子并看到其内容为 0 时，擦除，改写为 1，并向右移一格。此外，令下一状态为运行。”这样的命令。其实某种意义上，这个指令集就对应着程序员所写下的程序了。</li>
+</ol>
+<p><img data-src="https://pic1.zhimg.com/80/v2-6d57f9001041416d43e886f14fd43f84_720w.jpg?source=1940ef5c"></p>
+<p>在计算开始前，纸带可以是完全空白，也可以在某些格子里预先就有写上部分字符作为输入。运算开始时，读写头从某一位置开始，严格按照此刻的配置（configuration），即：</p>
+<ul>
+<li>当前所处位置</li>
+<li>当前格子内容</li>
+</ul>
+<p>来一步步的对照着指令集去进行操作，直到状态变为停止，运算结束。而后纸带上留下的信息，即字符的序列（比如类似“…011001…”）便作为输出，由人来解码为自然语言。</p>
+<p>要重申一下，以上只是图灵机模型的内容，而非具体的实现。所谓的纸带和读写头都只是图灵提出的抽象概念。为便于理解打一个比方。算盘虽然不是图灵机（因为它没有无限长的纸带，即无限的存储空间），但它的行为与图灵机一致。每一串算珠都是纸带上的一格，一串算珠上展示的数字便记录着当前格中的字符（可以是空白，可以是 12345 ）。人类的手即是读写头，可以更改每串算珠的状态。算盘的运行遵循人脑中的算法，当算法结束，算盘停机。</p>
+<hr>
+<h3 id="图灵机可以解决什么问题"><a href="#图灵机可以解决什么问题" class="headerlink" title="图灵机可以解决什么问题"></a>图灵机可以解决什么问题</h3><p>在文章中，图灵所做的事是证明了， <strong>假设</strong>上述模型里所说的功能都能被以某种形式物理实现，<strong>那么</strong>任意可计算问题都可以被解决。这里所说的可计算问题，涉及到计算理论（Computation Theory）的概念。这个领域的概念很繁杂，先简单梳理一下。在计算机领域，或者说自动机领域，我们研究的一切问题都是计算问题（Computational Problem）。它泛指一切与计算相关的问题。</p>
+<p>计算问题的一些举例：</p>
+<ul>
+<li>给定一个正整数 n，判断它是否是质数</li>
+<li>给定一个 01 序列，把它们按位取反</li>
+<li>给定一个字符串，判断某个字符是否存在，及查找存在位置</li>
+<li>给定一个逻辑蕴含的命题，求它的逆否命题</li>
+</ul>
+<p>非计算问题的例子：</p>
+<ul>
+<li>今晚吃什么</li>
+<li>为什么太阳从东边升起</li>
+</ul>
+<p>计算问题有的可以解决，有的不可解决。这就引出了计算问题的可计算性（Computability）。它可以被理解为“是否存在一个算法，能解决在任何输入下的此计算问题”。如上面的问题 1，我们当然可以找到一个算法来解决判断任意正整数 n 是否为质数的问题（比如从 2 遍历到 n-1，看 n 是否可以整除它）。所以，问题 1 就是可计算的。</p>
+<p>也有一些不可计算的计算问题，比如著名的停机问题（Halting Problem）。它的表述是这样的：给定一段程序的描述和该程序的一个有效输入，运行此程序，那么程序最终是会终止，还是会死循环下去？</p>
+<p>这个问题很绕人，有点像那个著名的理发师悖论，但它确实是一个计算问题。更具体的，它是一个不可判定问题（Undecidable Problem）。即不存在一个<strong>通用</strong>算法，可以在任意输入下解决此问题。图灵在文章里很优雅的用反证法推翻了假设“假设有这么一个算法可以解决任何停机问题”，从而证明了这样的算法并不存在。具体证明过程网上的资料非常丰富，我就不再花篇幅了。</p>
+<p>回到这一节的主题。简而言之，对于一个问题，对于任意输入，只要人类可以保证算出结果（不管花多少时间），那么图灵机就可以保证算出结果（不管花多少时间）。</p>
+<hr>
+<h3 id="什么是图灵完备"><a href="#什么是图灵完备" class="headerlink" title="什么是图灵完备"></a>什么是图灵完备</h3><p>图灵完备性（Turing Completeness）是针对一套数据操作规则而言的概念。数据操作规则可以是一门编程语言，也可以是计算机里具体实现了的指令集。当这套规则可以实现图灵机模型里的全部功能时，就称它具有图灵完备性。直白一点说，图灵完备性就是我给你一工具箱的东西，包括无限内存、if/else 控制流、while 循环……那么你现在图灵完备了吗？</p>
+<p>概念本身倒是非常直观，但整件事似乎还是让人云里雾里。我曾经一直不懂的就是为什么图灵给出的那个命题是正确的。换句话说，凭什么有了纸带以及其他的那一套东西，就可以自信解决任意可计算问题呢？尽管我不能通读他的那篇论文里的证明，但是通过一门叫做 Brainfuck 的编程语言，还是可以获得一些直觉。</p>
+<h3 id="直观理解图灵完备——Brainfuck-语言"><a href="#直观理解图灵完备——Brainfuck-语言" class="headerlink" title="直观理解图灵完备——Brainfuck 语言"></a>直观理解图灵完备——Brainfuck 语言</h3><p>如今主流的编程语言（C++，Java，Python，以及等等等等）都是图灵完备的语言。关于语言优劣之争也只是在其封装、优化等方面，以及因为这些区别而产生的“不同语言适用于不同情况”的争执。如果我们回到最底层，就会发现它们可以实现的功能其实完全一样，并且本质上就是一个图灵机。</p>
+<p>在 1993 年，Urban Müller 发明了 Brainfuck 语言。这门语言可以说是编程语言界的 helloworld 了——它一共只含有 8 个有效字符，每个有效字符就是一条指令。语言虽然极致轻量，它却是一门图灵完备的编程语言。如果能理解它的工作原理，那么对于理解图灵机是有很大帮助的。</p>
+<p>先贴上一段 BF 的代码，体验一下它的画风：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">++++++++[&gt;++++[&gt;++&gt;+++&gt;+++&gt;+&lt;&lt;&lt;&lt;-]&gt;+&gt;+&gt;-&gt;&gt;+[&lt;]&lt;-]&gt;&gt;.&gt;---.+++++++..+++.&gt;&gt;.&lt;-.&lt;.+++</span><br><span class="line">.------.--------.&gt;&gt;+.&gt;++.</span><br></pre></td></tr></table></figure>
+
+<p>这个程序编译运行后，控制台打印 “Hello World!”。</p>
+<p>BF 的工作机制与图灵机高度一致。首先它存储数据的方式是一个不限长的一维整数数组，里面的数值全部初始化为 0。此外，有一数据指针，每一时刻都指向数组的某一任意元素。指针可以向左/右移动，也可以读取/修改当前值。</p>
+<p>语言里的 8 个有效字符分别是：</p>
+<ul>
+<li><code>&gt;</code>：指针向右移动一格</li>
+<li><code>&lt;</code>：指针向左移动一格</li>
+<li><code>+</code>：使指针当前格数值加一</li>
+<li><code>-</code>：使指针当前格数值减一</li>
+<li><code>.</code>：把当前格数值按 ASCII 表输出到终端</li>
+<li><code>,</code>：从终端接受一 byte 的数据，存储其 ASCII 数值到当前格</li>
+<li><code>[</code>：当指针当前值为 0 时，程序跳转至与之对应的 <code>]</code> 之后；否则程序正常执行</li>
+<li><code>]</code>：程序跳转回与之对应的 <code>[</code> 处</li>
+</ul>
+<p>有了这些工具，我们可以很快做出一个计算乘法的程序。因为 ASCII 表中 ‘A’ 对应的值为 65，可以使用 5 * 13 算出 65 并输出得到字符 ‘A’。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+++++</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">&gt;+++++++++++++</span><br><span class="line">&lt;-</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">&gt;.</span><br></pre></td></tr></table></figure>
+
+<p>把指针初始处的格子命名为 cell 0，cell 0 右边的那个格子命名为 cell 1。那么第一句将其递增 5 次变为 5。然后，循环执行“右移指针，递增 13 次， 左移指针，递减 1 次”。当 cell 0 的值最终被递减为 0 的时候，循环结束。此时 cell 1 的值执行了 5 次“递增 13 次”的操作，即 65。指针右移至 cell 1，输出此格子，则在终端会看到 ‘A’。</p>
+<p><img data-src="https://pic3.zhimg.com/80/v2-6dc2cf6ed68844fa4fdc8a555dba3576_720w.jpg?source=1940ef5c"></p>
+<p>我写这个例子的目的是演示只用图灵机的模型，就可以确实计算出乘法的结果。那么自然更加复杂的计算也可以被拆解成图灵机操作（尽管可能非常琐碎）。此外，这个语言因为简洁，也是第一次练习写编译器的一个非常好的选择。</p>
 
       
     </div>
@@ -291,7 +344,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -359,7 +412,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
