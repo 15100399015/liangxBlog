@@ -88,70 +88,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Generator函数的语法</title>
-    <url>/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
-<p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
-<p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
-<p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，<code>function</code>关键字与函数名之间有一个星号；二是，函数体内部使用<code>yield</code>表达式，定义不同的内部状态（<code>yield</code>在英语里的意思就是“产出”）。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
-
-<p>上面代码定义了一个 Generator 函数<code>helloWorldGenerator</code>，它内部有两个<code>yield</code>表达式（<code>hello</code>和<code>world</code>），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
-<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
-<p>下一步，必须调用遍历器对象的<code>next</code>方法，使得指针移向下一个状态。也就是说，每次调用<code>next</code>方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个<code>yield</code>表达式（或<code>return</code>语句）为止。换言之，Generator 函数是分段执行的，<code>yield</code>表达式是暂停执行的标记，而<code>next</code>方法可以恢复执行。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;hello&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;world&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;ending&#x27;, done: true &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>上面代码一共调用了四次<code>next</code>方法。</p>
-<p>第一次调用，Generator 函数开始执行，直到遇到第一个<code>yield</code>表达式为止。<code>next</code>方法返回一个对象，它的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>hello</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
-<p>第二次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到下一个<code>yield</code>表达式。<code>next</code>方法返回的对象的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>world</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
-<p>第三次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到<code>return</code>语句（如果没有<code>return</code>语句，就执行到函数结束）。<code>next</code>方法返回的对象的<code>value</code>属性，就是紧跟在<code>return</code>语句后面的表达式的值（如果没有<code>return</code>语句，则<code>value</code>属性的值为<code>undefined</code>），<code>done</code>属性的值<code>true</code>，表示遍历已经结束。</p>
-<p>第四次调用，此时 Generator 函数已经运行完毕，<code>next</code>方法返回对象的<code>value</code>属性为<code>undefined</code>，<code>done</code>属性为<code>true</code>。以后再调用<code>next</code>方法，返回的都是这个值。</p>
-<p>总结一下，调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的<code>next</code>方法，就会返回一个有着<code>value</code>和<code>done</code>两个属性的对象。<code>value</code>属性表示当前的内部状态的值，是<code>yield</code>表达式后面那个表达式的值；<code>done</code>属性是一个布尔值，表示是否遍历结束。</p>
-<p>ES6 没有规定，<code>function</code>关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在<code>function</code>关键字后面。本书也采用这种写法。</p>
-<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h4><p>由于 Generator 函数返回的遍历器对象，只有调用<code>next</code>方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。<code>yield</code>表达式就是暂停标志。</p>
-<p>遍历器对象的<code>next</code>方法的运行逻辑如下。</p>
-<ol>
-<li>遇到<code>yield</code>表达式，就暂停执行后面的操作，并将紧跟在<code>yield</code>后面的那个表达式的值，作为返回的对象的<code>value</code>属性值</li>
-<li>下一次调用<code>next</code>方法时，再继续往下执行，直到遇到下一个<code>yield</code>表达式。</li>
-<li>如果没有再遇到新的<code>yield</code>表达式，就一直运行到函数结束，直到<code>return</code>语句为止，并将<code>return</code>语句后面的表达式的值，作为返回的对象的<code>value</code>属性值。</li>
-<li>如果该函数没有<code>return</code>语句，则返回的对象的<code>value</code>属性值为<code>undefined</code>。</li>
-</ol>
-<p>需要注意的是，<code>yield</code>表达式后面的表达式，只有当调用<code>next</code>方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">gen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">123</span> + <span class="number">456</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，<code>yield</code>后面的表达式<code>123 + 456</code>，不会立即求值，只会在<code>next</code>方法将指针移到这一句时，才会求值。</p>
-<p><code>yield</code>表达式与<code>return</code>语句既有相似之处，也有区别。相似之处在于，都能返回紧跟在语句后面的那个表达式的值。区别在于每次遇到<code>yield</code>，函数暂停执行，下一次再从该位置继续向后执行，而<code>return</code>语句不具备位置记忆的功能。一个函数里面，只能执行一次（或者说一个）<code>return</code>语句，但是可以执行多次（或者说多个）<code>yield</code>表达式。正常函数只能返回一个值，因为只能执行一次<code>return</code>；Generator 函数可以返回一系列的值，因为可以有任意多个<code>yield</code>。从另一个角度看，也可以说 Generator 生成了一系列的值，这也就是它的名称的来历（英语中，generator 这个词是“生成器”的意思）。</p>
-<p>Generator 函数可以不用<code>yield</code>表达式，这时就变成了一个单纯的暂缓执行函数。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;执行了！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> generator = f();</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  generator.next();</span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，函数<code>f</code>如果是普通函数，在为变量<code>generator</code>赋值时就会执行。但是，函数<code>f</code>是一个 Generator 函数，就变成只有调用<code>next</code>方法时，函数<code>f</code>才会执行。</p>
-<p>另外需要注意，<code>yield</code>表达式只能用在 Generator 函数里面，用在其他地方都会报错。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// SyntaxError: Unexpected number</span></span><br></pre></td></tr></table></figure>
-
-<p>上面代码在一个普通函数中使用<code>yield</code>表达式，结果产生一个句法错误。</p>
-<p>下面是另外一个例子。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  a.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&#x27;number&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr))&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码也会产生句法错误，因为<code>forEach</code>方法的参数是一个普通函数，但是在里面使用了<code>yield</code>表达式（这个函数里面还使用了<code>yield*</code>表达式，详细介绍见后文）。一种修改方法是改用<code>for</code>循环。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> length = a.length;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = a[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1, 2, 3, 4, 5, 6</span></span><br></pre></td></tr></table></figure>
-
-<p>另外，<code>yield</code>表达式如果用在另一个表达式之中，必须放在圆括号里面。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>yield</code>表达式用作函数参数或放在赋值表达式的右边，可以不加括号。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo(<span class="keyword">yield</span> <span class="string">&quot;a&quot;</span>, <span class="keyword">yield</span> <span class="string">&quot;b&quot;</span>); <span class="comment">// OK</span></span><br><span class="line">  <span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>es6</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Completion Record</title>
     <url>/2020/11/21/Completion%20Record/</url>
     <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
@@ -285,6 +221,70 @@
       </tags>
   </entry>
   <entry>
+    <title>Generator函数的语法</title>
+    <url>/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
+<p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
+<p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
+<p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，<code>function</code>关键字与函数名之间有一个星号；二是，函数体内部使用<code>yield</code>表达式，定义不同的内部状态（<code>yield</code>在英语里的意思就是“产出”）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
+
+<p>上面代码定义了一个 Generator 函数<code>helloWorldGenerator</code>，它内部有两个<code>yield</code>表达式（<code>hello</code>和<code>world</code>），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
+<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
+<p>下一步，必须调用遍历器对象的<code>next</code>方法，使得指针移向下一个状态。也就是说，每次调用<code>next</code>方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个<code>yield</code>表达式（或<code>return</code>语句）为止。换言之，Generator 函数是分段执行的，<code>yield</code>表达式是暂停执行的标记，而<code>next</code>方法可以恢复执行。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;hello&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;world&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;ending&#x27;, done: true &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码一共调用了四次<code>next</code>方法。</p>
+<p>第一次调用，Generator 函数开始执行，直到遇到第一个<code>yield</code>表达式为止。<code>next</code>方法返回一个对象，它的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>hello</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
+<p>第二次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到下一个<code>yield</code>表达式。<code>next</code>方法返回的对象的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>world</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
+<p>第三次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到<code>return</code>语句（如果没有<code>return</code>语句，就执行到函数结束）。<code>next</code>方法返回的对象的<code>value</code>属性，就是紧跟在<code>return</code>语句后面的表达式的值（如果没有<code>return</code>语句，则<code>value</code>属性的值为<code>undefined</code>），<code>done</code>属性的值<code>true</code>，表示遍历已经结束。</p>
+<p>第四次调用，此时 Generator 函数已经运行完毕，<code>next</code>方法返回对象的<code>value</code>属性为<code>undefined</code>，<code>done</code>属性为<code>true</code>。以后再调用<code>next</code>方法，返回的都是这个值。</p>
+<p>总结一下，调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的<code>next</code>方法，就会返回一个有着<code>value</code>和<code>done</code>两个属性的对象。<code>value</code>属性表示当前的内部状态的值，是<code>yield</code>表达式后面那个表达式的值；<code>done</code>属性是一个布尔值，表示是否遍历结束。</p>
+<p>ES6 没有规定，<code>function</code>关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在<code>function</code>关键字后面。本书也采用这种写法。</p>
+<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h4><p>由于 Generator 函数返回的遍历器对象，只有调用<code>next</code>方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。<code>yield</code>表达式就是暂停标志。</p>
+<p>遍历器对象的<code>next</code>方法的运行逻辑如下。</p>
+<ol>
+<li>遇到<code>yield</code>表达式，就暂停执行后面的操作，并将紧跟在<code>yield</code>后面的那个表达式的值，作为返回的对象的<code>value</code>属性值</li>
+<li>下一次调用<code>next</code>方法时，再继续往下执行，直到遇到下一个<code>yield</code>表达式。</li>
+<li>如果没有再遇到新的<code>yield</code>表达式，就一直运行到函数结束，直到<code>return</code>语句为止，并将<code>return</code>语句后面的表达式的值，作为返回的对象的<code>value</code>属性值。</li>
+<li>如果该函数没有<code>return</code>语句，则返回的对象的<code>value</code>属性值为<code>undefined</code>。</li>
+</ol>
+<p>需要注意的是，<code>yield</code>表达式后面的表达式，只有当调用<code>next</code>方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">gen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">123</span> + <span class="number">456</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>yield</code>后面的表达式<code>123 + 456</code>，不会立即求值，只会在<code>next</code>方法将指针移到这一句时，才会求值。</p>
+<p><code>yield</code>表达式与<code>return</code>语句既有相似之处，也有区别。相似之处在于，都能返回紧跟在语句后面的那个表达式的值。区别在于每次遇到<code>yield</code>，函数暂停执行，下一次再从该位置继续向后执行，而<code>return</code>语句不具备位置记忆的功能。一个函数里面，只能执行一次（或者说一个）<code>return</code>语句，但是可以执行多次（或者说多个）<code>yield</code>表达式。正常函数只能返回一个值，因为只能执行一次<code>return</code>；Generator 函数可以返回一系列的值，因为可以有任意多个<code>yield</code>。从另一个角度看，也可以说 Generator 生成了一系列的值，这也就是它的名称的来历（英语中，generator 这个词是“生成器”的意思）。</p>
+<p>Generator 函数可以不用<code>yield</code>表达式，这时就变成了一个单纯的暂缓执行函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;执行了！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> generator = f();</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  generator.next();</span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，函数<code>f</code>如果是普通函数，在为变量<code>generator</code>赋值时就会执行。但是，函数<code>f</code>是一个 Generator 函数，就变成只有调用<code>next</code>方法时，函数<code>f</code>才会执行。</p>
+<p>另外需要注意，<code>yield</code>表达式只能用在 Generator 函数里面，用在其他地方都会报错。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// SyntaxError: Unexpected number</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码在一个普通函数中使用<code>yield</code>表达式，结果产生一个句法错误。</p>
+<p>下面是另外一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  a.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&#x27;number&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr))&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码也会产生句法错误，因为<code>forEach</code>方法的参数是一个普通函数，但是在里面使用了<code>yield</code>表达式（这个函数里面还使用了<code>yield*</code>表达式，详细介绍见后文）。一种修改方法是改用<code>for</code>循环。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> length = a.length;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = a[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1, 2, 3, 4, 5, 6</span></span><br></pre></td></tr></table></figure>
+
+<p>另外，<code>yield</code>表达式如果用在另一个表达式之中，必须放在圆括号里面。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>yield</code>表达式用作函数参数或放在赋值表达式的右边，可以不加括号。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo(<span class="keyword">yield</span> <span class="string">&quot;a&quot;</span>, <span class="keyword">yield</span> <span class="string">&quot;b&quot;</span>); <span class="comment">// OK</span></span><br><span class="line">  <span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>es6</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>KMP</title>
     <url>/2020/10/29/KMP/</url>
     <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
@@ -335,6 +335,73 @@
 <p>MVC 并不适合小型甚至中等规模的应用程序，花费大量时间将 MVC 应用到规模并不是很大的应用程序通常会得不偿失。</p>
 <h3 id="MVC-是一条创建软件的好途径"><a href="#MVC-是一条创建软件的好途径" class="headerlink" title="MVC 是一条创建软件的好途径"></a>MVC 是一条创建软件的好途径</h3><p>MVC 设计模式是一个很好创建软件的途径，它所提倡的一些原则，像内容和显示互相分离可能比较好理解。但是如果你要隔离模型、视图和控制器的构件，你可能需要重新思考你的应用程序，尤其是应用程序的构架方面。如果你肯接受 MVC，并且有能力应付它所带来的额外的工作和复杂性，MVC 将会使你的软件在健壮性，代码重用和结构方面上一个新的台阶。</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>Star Sky</title>
+    <url>/2020/11/10/SkySky/</url>
+    <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=31654478&auto=1&height=66"></iframe>
+
+<p><a href="https://music.163.com/#/song?id=31654478">https://music.163.com/#/song?id=31654478</a></p>
+<p>Here we are 我们在此地</p>
+<p>Riding the sky 翱翔于天际</p>
+<p>Painting the night with sun 绘夜空以晨旭</p>
+<p>You and I, Mirrors of light 你和我 交相辉映</p>
+<p>Twin flames of fire 如两团火焰</p>
+<p>Lit in another time and place 闪亮在彼时彼地</p>
+<p>I knew your name 我曾知你生名</p>
+<p>I knew your face 也曾忆你音容</p>
+<p>Your love and grace 与你爱和魅力</p>
+<p>Past and present now embrace 过往与现在汇聚</p>
+<p>Worlds collide in inner space 世界激荡于内心</p>
+<p>Unstoppable, the song we play 我们奏响的歌 永不停息</p>
+<p>（chorus）（合唱）</p>
+<p>Burn the page for me 忘记我的过去</p>
+<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
+<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
+<p>I cannot deliver your love 我不能接受你的爱</p>
+<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
+<p>turn that page for me 就让过往逝去</p>
+<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
+<p>I cannot find solace in your words 也找不到安慰的话语</p>
+<p>I cannot deliver you your love 我不能回应你的爱意</p>
+<p>or caress your soul 也不能抚慰你（的灵魂）</p>
+<p>Age to age 年复一年</p>
+<p>I feel the call 我感到那呼唤</p>
+<p>Memory of future dreams 未来梦想的记忆</p>
+<p>You and I, riding the sky 你和我 相依比翼</p>
+<p>Keeping the fire bright 让火焰永不熄</p>
+<p>From another time and place 在彼时彼地</p>
+<p>I know your name 我知你生名</p>
+<p>I know your face 将你容颜记</p>
+<p>Your touch and grace 和你的怀抱和魅力</p>
+<p>All of time can not erase 时间也无法抹去</p>
+<p>What our hearts remember stays 我们记得要留在哪里</p>
+<p>Forever on a song we play 永远留在 我们的那首歌里</p>
+<p>（chorus）（合唱）</p>
+<p>Burn the page for me 忘记我的过去</p>
+<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
+<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
+<p>I cannot deliver your love 我不能接受你的爱</p>
+<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
+<p>turn that page for me 就让过往逝去</p>
+<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
+<p>I cannot find solace in your words 也找不到安慰的话语</p>
+<p>I cannot deliver you your love 我不能回应你的爱意</p>
+<p>or caress your soul 也不能抚慰你（的灵魂）</p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><ul>
+<li>女神站在高山之巅，圣咏这和平和凡世绝美，众生顶礼</li>
+<li>我的学生都战死了，现在轮到我这个老师上去了！这是 1940 年一名中央航空教练员驾驶飞机冲向 32 架日本轰炸机前留在日记本上的最后一句话！传奇不该被遗忘！！</li>
+<li>不和亲，不赔款，不割地，不纳贡，天子守国门，君王死社稷！——明朝祖训 “朕死，无面目见祖宗，自去冠冕，以发覆面，任贼分尸，勿伤百姓一人。”——崇祯于 1644 年三月十九日凌晨于煤山自缢前，留在衣服上的那份遗诏。</li>
+<li>世界上通用的语言就两种：音乐和利剑。一样征服人，一样征服心。</li>
+<li>秦始皇：朕统六国，天下归一，筑长城以镇九州龙脉，卫我大秦、护我社稷。朕以始皇之名在此立誓！朕在，当守土开疆，扫平四夷，定我大秦万世之基！朕亡，亦将身化龙魂，佑我华夏永世不衰！此誓，日月为证，天地共鉴，仙魔鬼神共听之！</li>
+</ul>
+]]></content>
+      <categories>
+        <category>音乐</category>
+      </categories>
+      <tags>
+        <tag>音乐</tag>
+      </tags>
   </entry>
   <entry>
     <title>Proxy</title>
@@ -416,70 +483,51 @@
       </tags>
   </entry>
   <entry>
-    <title>Star Sky</title>
-    <url>/2020/11/10/SkySky/</url>
-    <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=31654478&auto=1&height=66"></iframe>
+    <title>TypeScript 中的高级类型</title>
+    <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
+<p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
 
-<p><a href="https://music.163.com/#/song?id=31654478">https://music.163.com/#/song?id=31654478</a></p>
-<p>Here we are 我们在此地</p>
-<p>Riding the sky 翱翔于天际</p>
-<p>Painting the night with sun 绘夜空以晨旭</p>
-<p>You and I, Mirrors of light 你和我 交相辉映</p>
-<p>Twin flames of fire 如两团火焰</p>
-<p>Lit in another time and place 闪亮在彼时彼地</p>
-<p>I knew your name 我曾知你生名</p>
-<p>I knew your face 也曾忆你音容</p>
-<p>Your love and grace 与你爱和魅力</p>
-<p>Past and present now embrace 过往与现在汇聚</p>
-<p>Worlds collide in inner space 世界激荡于内心</p>
-<p>Unstoppable, the song we play 我们奏响的歌 永不停息</p>
-<p>（chorus）（合唱）</p>
-<p>Burn the page for me 忘记我的过去</p>
-<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
-<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
-<p>I cannot deliver your love 我不能接受你的爱</p>
-<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
-<p>turn that page for me 就让过往逝去</p>
-<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
-<p>I cannot find solace in your words 也找不到安慰的话语</p>
-<p>I cannot deliver you your love 我不能回应你的爱意</p>
-<p>or caress your soul 也不能抚慰你（的灵魂）</p>
-<p>Age to age 年复一年</p>
-<p>I feel the call 我感到那呼唤</p>
-<p>Memory of future dreams 未来梦想的记忆</p>
-<p>You and I, riding the sky 你和我 相依比翼</p>
-<p>Keeping the fire bright 让火焰永不熄</p>
-<p>From another time and place 在彼时彼地</p>
-<p>I know your name 我知你生名</p>
-<p>I know your face 将你容颜记</p>
-<p>Your touch and grace 和你的怀抱和魅力</p>
-<p>All of time can not erase 时间也无法抹去</p>
-<p>What our hearts remember stays 我们记得要留在哪里</p>
-<p>Forever on a song we play 永远留在 我们的那首歌里</p>
-<p>（chorus）（合唱）</p>
-<p>Burn the page for me 忘记我的过去</p>
-<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
-<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
-<p>I cannot deliver your love 我不能接受你的爱</p>
-<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
-<p>turn that page for me 就让过往逝去</p>
-<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
-<p>I cannot find solace in your words 也找不到安慰的话语</p>
-<p>I cannot deliver you your love 我不能回应你的爱意</p>
-<p>or caress your soul 也不能抚慰你（的灵魂）</p>
-<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><ul>
-<li>女神站在高山之巅，圣咏这和平和凡世绝美，众生顶礼</li>
-<li>我的学生都战死了，现在轮到我这个老师上去了！这是 1940 年一名中央航空教练员驾驶飞机冲向 32 架日本轰炸机前留在日记本上的最后一句话！传奇不该被遗忘！！</li>
-<li>不和亲，不赔款，不割地，不纳贡，天子守国门，君王死社稷！——明朝祖训 “朕死，无面目见祖宗，自去冠冕，以发覆面，任贼分尸，勿伤百姓一人。”——崇祯于 1644 年三月十九日凌晨于煤山自缢前，留在衣服上的那份遗诏。</li>
-<li>世界上通用的语言就两种：音乐和利剑。一样征服人，一样征服心。</li>
-<li>秦始皇：朕统六国，天下归一，筑长城以镇九州龙脉，卫我大秦、护我社稷。朕以始皇之名在此立誓！朕在，当守土开疆，扫平四夷，定我大秦万世之基！朕亡，亦将身化龙魂，佑我华夏永世不衰！此誓，日月为证，天地共鉴，仙魔鬼神共听之！</li>
-</ul>
+<a id="more"></a>
+
+<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
+
+<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
+<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
+
+<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
+<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
+<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了让这段代码工作，我们需要使用类型断言</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用户自定义的类型保护</strong></p>
+<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
+<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
+<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
 ]]></content>
       <categories>
-        <category>音乐</category>
+        <category>TypeScript</category>
       </categories>
       <tags>
-        <tag>音乐</tag>
+        <tag>TypeScript</tag>
       </tags>
   </entry>
   <entry>
@@ -621,54 +669,6 @@
 <li>组织代码，有点语言有，有的不在语言里面在一些辅助性的设施里面，</li>
 </ol>
 ]]></content>
-  </entry>
-  <entry>
-    <title>TypeScript 中的高级类型</title>
-    <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
-<p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
-
-<a id="more"></a>
-
-<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
-
-<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
-<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
-
-<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
-<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
-
-<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
-<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了让这段代码工作，我们需要使用类型断言</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用户自定义的类型保护</strong></p>
-<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
-<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
-<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
-]]></content>
-      <categories>
-        <category>TypeScript</category>
-      </categories>
-      <tags>
-        <tag>TypeScript</tag>
-      </tags>
   </entry>
   <entry>
     <title>人类将成为人工智能的宠物？</title>
@@ -821,67 +821,6 @@
       </tags>
   </entry>
   <entry>
-    <title>前端测试开篇</title>
-    <url>/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/</url>
-    <content><![CDATA[<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="什么是自动化测试"><a href="#什么是自动化测试" class="headerlink" title="什么是自动化测试"></a>什么是自动化测试</h3><blockquote>
-<p>在软件测试中，测试自动化（英语：Test automation）是一种测试方法，使用特定的软件，去控制测试流程，并比较实际的结果与预期结果之间的差异。通过将测试自动化，可以让正式的测试过程中的必要测试，可以反复进行；通过这种方法，也可以将难以手动进行的测试，交由软件来做。测试自动化的最大优势就是可以快速而且反复的进行测试。</p>
-</blockquote>
-<p>简单理解，自动化测试是指软件测试的自动化，让软件代替人工测试，可以快速，反复进行</p>
-<p>关于自动化测试有一个金字塔理论，把测试从上到下分为 /UI（用户界面测试）/Service（服务测试） /Unit（单元测试 ）。如图所示，越往金字塔底层，测试的效率越高，测试质量保障程度越高，测试的成本越低。怎么理解这句话呢？前端项目通常 UI 变化频繁，一旦发生变化，UI 测试用例就无法执行且难以维护，所以 UI 自动化测试的成本高，收益小；相比 UI 测试，Service 测试更加简单直接且变化不会很频繁；单元测试主要对公共函数、方法进行测试，测试用例复用度高且更能保证代码质量。</p>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-99fbbe6203ee75133178cdd5b131b4ac_720w.jpg"></p>
-<h3 id="实现自动化测试有什么好处"><a href="#实现自动化测试有什么好处" class="headerlink" title="实现自动化测试有什么好处"></a>实现自动化测试有什么好处</h3><p>测试最重要的目的是验证代码正确性，确保项目质量。举个例子，某一天我写了一个逻辑复杂的函数，这个函数被很多地方调用，过了一个月之后，我可能忘记这里面的具体逻辑了，出于某种原因需要为这个函数增加一些功能，修改这个函数的代码，那我要怎么做才能保证修改代码后不影响其他的调用者呢，或者说，我要怎么做，才能快速的知道哪些地方受影响，哪些地方不受影响呢？答案就是实施自动化测试，跑测试用例。</p>
-<p>如果不进行自动化测试，我们会如何验证代码的正确性？通常 FE 使用的方法是手动测试：console、alert、打断点、点点点。但手动测试是一次性的，如果下次有人对代码功能做了修改，我们不得不再次重复手动测试的工作，并且很难保证测试的全覆盖。但如果编写测试用例进行自动化测试，第一次写完的测试用例是可以重复使用的，一次编写，多次运行。如果测试用例写的完善、语义化，开发人员还可以通过看测试用例快速了解项目需求。实施自动化测试可以驱动开发人员在代码的设计中做更好的抽象，写可测试的代码，以测试公用方法为例，要确保被测试的方法无副作用，既对外部变量没有依赖，也不会改变全局原本的状态。</p>
-<p>总结一下，实施自动化测试有四个好处：</p>
-<ul>
-<li>可以验证代码正确性，保证项目质量</li>
-<li>测试用例可以复用，一次编写，多次运行</li>
-<li>通过看测试用例可以快速了解需求</li>
-<li>驱动开发，指导设计，保证写的代码可测试</li>
-</ul>
-<h3 id="什么样的项目适合自动化测试"><a href="#什么样的项目适合自动化测试" class="headerlink" title="什么样的项目适合自动化测试"></a>什么样的项目适合自动化测试</h3><p>自动化测试如此优秀，那是不是所有项目都适合进行自动化测试？答案是否定的，因为有成本。在实施自动化测试之前需要对软件开发过程进行分析，基于投入产出来判断是否适合实施自动化测试。实施自动化测试的项目通常需要同时满足以下条件：</p>
-<ul>
-<li>需求变动不频繁</li>
-<li>项目周期足够长</li>
-<li>自动化测试脚本可重复使用</li>
-<li>代码规范可测试</li>
-</ul>
-<p>如果需求变动过于频繁，维护测试脚本的成本太高；如果项目周期比较短，没有足够的时间去支持自动化测试的过程；如果测试脚本重复使用率低，耗费的精力大于创造的价值，不值得；如果代码不规范，可测试性差，那自动化测试实施起来会比较困难。</p>
-<hr>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>ATDD： Acceptance Test Driven Development（验收测试驱动开发）</strong></p>
-<p>这是一种在编码开始之前将客户带入测试设计过程的技术。它也是一个协作实践，用户，测试人员和开发人员定义了自动验收标准。 ATDD 有助于确保所有项目成员准确理解需要完成和实施的内容。如果系统未通过测试可提供快速反馈，说明未满足要求。验收测试以业务领域术语进行指定。每个功能都必须提供真实且可衡量的业务价值，事实上，如果您的功能没有追溯至至少一个业务目标，那么您应该想知道为什么您要首先实施它。</p>
-<p><strong>TDD：Test-driven development （测试驱动开发）</strong></p>
-<p>是一种使用自动化单元测试来推动软件设计并强制依赖关系解耦的技术。使用这种做法的结果是一套全面的单元测试，可随时运行，以提供软件可以正常工作的反馈。TDD 重点是培养整个研发过程的节奏感，就像跳踢踏舞一样，“ti-ta-ti”。在编写真正实现功能的代码之前先编写测试，每次测试之后，重构完成，然后再次执行相同或类似的测试。该过程根据需要重复多次，直到每个单元根据所需的规格运行。</p>
-<p><strong>BDD：Behavior-Driven Development (行为驱动开发)</strong></p>
-<p>BDD 将 TDD 的一般技术和原理与领域驱动设计(DDD)的想法相结合。 BDD 是一个设计活动，您可以根据预期行为逐步构建功能块。BDD 的重点是软件开发过程中使用的语言和交互。行为驱动的开发人员使用他们的母语与领域驱动设计的语言相结合来描述他们的代码的目的和好处。使用 BDD 的团队应该能够以用户故事的形式提供大量的“功能文档”，并增加可执行场景或示例。 BDD 通常有助于领域专家理解实现而不是暴露代码级别测试。它通常以 GWT 格式定义：GIVEN WHEN＆THEN。</p>
-<blockquote>
-<p>小结：TDD 的原理是在开发功能代码之前，先编写单元测试用例代码（先写测试再开发，一般都是单元测试，白盒测试）；BDD 的原理是系统业务专家、开发者、测试人员一起合作，分析软件的需求，然后将这些需求写成一个个的故事。开发者负责填充这些故事的内容，保证程序实现效果与用户需求一致。也就是 BDD 是按照用户的行为来开发，再根据用户的行为编写测试用例 （一般都是集成测试，黑盒测试）</p>
-</blockquote>
-<h3 id="黑盒测试和白盒测试"><a href="#黑盒测试和白盒测试" class="headerlink" title="黑盒测试和白盒测试"></a>黑盒测试和白盒测试</h3><ul>
-<li>黑盒测试一般也被称为功能测试，黑盒测试要求测试人员将程序看作一个整体，不考虑其内部结构和特性，只是按照期望验证程序是否能正常工作</li>
-<li>白盒测试是基于代码本身的测试，一般指对代码逻辑结构的测试。</li>
-</ul>
-<h3 id="测试分类（部分）"><a href="#测试分类（部分）" class="headerlink" title="测试分类（部分）"></a>测试分类（部分）</h3><p>单元测试(Unit Testing)</p>
-<ul>
-<li>对软件中的最小可测试单元进行检查和验证。例如测试一个函数、一个模块、一个组件…，前端所说的单元测试就是对一个模块进行测试。也就是说前端测试的时候，你测试的东西一定是一个模块。</li>
-</ul>
-<p>集成测试(Integration Testing)</p>
-<ul>
-<li>将已测试过的单元测试函数进行组合集成暴露出的高层函数或类的封装，对这些函数或类进行的测试</li>
-</ul>
-<p>端到端测试(E2E Testing)</p>
-<ul>
-<li>打开应用程序模拟输入，检查功能以及界面是否正确</li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端自动化测试</category>
-      </categories>
-      <tags>
-        <tag>测试</tag>
-        <tag>工程体系</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>分治算法</title>
     <url>/2020/11/05/%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在计算机科学中，分治法是一种很重要的算法，字面上的解释是 “分而治之”，就是把一个复杂问题分成两个或更多的相同或类似的子问题，再把子问题分成更小的子问题……直到最后的子问题可以简单的直接求解，原问题的解即是子问题的解的合并，这个技巧是很多高效算法的基础，如排序算法（快速排序，归并排序）,傅立叶变换(快速傅立叶变换)……</p>
@@ -983,6 +922,82 @@
       </tags>
   </entry>
   <entry>
+    <title>前端测试开篇</title>
+    <url>/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/</url>
+    <content><![CDATA[<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="什么是自动化测试"><a href="#什么是自动化测试" class="headerlink" title="什么是自动化测试"></a>什么是自动化测试</h3><blockquote>
+<p>在软件测试中，测试自动化（英语：Test automation）是一种测试方法，使用特定的软件，去控制测试流程，并比较实际的结果与预期结果之间的差异。通过将测试自动化，可以让正式的测试过程中的必要测试，可以反复进行；通过这种方法，也可以将难以手动进行的测试，交由软件来做。测试自动化的最大优势就是可以快速而且反复的进行测试。</p>
+</blockquote>
+<p>简单理解，自动化测试是指软件测试的自动化，让软件代替人工测试，可以快速，反复进行</p>
+<p>关于自动化测试有一个金字塔理论，把测试从上到下分为 /UI（用户界面测试）/Service（服务测试） /Unit（单元测试 ）。如图所示，越往金字塔底层，测试的效率越高，测试质量保障程度越高，测试的成本越低。怎么理解这句话呢？前端项目通常 UI 变化频繁，一旦发生变化，UI 测试用例就无法执行且难以维护，所以 UI 自动化测试的成本高，收益小；相比 UI 测试，Service 测试更加简单直接且变化不会很频繁；单元测试主要对公共函数、方法进行测试，测试用例复用度高且更能保证代码质量。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-99fbbe6203ee75133178cdd5b131b4ac_720w.jpg"></p>
+<h3 id="实现自动化测试有什么好处"><a href="#实现自动化测试有什么好处" class="headerlink" title="实现自动化测试有什么好处"></a>实现自动化测试有什么好处</h3><p>测试最重要的目的是验证代码正确性，确保项目质量。举个例子，某一天我写了一个逻辑复杂的函数，这个函数被很多地方调用，过了一个月之后，我可能忘记这里面的具体逻辑了，出于某种原因需要为这个函数增加一些功能，修改这个函数的代码，那我要怎么做才能保证修改代码后不影响其他的调用者呢，或者说，我要怎么做，才能快速的知道哪些地方受影响，哪些地方不受影响呢？答案就是实施自动化测试，跑测试用例。</p>
+<p>如果不进行自动化测试，我们会如何验证代码的正确性？通常 FE 使用的方法是手动测试：console、alert、打断点、点点点。但手动测试是一次性的，如果下次有人对代码功能做了修改，我们不得不再次重复手动测试的工作，并且很难保证测试的全覆盖。但如果编写测试用例进行自动化测试，第一次写完的测试用例是可以重复使用的，一次编写，多次运行。如果测试用例写的完善、语义化，开发人员还可以通过看测试用例快速了解项目需求。实施自动化测试可以驱动开发人员在代码的设计中做更好的抽象，写可测试的代码，以测试公用方法为例，要确保被测试的方法无副作用，既对外部变量没有依赖，也不会改变全局原本的状态。</p>
+<p>总结一下，实施自动化测试有四个好处：</p>
+<ul>
+<li>可以验证代码正确性，保证项目质量</li>
+<li>测试用例可以复用，一次编写，多次运行</li>
+<li>通过看测试用例可以快速了解需求</li>
+<li>驱动开发，指导设计，保证写的代码可测试</li>
+</ul>
+<h3 id="什么样的项目适合自动化测试"><a href="#什么样的项目适合自动化测试" class="headerlink" title="什么样的项目适合自动化测试"></a>什么样的项目适合自动化测试</h3><p>自动化测试如此优秀，那是不是所有项目都适合进行自动化测试？答案是否定的，因为有成本。在实施自动化测试之前需要对软件开发过程进行分析，基于投入产出来判断是否适合实施自动化测试。实施自动化测试的项目通常需要同时满足以下条件：</p>
+<ul>
+<li>需求变动不频繁</li>
+<li>项目周期足够长</li>
+<li>自动化测试脚本可重复使用</li>
+<li>代码规范可测试</li>
+</ul>
+<p>如果需求变动过于频繁，维护测试脚本的成本太高；如果项目周期比较短，没有足够的时间去支持自动化测试的过程；如果测试脚本重复使用率低，耗费的精力大于创造的价值，不值得；如果代码不规范，可测试性差，那自动化测试实施起来会比较困难。</p>
+<hr>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>ATDD： Acceptance Test Driven Development（验收测试驱动开发）</strong></p>
+<p>这是一种在编码开始之前将客户带入测试设计过程的技术。它也是一个协作实践，用户，测试人员和开发人员定义了自动验收标准。 ATDD 有助于确保所有项目成员准确理解需要完成和实施的内容。如果系统未通过测试可提供快速反馈，说明未满足要求。验收测试以业务领域术语进行指定。每个功能都必须提供真实且可衡量的业务价值，事实上，如果您的功能没有追溯至至少一个业务目标，那么您应该想知道为什么您要首先实施它。</p>
+<p><strong>TDD：Test-driven development （测试驱动开发）</strong></p>
+<p>是一种使用自动化单元测试来推动软件设计并强制依赖关系解耦的技术。使用这种做法的结果是一套全面的单元测试，可随时运行，以提供软件可以正常工作的反馈。TDD 重点是培养整个研发过程的节奏感，就像跳踢踏舞一样，“ti-ta-ti”。在编写真正实现功能的代码之前先编写测试，每次测试之后，重构完成，然后再次执行相同或类似的测试。该过程根据需要重复多次，直到每个单元根据所需的规格运行。</p>
+<p><strong>BDD：Behavior-Driven Development (行为驱动开发)</strong></p>
+<p>BDD 将 TDD 的一般技术和原理与领域驱动设计(DDD)的想法相结合。 BDD 是一个设计活动，您可以根据预期行为逐步构建功能块。BDD 的重点是软件开发过程中使用的语言和交互。行为驱动的开发人员使用他们的母语与领域驱动设计的语言相结合来描述他们的代码的目的和好处。使用 BDD 的团队应该能够以用户故事的形式提供大量的“功能文档”，并增加可执行场景或示例。 BDD 通常有助于领域专家理解实现而不是暴露代码级别测试。它通常以 GWT 格式定义：GIVEN WHEN＆THEN。</p>
+<blockquote>
+<p>小结：TDD 的原理是在开发功能代码之前，先编写单元测试用例代码（先写测试再开发，一般都是单元测试，白盒测试）；BDD 的原理是系统业务专家、开发者、测试人员一起合作，分析软件的需求，然后将这些需求写成一个个的故事。开发者负责填充这些故事的内容，保证程序实现效果与用户需求一致。也就是 BDD 是按照用户的行为来开发，再根据用户的行为编写测试用例 （一般都是集成测试，黑盒测试）</p>
+</blockquote>
+<h3 id="黑盒测试和白盒测试"><a href="#黑盒测试和白盒测试" class="headerlink" title="黑盒测试和白盒测试"></a>黑盒测试和白盒测试</h3><ul>
+<li>黑盒测试一般也被称为功能测试，黑盒测试要求测试人员将程序看作一个整体，不考虑其内部结构和特性，只是按照期望验证程序是否能正常工作</li>
+<li>白盒测试是基于代码本身的测试，一般指对代码逻辑结构的测试。</li>
+</ul>
+<h3 id="测试分类（部分）"><a href="#测试分类（部分）" class="headerlink" title="测试分类（部分）"></a>测试分类（部分）</h3><p>单元测试(Unit Testing)</p>
+<ul>
+<li>对软件中的最小可测试单元进行检查和验证。例如测试一个函数、一个模块、一个组件…，前端所说的单元测试就是对一个模块进行测试。也就是说前端测试的时候，你测试的东西一定是一个模块。</li>
+</ul>
+<p>集成测试(Integration Testing)</p>
+<ul>
+<li>将已测试过的单元测试函数进行组合集成暴露出的高层函数或类的封装，对这些函数或类进行的测试</li>
+</ul>
+<p>端到端测试(E2E Testing)</p>
+<ul>
+<li>打开应用程序模拟输入，检查功能以及界面是否正确</li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端自动化测试</category>
+      </categories>
+      <tags>
+        <tag>测试</tag>
+        <tag>工程体系</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>命令模式</title>
+    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
+<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
+<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
+<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>回溯法</title>
     <url>/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/</url>
     <content><![CDATA[<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
@@ -1003,21 +1018,6 @@
       <tags>
         <tag>算法</tag>
         <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>命令模式</title>
-    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
-<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
-<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
-<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
-]]></content>
-      <categories>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
@@ -1215,82 +1215,6 @@
       </tags>
   </entry>
   <entry>
-    <title>带你深入理解图灵机-天才所在的时代</title>
-    <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/</url>
-    <content><![CDATA[<p>这几年由于区块链的大热，以太坊独特的 solidity 语言实现智能合约功能，<strong>图灵完备</strong>这个词走进大家的视线。</p>
-<p>没有计算机专业知识的同学其实很难理解这个词的意思，其实计算机专业的同学都没有深入理解图灵机，图灵完备，图灵测试等概念包含的内涵。为了方便理解区块链技术，理解智能合约，笔者准备分几篇文章来带大家从浅入深，一步一步带你深入理解图灵机，相信通过这几篇文章能就能够理解什么是图灵完备。</p>
-<blockquote>
-<p>大家知道任何伟大艺术的诞生背后都有迷人的时代背景，伟大的科学思想也是一样。从达芬奇到蒙拉丽莎的微笑；从牛顿到万有引力；从爱因斯坦到相对论；伟大的天才图灵和这些大师一样有同样让人着迷的时代和故事。</p>
-</blockquote>
-<h3 id="图灵的生平"><a href="#图灵的生平" class="headerlink" title="图灵的生平"></a>图灵的生平</h3><p>艾伦·麦席森·图灵（Alan Mathison Turing，1912 年 6 月 23 日－1954 年 6 月 7 日），英国数学家、逻辑学家，<strong>被称为计算机科学理论之父，人工智能之父。</strong></p>
-<p>1931 年，图灵考入剑桥大学国王学院，由于成绩优异而获得数学奖学金。</p>
-<p>1936 年 5 月，年仅 24 岁的图灵发表一篇题为《论数字计算在决断难题中的应用》的论文，论文中提出一种计算装置，后被称为<strong>“图灵机”</strong>，图灵机不是具体的计算机，而是一种计算概念、计算理论。</p>
-<p>1938 年在普林斯顿获博士学位，其论文题目为“以序数为基础的逻辑系统”，在数理逻辑研究中产生了深远的影响；同年图灵回到英国，在剑桥大学国王学院任研究员。</p>
-<p>第二次世界大战期间，1939 年图灵到英国外交部通信处从事军事工作，主要是破译敌方密码的工作。由于破译工作的需要，他参与了世界上最早的电子计算机的研制工作。他的工作取得了极好的成就，破译了德国人 Enigma 密码，于 1945 年获政府的最高奖——大英帝国荣誉勋章。</p>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/10096448-17f4b1ad3b7968f3.png"></p>
-<p>图灵破解密码</p>
-<p>1945 年，图灵结束了在外交部的工作，他试图恢复战前在理论计算机科学方面的研究，具体研制出新的计算机来。</p>
-<p>1950 年他发表论文《计算机器与智能》（ Computing Machinery and Intelligence），为后来的人工智能科学提供了开创性的构思。提出著名的<strong>图灵测试</strong>。</p>
-<p>1950 年，1950 年 10 月，图灵发表论文《机器能思考吗》。这一划时代的作品，使图灵赢得了“人工智能之父”的桂冠。此时，人工智能也进入了实践研制阶段。随着这几年 AI 技术的不断成熟，人们越来越认识到图灵思想的深刻性：它们至今仍然是人工智能的主要思想之一。</p>
-<p>1954 年 6 月 7 日，年仅 41 岁的图灵被发现死于家中的床上，床头还放着一个被咬了一口有毒的苹果。这就是现在大名鼎鼎的苹果电脑公司 logo 的来源。</p>
-<h3 id="时代背景"><a href="#时代背景" class="headerlink" title="时代背景"></a>时代背景</h3><p>从图灵的生平中，我们知道，他出生在 20 世纪初，1912 年。 在世界国家格局上，这个时候刚刚爆发第一次世界大战（1913~1921），紧接着 1939 年至 1945 年第二次世界大战，大家知道，这两次世界大战倒逼了很多科技的发展，二战期间恰好是图灵青年时代。</p>
-<p>在科技文明发展上，由于逻辑的数学化，促使了数理逻辑学科的诞生和发展。但同时这个时期数学上发生了第三次数学危机，具体介绍在下方。图灵在剑桥读大学期间，修读了“数学基础”课程，授课人是纽曼，纽曼整个课程包含对哥德尔不完备性定理的证明和尚未解决的判定性问题。</p>
-<p>这些科技事件的背后，其实是人们在认知上，对<strong>可计算性理论</strong>的研究，图灵正是这个问题终结者。</p>
-<p>随便提一下，爱因斯坦 1905 年提出狭义相对论，1927 年年仅 15 岁的图灵为了帮助母亲理解相对论，还写过论文的摘要。</p>
-<h4 id="可计算性理论"><a href="#可计算性理论" class="headerlink" title="可计算性理论"></a>可计算性理论</h4><p>在 20 世纪以前，人们普遍认为，所有的问题类都是有算法的，人们的计算研究就是找出算法来。1900 年，当时著名的大数学家希尔伯特在世纪之交的数学家大会上给国际数学界提出了著名的 23 个数学问题。 其中第十问题是这样的：</p>
-<blockquote>
-<p>存在不存在一种有限的、机械的步骤能够判断“丢番图方程”是否存在解？</p>
-</blockquote>
-<p>“丢番图方程”指：有一个或者几个变量的整系数方程，它们的求解仅仅在整数范围内进行。 上面这个问题简单点解释是：随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解。</p>
-<p>这个问题在 1970 年，苏联一个数学家证明了其实很多数学问题，是没有答案，甚至没有答案的问题比有答案的问题还要多。</p>
-<p>这里就提出来了有限的、机械的证明步骤的问题，其实就是算法。但在当时，人们还不知道“算法”是什么。实际上，当时数学领域中已经有很多问题都是跟“算法”密切相关的，因而，科学的 “算法” 定义呼之欲出。之后到了 30 年代的时候，终于有两个人分别提出了精确定义算法的方法，一个人是图灵，一个人是丘奇。而其中图灵提出来的图灵机模型直观形象。</p>
-<p>图灵思考这个问题的方式和常人不一样，在写前面提到的论文《论可计算数及其在判定性问题上的应用》的时候，图灵在思考三个问题</p>
-<blockquote>
-<ol>
-<li>世界上是否所有的数学问题都有明确的答案？</li>
-<li>如果有明确的答案，是否可以通过有限步骤的计算得到答案？</li>
-<li>对于那些有可能在有限步骤计算出来的学习问题，是否有一种假想的机械，让它不断运行，最后机器停下来的时候，那个数学答案就计算出来了？</li>
-</ol>
-</blockquote>
-<p>图灵这样的天才考虑问题的认知是高屋建瓴的。 图灵首先考虑的是是否所有数学问题都用解，如果这个问题不解决，辛辛苦苦解题，最后发现无解，一切的努力都是浪费时间和精力。</p>
-<p>对于存在答案的数学问题，只有部分是可以在有限步骤内完成，这样把计算机的边界确定下来了。</p>
-<p>确定了边界之后，就要设计一种通用、有效、等价的机器，保证可以按照这个方法做事，最后得到答案。而图灵机就是图灵设计出来的这样的一个机器，严格来讲是一种数学模型、计算理论模型。</p>
-<p>从图灵机提出到现在已经过去了 80 多年，今天所有的计算机，包括量子计算机都没有超出图灵机的理论范畴。</p>
-<h4 id="第三次数学危机与停机问题"><a href="#第三次数学危机与停机问题" class="headerlink" title="第三次数学危机与停机问题"></a>第三次数学危机与停机问题</h4><p>第三次数学危机产生于十九世纪末和二十世纪初，当时正是数学空前兴旺发达的时期。首先是逻辑的数学化，促使了数理逻辑这门学科诞生。</p>
-<p>早在 19 世纪末的时候，康托尔为集合论做了奠基性的研究。人们发现，运用集合这个概念可以概括所有的数学，也就是说集合是一切数学的基础。然而就当这座大厦即将完工的时候，一件可怕的事情发生了，罗素提出来的罗素悖论粉碎了数学家的梦想。</p>
-<p>关于罗素悖论的一个通俗化版本是：</p>
-<blockquote>
-<p>“村子里有一个理发师，他给自己定了一条规矩：‘不给那些所有给自己理发的人理发’。 现在就要问，这个理发师该不该给自己理发？”。 如果你尝试回答这个问题就会发现奇怪的事情：这个问题本身似乎是不可能的！</p>
-</blockquote>
-<p>为什么要第三次数学危机呢？ 因为有个很重要的概念：<strong>停机问题</strong>，停机问题是逻辑数学中可计算性理论中很重要的问题，也是第三次数学危机的解决方案。 <strong>停机问题</strong>通俗地说，停机问题就是判断任意一个程序是否能在有限的时间之内结束运行的问题。该问题等价于如下的判定问题：是否存在一个程序 P，对于任意输入的程序 w，能够判断 w 会在有限时间内结束或者死循环。</p>
-<p>有人猜测图灵机模型是图灵在思考<strong>停机问题</strong>而顺带设计出来的，是很有道理的。</p>
-<h3 id="人工智能"><a href="#人工智能" class="headerlink" title="人工智能"></a>人工智能</h3><p>图灵在剑桥大学国王学院期间，研究过一本叫做《量子力学的数学基础》的新书，这本书由年轻的匈牙利数学家约翰·冯·诺依曼所著。图灵意识到计算可以用确定性的机械运动来进行表示。其实我们现在的电子计算机虽然不是我们传统意义上的机械，但是 CPU 内部的电子运动等价于机械运动。</p>
-<p>同时图灵也意识到人的思想、意识来自于量子力学中的测不准原理，这不光是微观世界，同时也是这个宇宙本身的规律。所以图灵意识到计算是确定性的，可判定的，而意识是不定的，不可计算的。</p>
-<p>在 AI 人工智能有巨大发展的今天，很多人担心计算机是否会和人一样有意识，其实图灵在 80 多年前已经考虑过这个问题了。</p>
-<p>前面提到，图灵在 1950 年写过一篇论文《计算机器与智能》，在这篇论文中，图灵测试一词被提出来：</p>
-<blockquote>
-<p>指测试者与被测试者（一个人和一台机器）隔开的情况下，通过一些装置（如键盘）向被测试者随意提问。进行多次测试后，如果有超过 30%的测试者不能确定出被测试者是人还是机器，那么这台机器就通过了测试，并被认为具有人类智能</p>
-</blockquote>
-<p>这个测试有多难？目前我们所有的人工智能都没有完成这个测试。最近 2018 年 3 月份的谷歌 I/O 大会上演示的 AI 产品，据说“部分通过图灵测试”。这个部分到底有多少也未可知。</p>
-<h3 id="总结与启示"><a href="#总结与启示" class="headerlink" title="总结与启示"></a>总结与启示</h3><p>从人类科技发展的历史上来看，19 世纪末到 20 世纪中期，是第二次工业革命和第三工业革命过渡的时期。第二次工业革命主要电和磁、内燃机的发明和使用，发展到这个时候科学家对世界的认知越来越多，越来越清晰，物理学和数学等自然科学发展迅速。这个时候的数学家发现很多现象可以用数学模型来表示，从物体的运动到星球的运动、从热能到动能的转换、从电到磁的转换等等。那问题来了是否所有的现象都可以用数学模型来表达呢？真是这个问题，让人们对数学很多根本性问题进行思考和研究。</p>
-<p>中国有句古话说：乱世出英雄。在图灵的时代，在科学历史上出了很多的科学英雄，包括爱因斯坦、冯诺依曼、图灵、哥德尔等等，一方面是时代背景使然，一方面真是他们的天赋和努力让以信息化为代表的第三次工业革命的进程大大加快了。</p>
-<p>从这些巨匠的思考问题，解决问题的方法和认知来看是超出常人的。从对<strong>可计算性理论</strong>的思考，给了我们很大的启示：</p>
-<ol>
-<li>要学会抽象，看问题高屋建瓴，学会从上帝视角看问题</li>
-<li>知道做事情的边界是非常重要的，可以指导人们在正确的范围内做事情，可以减少很多无谓的付出。</li>
-<li>做事情要有方法论，理解计算的等价性</li>
-<li>要学好数学</li>
-</ol>
-]]></content>
-      <categories>
-        <category>图灵</category>
-        <category>玄学</category>
-      </categories>
-      <tags>
-        <tag>人物</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>带你深入理解图灵机-图灵机,图灵完备</title>
     <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%9B%BE%E7%81%B5%E6%9C%BA,%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87/</url>
     <content><![CDATA[<p>上一篇介绍了天才图灵所做的时代背景，我们了解那个时代对于数学逻辑，可计算理论的发展。站在更大的时间和空间维度来看，我们看问题的角度会有更高的视角。</p>
@@ -1475,21 +1399,79 @@
       </tags>
   </entry>
   <entry>
-    <title>排序算法</title>
-    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
-<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
-<p>冒泡排序</p>
-<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
-<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
-<p>让我们实现下冒泡排序</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>带你深入理解图灵机-天才所在的时代</title>
+    <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/</url>
+    <content><![CDATA[<p>这几年由于区块链的大热，以太坊独特的 solidity 语言实现智能合约功能，<strong>图灵完备</strong>这个词走进大家的视线。</p>
+<p>没有计算机专业知识的同学其实很难理解这个词的意思，其实计算机专业的同学都没有深入理解图灵机，图灵完备，图灵测试等概念包含的内涵。为了方便理解区块链技术，理解智能合约，笔者准备分几篇文章来带大家从浅入深，一步一步带你深入理解图灵机，相信通过这几篇文章能就能够理解什么是图灵完备。</p>
+<blockquote>
+<p>大家知道任何伟大艺术的诞生背后都有迷人的时代背景，伟大的科学思想也是一样。从达芬奇到蒙拉丽莎的微笑；从牛顿到万有引力；从爱因斯坦到相对论；伟大的天才图灵和这些大师一样有同样让人着迷的时代和故事。</p>
+</blockquote>
+<h3 id="图灵的生平"><a href="#图灵的生平" class="headerlink" title="图灵的生平"></a>图灵的生平</h3><p>艾伦·麦席森·图灵（Alan Mathison Turing，1912 年 6 月 23 日－1954 年 6 月 7 日），英国数学家、逻辑学家，<strong>被称为计算机科学理论之父，人工智能之父。</strong></p>
+<p>1931 年，图灵考入剑桥大学国王学院，由于成绩优异而获得数学奖学金。</p>
+<p>1936 年 5 月，年仅 24 岁的图灵发表一篇题为《论数字计算在决断难题中的应用》的论文，论文中提出一种计算装置，后被称为<strong>“图灵机”</strong>，图灵机不是具体的计算机，而是一种计算概念、计算理论。</p>
+<p>1938 年在普林斯顿获博士学位，其论文题目为“以序数为基础的逻辑系统”，在数理逻辑研究中产生了深远的影响；同年图灵回到英国，在剑桥大学国王学院任研究员。</p>
+<p>第二次世界大战期间，1939 年图灵到英国外交部通信处从事军事工作，主要是破译敌方密码的工作。由于破译工作的需要，他参与了世界上最早的电子计算机的研制工作。他的工作取得了极好的成就，破译了德国人 Enigma 密码，于 1945 年获政府的最高奖——大英帝国荣誉勋章。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/10096448-17f4b1ad3b7968f3.png"></p>
+<p>图灵破解密码</p>
+<p>1945 年，图灵结束了在外交部的工作，他试图恢复战前在理论计算机科学方面的研究，具体研制出新的计算机来。</p>
+<p>1950 年他发表论文《计算机器与智能》（ Computing Machinery and Intelligence），为后来的人工智能科学提供了开创性的构思。提出著名的<strong>图灵测试</strong>。</p>
+<p>1950 年，1950 年 10 月，图灵发表论文《机器能思考吗》。这一划时代的作品，使图灵赢得了“人工智能之父”的桂冠。此时，人工智能也进入了实践研制阶段。随着这几年 AI 技术的不断成熟，人们越来越认识到图灵思想的深刻性：它们至今仍然是人工智能的主要思想之一。</p>
+<p>1954 年 6 月 7 日，年仅 41 岁的图灵被发现死于家中的床上，床头还放着一个被咬了一口有毒的苹果。这就是现在大名鼎鼎的苹果电脑公司 logo 的来源。</p>
+<h3 id="时代背景"><a href="#时代背景" class="headerlink" title="时代背景"></a>时代背景</h3><p>从图灵的生平中，我们知道，他出生在 20 世纪初，1912 年。 在世界国家格局上，这个时候刚刚爆发第一次世界大战（1913~1921），紧接着 1939 年至 1945 年第二次世界大战，大家知道，这两次世界大战倒逼了很多科技的发展，二战期间恰好是图灵青年时代。</p>
+<p>在科技文明发展上，由于逻辑的数学化，促使了数理逻辑学科的诞生和发展。但同时这个时期数学上发生了第三次数学危机，具体介绍在下方。图灵在剑桥读大学期间，修读了“数学基础”课程，授课人是纽曼，纽曼整个课程包含对哥德尔不完备性定理的证明和尚未解决的判定性问题。</p>
+<p>这些科技事件的背后，其实是人们在认知上，对<strong>可计算性理论</strong>的研究，图灵正是这个问题终结者。</p>
+<p>随便提一下，爱因斯坦 1905 年提出狭义相对论，1927 年年仅 15 岁的图灵为了帮助母亲理解相对论，还写过论文的摘要。</p>
+<h4 id="可计算性理论"><a href="#可计算性理论" class="headerlink" title="可计算性理论"></a>可计算性理论</h4><p>在 20 世纪以前，人们普遍认为，所有的问题类都是有算法的，人们的计算研究就是找出算法来。1900 年，当时著名的大数学家希尔伯特在世纪之交的数学家大会上给国际数学界提出了著名的 23 个数学问题。 其中第十问题是这样的：</p>
+<blockquote>
+<p>存在不存在一种有限的、机械的步骤能够判断“丢番图方程”是否存在解？</p>
+</blockquote>
+<p>“丢番图方程”指：有一个或者几个变量的整系数方程，它们的求解仅仅在整数范围内进行。 上面这个问题简单点解释是：随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解。</p>
+<p>这个问题在 1970 年，苏联一个数学家证明了其实很多数学问题，是没有答案，甚至没有答案的问题比有答案的问题还要多。</p>
+<p>这里就提出来了有限的、机械的证明步骤的问题，其实就是算法。但在当时，人们还不知道“算法”是什么。实际上，当时数学领域中已经有很多问题都是跟“算法”密切相关的，因而，科学的 “算法” 定义呼之欲出。之后到了 30 年代的时候，终于有两个人分别提出了精确定义算法的方法，一个人是图灵，一个人是丘奇。而其中图灵提出来的图灵机模型直观形象。</p>
+<p>图灵思考这个问题的方式和常人不一样，在写前面提到的论文《论可计算数及其在判定性问题上的应用》的时候，图灵在思考三个问题</p>
+<blockquote>
+<ol>
+<li>世界上是否所有的数学问题都有明确的答案？</li>
+<li>如果有明确的答案，是否可以通过有限步骤的计算得到答案？</li>
+<li>对于那些有可能在有限步骤计算出来的学习问题，是否有一种假想的机械，让它不断运行，最后机器停下来的时候，那个数学答案就计算出来了？</li>
+</ol>
+</blockquote>
+<p>图灵这样的天才考虑问题的认知是高屋建瓴的。 图灵首先考虑的是是否所有数学问题都用解，如果这个问题不解决，辛辛苦苦解题，最后发现无解，一切的努力都是浪费时间和精力。</p>
+<p>对于存在答案的数学问题，只有部分是可以在有限步骤内完成，这样把计算机的边界确定下来了。</p>
+<p>确定了边界之后，就要设计一种通用、有效、等价的机器，保证可以按照这个方法做事，最后得到答案。而图灵机就是图灵设计出来的这样的一个机器，严格来讲是一种数学模型、计算理论模型。</p>
+<p>从图灵机提出到现在已经过去了 80 多年，今天所有的计算机，包括量子计算机都没有超出图灵机的理论范畴。</p>
+<h4 id="第三次数学危机与停机问题"><a href="#第三次数学危机与停机问题" class="headerlink" title="第三次数学危机与停机问题"></a>第三次数学危机与停机问题</h4><p>第三次数学危机产生于十九世纪末和二十世纪初，当时正是数学空前兴旺发达的时期。首先是逻辑的数学化，促使了数理逻辑这门学科诞生。</p>
+<p>早在 19 世纪末的时候，康托尔为集合论做了奠基性的研究。人们发现，运用集合这个概念可以概括所有的数学，也就是说集合是一切数学的基础。然而就当这座大厦即将完工的时候，一件可怕的事情发生了，罗素提出来的罗素悖论粉碎了数学家的梦想。</p>
+<p>关于罗素悖论的一个通俗化版本是：</p>
+<blockquote>
+<p>“村子里有一个理发师，他给自己定了一条规矩：‘不给那些所有给自己理发的人理发’。 现在就要问，这个理发师该不该给自己理发？”。 如果你尝试回答这个问题就会发现奇怪的事情：这个问题本身似乎是不可能的！</p>
+</blockquote>
+<p>为什么要第三次数学危机呢？ 因为有个很重要的概念：<strong>停机问题</strong>，停机问题是逻辑数学中可计算性理论中很重要的问题，也是第三次数学危机的解决方案。 <strong>停机问题</strong>通俗地说，停机问题就是判断任意一个程序是否能在有限的时间之内结束运行的问题。该问题等价于如下的判定问题：是否存在一个程序 P，对于任意输入的程序 w，能够判断 w 会在有限时间内结束或者死循环。</p>
+<p>有人猜测图灵机模型是图灵在思考<strong>停机问题</strong>而顺带设计出来的，是很有道理的。</p>
+<h3 id="人工智能"><a href="#人工智能" class="headerlink" title="人工智能"></a>人工智能</h3><p>图灵在剑桥大学国王学院期间，研究过一本叫做《量子力学的数学基础》的新书，这本书由年轻的匈牙利数学家约翰·冯·诺依曼所著。图灵意识到计算可以用确定性的机械运动来进行表示。其实我们现在的电子计算机虽然不是我们传统意义上的机械，但是 CPU 内部的电子运动等价于机械运动。</p>
+<p>同时图灵也意识到人的思想、意识来自于量子力学中的测不准原理，这不光是微观世界，同时也是这个宇宙本身的规律。所以图灵意识到计算是确定性的，可判定的，而意识是不定的，不可计算的。</p>
+<p>在 AI 人工智能有巨大发展的今天，很多人担心计算机是否会和人一样有意识，其实图灵在 80 多年前已经考虑过这个问题了。</p>
+<p>前面提到，图灵在 1950 年写过一篇论文《计算机器与智能》，在这篇论文中，图灵测试一词被提出来：</p>
+<blockquote>
+<p>指测试者与被测试者（一个人和一台机器）隔开的情况下，通过一些装置（如键盘）向被测试者随意提问。进行多次测试后，如果有超过 30%的测试者不能确定出被测试者是人还是机器，那么这台机器就通过了测试，并被认为具有人类智能</p>
+</blockquote>
+<p>这个测试有多难？目前我们所有的人工智能都没有完成这个测试。最近 2018 年 3 月份的谷歌 I/O 大会上演示的 AI 产品，据说“部分通过图灵测试”。这个部分到底有多少也未可知。</p>
+<h3 id="总结与启示"><a href="#总结与启示" class="headerlink" title="总结与启示"></a>总结与启示</h3><p>从人类科技发展的历史上来看，19 世纪末到 20 世纪中期，是第二次工业革命和第三工业革命过渡的时期。第二次工业革命主要电和磁、内燃机的发明和使用，发展到这个时候科学家对世界的认知越来越多，越来越清晰，物理学和数学等自然科学发展迅速。这个时候的数学家发现很多现象可以用数学模型来表示，从物体的运动到星球的运动、从热能到动能的转换、从电到磁的转换等等。那问题来了是否所有的现象都可以用数学模型来表达呢？真是这个问题，让人们对数学很多根本性问题进行思考和研究。</p>
+<p>中国有句古话说：乱世出英雄。在图灵的时代，在科学历史上出了很多的科学英雄，包括爱因斯坦、冯诺依曼、图灵、哥德尔等等，一方面是时代背景使然，一方面真是他们的天赋和努力让以信息化为代表的第三次工业革命的进程大大加快了。</p>
+<p>从这些巨匠的思考问题，解决问题的方法和认知来看是超出常人的。从对<strong>可计算性理论</strong>的思考，给了我们很大的启示：</p>
+<ol>
+<li>要学会抽象，看问题高屋建瓴，学会从上帝视角看问题</li>
+<li>知道做事情的边界是非常重要的，可以指导人们在正确的范围内做事情，可以减少很多无谓的付出。</li>
+<li>做事情要有方法论，理解计算的等价性</li>
+<li>要学好数学</li>
+</ol>
 ]]></content>
       <categories>
-        <category>算法</category>
+        <category>图灵</category>
+        <category>玄学</category>
       </categories>
       <tags>
-        <tag>算法</tag>
+        <tag>人物</tag>
       </tags>
   </entry>
   <entry>
@@ -1511,6 +1493,50 @@
       <tags>
         <tag>数据结构</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>排序算法</title>
+    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
+<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
+<p>冒泡排序</p>
+<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
+<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
+<p>让我们实现下冒泡排序</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>泛用语言分类方法</title>
+    <url>/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<p>从这节课开始我们进入到重学 JavaScript 的内容，在所有的重学系列的课程中，我们都是回假设大家已经对，JavaScript，Css，html 有了一定的了解，而我们重学的过程其实是在帮助我们在这些过去的知识里面建立一个新的秩序，也就是建立知识体系的过程，重学 JavaScript 部分，将会带着大家以 JavaScript 的语法为线索，从细到粗的跟大家完成学习一遍 JavaScript 的语言知识，第一节课我们回先讲一点编程语言的基本知识</p>
+<h3 id="语言分类"><a href="#语言分类" class="headerlink" title="语言分类"></a>语言分类</h3><ul>
+<li><p>自然语言</p>
+<p>  自然语言（Natural Language）就是人类讲的语言，比如汉语、英语和法语。这类语言不是人为设计（虽然有人试图强加一些规则）而是自然进化的。</p>
+</li>
+<li><p>形式语言</p>
+<p>  形式语言（Formal Language）是为了特定应用而人为设计的语言。例如数学家用的数字和运算符号、化学家用的分子式等。编程语言也是一种形式语言，是专门设计用来表达计算过程的形式语言。形式语言有严格的语法（Syntax）规则，例如，3+3=6是一个语法正确的数学等式，而3=+6$则不是，H2O是一个正确的分子式，而2Zz则不是。语法规则是由关于符号（Token）和结构（Structure）的规则所组成的。Token的概念相当于自然语言中的单词和标点、数学式中的数和运算符、化学分子式中的元素名和数字。关于Token的规则称为词法（Lexical）规则，而关于语句结构的规则称为语法（Grammar）规则。</p>
+</li>
+</ul>
+<h3 id="形式语言的表示方法"><a href="#形式语言的表示方法" class="headerlink" title="形式语言的表示方法"></a>形式语言的表示方法</h3><p>一个形式语言可以通过多种方法来限定自身，比如：</p>
+<ul>
+<li>枚举出各个字串（只适用于有限字串集合）。-</li>
+<li>通过形式文法来产生（参见<strong>乔姆斯基谱系</strong>）。</li>
+<li>通过正则表达式来产生。</li>
+<li>通过某种自动机来识别，比如图灵机、有限状态自动机。</li>
+</ul>
+<h3 id="形式语言编程方面的应用"><a href="#形式语言编程方面的应用" class="headerlink" title="形式语言编程方面的应用"></a>形式语言编程方面的应用</h3><p>主要：语法（编程语言和编译器）<br>编译器通常有两个不同的部分组成。</p>
+<p>一个词法分析器，由一个像lex的工具形成。识别编程语言的语法标记。例如：标识符或关键字，在一个简单的语言表达形式中，通常是正则表达式工具。在最基本的概念，</p>
+<p>一个解析器由一个类似Yacc的解析生成器构成。试图判断源程序是否有效。当然，编译器做的不仅仅是解析源代码，他们通常把它翻译成一些可执行格式。因此，一个解析器通常输出多是或否的回答，一个典型的抽象语法树，这是由编译器后续阶段用于最终生成机器代码，包含直接运行在硬件执行，或一些中间代码需要虚拟机执行。</p>
+<h3 id="乔姆斯基谱系"><a href="#乔姆斯基谱系" class="headerlink" title="乔姆斯基谱系"></a>乔姆斯基谱系</h3><p>乔姆斯基体系是由诺·乔姆斯基于1956年提出的，是刻画形式文法表达能力的一个分类谱系。</p>
+<p>太深奥看不懂，以后再说，，，，</p>
+]]></content>
   </entry>
   <entry>
     <title>有限状态机是什么</title>
@@ -1712,32 +1738,6 @@
         <tag>浏览器</tag>
         <tag>API</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>泛用语言分类方法</title>
-    <url>/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<p>从这节课开始我们进入到重学 JavaScript 的内容，在所有的重学系列的课程中，我们都是回假设大家已经对，JavaScript，Css，html 有了一定的了解，而我们重学的过程其实是在帮助我们在这些过去的知识里面建立一个新的秩序，也就是建立知识体系的过程，重学 JavaScript 部分，将会带着大家以 JavaScript 的语法为线索，从细到粗的跟大家完成学习一遍 JavaScript 的语言知识，第一节课我们回先讲一点编程语言的基本知识</p>
-<h3 id="语言分类"><a href="#语言分类" class="headerlink" title="语言分类"></a>语言分类</h3><ul>
-<li><p>自然语言</p>
-<p>  自然语言（Natural Language）就是人类讲的语言，比如汉语、英语和法语。这类语言不是人为设计（虽然有人试图强加一些规则）而是自然进化的。</p>
-</li>
-<li><p>形式语言</p>
-<p>  形式语言（Formal Language）是为了特定应用而人为设计的语言。例如数学家用的数字和运算符号、化学家用的分子式等。编程语言也是一种形式语言，是专门设计用来表达计算过程的形式语言。形式语言有严格的语法（Syntax）规则，例如，3+3=6是一个语法正确的数学等式，而3=+6$则不是，H2O是一个正确的分子式，而2Zz则不是。语法规则是由关于符号（Token）和结构（Structure）的规则所组成的。Token的概念相当于自然语言中的单词和标点、数学式中的数和运算符、化学分子式中的元素名和数字。关于Token的规则称为词法（Lexical）规则，而关于语句结构的规则称为语法（Grammar）规则。</p>
-</li>
-</ul>
-<h3 id="形式语言的表示方法"><a href="#形式语言的表示方法" class="headerlink" title="形式语言的表示方法"></a>形式语言的表示方法</h3><p>一个形式语言可以通过多种方法来限定自身，比如：</p>
-<ul>
-<li>枚举出各个字串（只适用于有限字串集合）。-</li>
-<li>通过形式文法来产生（参见<strong>乔姆斯基谱系</strong>）。</li>
-<li>通过正则表达式来产生。</li>
-<li>通过某种自动机来识别，比如图灵机、有限状态自动机。</li>
-</ul>
-<h3 id="形式语言编程方面的应用"><a href="#形式语言编程方面的应用" class="headerlink" title="形式语言编程方面的应用"></a>形式语言编程方面的应用</h3><p>主要：语法（编程语言和编译器）<br>编译器通常有两个不同的部分组成。</p>
-<p>一个词法分析器，由一个像lex的工具形成。识别编程语言的语法标记。例如：标识符或关键字，在一个简单的语言表达形式中，通常是正则表达式工具。在最基本的概念，</p>
-<p>一个解析器由一个类似Yacc的解析生成器构成。试图判断源程序是否有效。当然，编译器做的不仅仅是解析源代码，他们通常把它翻译成一些可执行格式。因此，一个解析器通常输出多是或否的回答，一个典型的抽象语法树，这是由编译器后续阶段用于最终生成机器代码，包含直接运行在硬件执行，或一些中间代码需要虚拟机执行。</p>
-<h3 id="乔姆斯基谱系"><a href="#乔姆斯基谱系" class="headerlink" title="乔姆斯基谱系"></a>乔姆斯基谱系</h3><p>乔姆斯基体系是由诺·乔姆斯基于1956年提出的，是刻画形式文法表达能力的一个分类谱系。</p>
-<p>太深奥看不懂，以后再说，，，，</p>
-]]></content>
   </entry>
   <entry>
     <title>浏览器工作流程-CSS解析</title>
@@ -2390,8 +2390,10 @@
 <td>Symbol(“a”)</td>
 </tr>
 </tbody></table>
-<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 <code>Number 类型</code>跟 <code>Number类</code>是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分他到底是包装前的值，还是包装后的对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> aaa = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(aaa.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
+<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 Number 类型跟 Number 类是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分它到底是包装前的值，还是包装后的对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> num = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(num.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> <span class="built_in">Number</span>(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(a))<span class="comment">// number</span></span><br><span class="line"><span class="built_in">console</span>.log(b)<span class="comment">// [Number 1]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(b))<span class="comment">// object</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="拆箱转换"><a href="#拆箱转换" class="headerlink" title="拆箱转换"></a>拆箱转换</h3><p>把对象转化为相应的需要的基本类型</p>
 <p>拆箱转换是指把一个 Object 转成一个基本类型，这其中一个主要的过程叫做 <code>ToPrimitive</code> , <code>ToPrimitive</code> 发生在我们表达式定义的方法面面，比如 Object + Object，或者 Object 参与运算的情况，它都会调用 <code>ToPrimitive</code> 过程</p>

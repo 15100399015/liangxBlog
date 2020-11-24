@@ -217,10 +217,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-11-22 22:01:14 / 修改时间：23:28:14" itemprop="dateCreated datePublished" datetime="2020-11-22T22:01:14+08:00">2020-11-22</time>
+              <time title="创建时间：2020-11-22 22:01:14" itemprop="dateCreated datePublished" datetime="2020-11-22T22:01:14+08:00">2020-11-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-24 21:56:05" itemprop="dateModified" datetime="2020-11-24T21:56:05+08:00">2020-11-24</time>
+              </span>
 
           
   
@@ -292,8 +298,10 @@
 <td>Symbol(“a”)</td>
 </tr>
 </tbody></table>
-<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 <code>Number 类型</code>跟 <code>Number类</code>是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分他到底是包装前的值，还是包装后的对象</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> aaa = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(aaa.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
+<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 Number 类型跟 Number 类是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分它到底是包装前的值，还是包装后的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> num = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(num.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> <span class="built_in">Number</span>(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(a))<span class="comment">// number</span></span><br><span class="line"><span class="built_in">console</span>.log(b)<span class="comment">// [Number 1]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(b))<span class="comment">// object</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="拆箱转换"><a href="#拆箱转换" class="headerlink" title="拆箱转换"></a>拆箱转换</h3><p>把对象转化为相应的需要的基本类型</p>
 <p>拆箱转换是指把一个 Object 转成一个基本类型，这其中一个主要的过程叫做 <code>ToPrimitive</code> , <code>ToPrimitive</code> 发生在我们表达式定义的方法面面，比如 Object + Object，或者 Object 参与运算的情况，它都会调用 <code>ToPrimitive</code> 过程</p>
