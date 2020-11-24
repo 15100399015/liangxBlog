@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/16/%E5%A3%B0%E6%98%8E%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%92%8C%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/16/%E5%A3%B0%E6%98%8E%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%92%8C%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F/" class="post-title-link" itemprop="url">声明式编程和命令式编程有什么区别？</a>
+            <a href="/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" class="post-title-link" itemprop="url">一般命令式编程语言</a>
         </h2>
 
         <div class="post-meta">
@@ -219,16 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-11-16 09:33:04 / 修改时间：09:42:06" itemprop="dateCreated datePublished" datetime="2020-11-16T09:33:04+08:00">2020-11-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">语言</span></a>
-                </span>
+              <time title="创建时间：2020-11-16 10:13:36 / 修改时间：10:55:12" itemprop="dateCreated datePublished" datetime="2020-11-16T10:13:36+08:00">2020-11-16</time>
             </span>
 
           
@@ -240,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/16/%E5%A3%B0%E6%98%8E%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%92%8C%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/16/%E5%A3%B0%E6%98%8E%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%92%8C%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -256,17 +247,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>计算机系统是分层的，也就是下层做一些支持的工作暴露接口给上层用。</p>
-<blockquote>
-<p>注意：语言的本质是一种接口。</p>
-</blockquote>
-<p>计算机的最下层是 CPU 指令，其本质就是用“变量定义+顺序执行+分支判断+循环”所表达的逻辑过程。计算机应用的最上层是实现人类社会的某种功能。所以所有计算机编码的过程，就是用逻辑表达现实的过程。层与层之间定义的借接口，越接近现实的表达就叫越“声明式”（declarative），越接近计算机的执行过程就叫越“命令式”（imperative）。注意这不是绝对的概念，而是相对的概念。</p>
-<p>当接口越是在表达“要什么”，就是越声明式；越是在表达“要怎样”，就是越命令式。SQL 就是在表达要什么（数据），而不是表达怎么弄出我要的数据，所以它就很“声明式”。C++就比 C 更声明式，因为面向对象本身就是一种声明式的体现。HTML 也很声明式，它只描述我要一张什么样的表，并不表达怎么弄出一张表。</p>
-<p>简单的说，接口的表述方式越接近人类语言——词汇的串行连接（一个词汇实际上是一个概念）——就越“声明式”；越接近计算机语言——“顺序+分支+循环”的操作流程——就越“命令</p>
-<p>越是声明式，意味着下层要做更多的东西，或者说能力越强。也意味着效率的损失。越是命令式，意味着上层对下层有更多的操作空间，可以按照自己特定的需求要求下层按照某种方式来处理。</p>
-<p>实际上，这对概念应该叫做“声明式接口”和“命令式接口”。可能是因为它大部分时候是在谈论“语言”这种接口方式时才会用到，所以会叫做“声明式编程”和“命令式编程”。</p>
-<p>当然，你也可以把它当成一种编程思想，也就是说，在构建自己的代码时，为了结构的清晰可读，把代码分层，层之间的接口尽量声明式。这样你的代码自然在一层上主要描述从人的角度需要什么；另一层上用计算机逻辑实现人的需要。</p>
-<p>另外，这组概念总让人迷惑，可能一个原因是翻译问题。如果翻译成”说明式“和”指令式“应该容易理解的多。</p>
+          <p>一般的命令式语言的一种设计方式</p>
+<p>一般来说我们的命令式语言它可能有一些细微的结构上的不一致，但是总体上来讲，它的结构都分成 5 个层级</p>
+<ol>
+<li>Atom（原子级）：原子级是一个语言的最小组成单位，它通常包含一些关键字包含着一些直接量包含着一些变量名这样的一些基本单位，典型的就是我们的变量名，字符串直接量，数字直接量</li>
+<li>Expression（表达式）：原子级的结构通过运算符相连接，然后加上一些辅助的符号，那么它就会构成一个表达式的结构，表达式它通常是一个可以级联的结构，比如说我们的 JavaScript 有四则运算，按位与，移位运算，比较运算，或，非，等</li>
+<li>Statement（语句）：表达式加上一些特定的标识符和一些特定的关键字和一些特定的符号形成一种结构我们把它叫做语句，大家比较熟悉的可能有 if（条件语句），while，for（循环语句），一个有语句的语言其实已经是一个可以达成图灵完备并且去执行的语言了，</li>
+<li>Structure（结构化）：一般的语言还会有结构化的层级比如我们 JavaScript 里就会有 Function，Class 这样的一些设计，它可以我们组织代码，把代码分成不同的块，分成不同的可复用的结构，同样他也会使用关键字来形成结构化的结构</li>
+<li>组织代码，有点语言有，有的不在语言里面在一些辅助性的设施里面，</li>
+</ol>
 
       
     </div>
@@ -285,7 +274,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -353,7 +342,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

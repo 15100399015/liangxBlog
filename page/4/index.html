@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">有限状态机是什么</a>
+            <a href="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/" class="post-title-link" itemprop="url">状态机</a>
         </h2>
 
         <div class="post-meta">
@@ -217,16 +217,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-11-17 16:16:04" itemprop="dateCreated datePublished" datetime="2020-11-17T16:16:04+08:00">2020-11-17</time>
+              <time title="创建时间：2020-11-18 13:42:04 / 修改时间：13:59:46" itemprop="dateCreated datePublished" datetime="2020-11-18T13:42:04+08:00">2020-11-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-18 13:36:27" itemprop="dateModified" datetime="2020-11-18T13:36:27+08:00">2020-11-18</time>
-              </span>
 
           
   
@@ -237,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -253,26 +247,69 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
-<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
-<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
-<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
-<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
-<p>它有三个特征：</p>
+          <blockquote>
+<p>状态机是什么？状态机应该如何去应用呢？状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
+</blockquote>
+<p>在工作过程中，意外接触了一个词——“状态机”，这是个什么意思，可以为我们做产品提供怎样的用处？</p>
+<p><strong>作为产品，为什么需要学习状态机呢？</strong></p>
+<p>在刚进入公司的时候，根据公司产品做流程图的时候，发现自己经常会漏了这样或那样的状态，导致整体流程会有问题。后来知道了状态机这样的东西，发现用这幅图就可以很清晰的表达整个状态的流转。当然这个不是做好一款产品的必备品，但是却可以让你更加轻松的同技术等人员交流。</p>
+<p>一、什么是状态机？</p>
+<p>就是就是状态转移图。</p>
+<p>如果流程围绕某个事物的状态变化进行，显而易见，该轮到状态机图上场了。一个状态机图中只描述一个事物，该事物有多个状态，不同的动作作用到状态上导致状态的转换。</p>
+<p>举个最简单的例子：</p>
+<p>人有三个状态：</p>
 <ul>
-<li>状态总数（state）是有限的。</li>
-<li>任一时刻，只处在一种状态之中。</li>
-<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
+<li>健康</li>
+<li>感冒</li>
+<li>康复中</li>
 </ul>
-<p>有限状态机一般都有以下特点：</p>
+<p>触发的条件有</p>
 <ul>
-<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
-<li>事物拥有的状态总数是有限的；</li>
-<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
-<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
-<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
+<li>淋雨(t1)</li>
+<li>吃药(t2)</li>
+<li>打针(t3)</li>
+<li>休息(t4)</li>
 </ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h3 id="编码演示"><a href="#编码演示" class="headerlink" title="编码演示"></a>编码演示</h3>
+<p>所以状态机就是健康-&gt;(t4)-&gt;健康；健康-&gt;(t1)-&gt;感冒；感冒-&gt;(t3)-&gt;健康；感冒-&gt;(t2)-&gt;康复中；康复中-&gt;(t4)-&gt;健康等等。就是这样状态在不同的条件下，跳转到自己或不同状态的图。</p>
+<p>状态机可归纳为 4 个要素，即<strong>现态、条件、动作、次态</strong>。这样的归纳，主要是出于对状态机的内在因果关系的考虑。<strong>“现态”和“条件”是因，“动作”和“次态”是果</strong>。</p>
+<p>详解如下：</p>
+<ol>
+<li>现态：是指当前所处的状态。</li>
+<li>条件：又称为“事件”，当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。</li>
+<li>动作：条件满足后执行的动作，动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。</li>
+<li>次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</li>
+</ol>
+<p>在了解关于状态机的文章后，结合自己的平时的学习总结，我发现：<strong>在平时的业务过程中，判断即对应状态机理论中的条件，我们做什么操作改变状态即理论中的动作</strong>，同时状态必须要有始有终，否则会出现状态卡住，无法继续正常推进。</p>
+<p>状态机的开始一般用空心圆表示，代表状态图的起始位置。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/d85d69eb32524248948b04def94de314.jpeg" alt="img"></p>
+<p>结尾一般用实心圆点表示，是一个状态的终止点。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/02677f6905fd4ffdbbf5129eff72cd78.jpeg" alt="img"></p>
+<p>二、那么状态机怎样去应用呢？</p>
+<p>以物理课学的灯泡图为例：就是一个最基本的小型状态机，这个例子人人里的很多大神都已经举过了，这里就简单说下。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/18bd7c123ed34779b7a987181ad226ed.jpeg" alt="img"></p>
+<p>这里就是两个状态：① 打开开关，灯泡亮；② 关闭开关，灯泡灭。</p>
+<p>可以画出以下的状态机图：</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/0e3c08e476844dd99026db2709c03464.jpeg" alt="img"></p>
+<p>如果进度卡住，该怎么办？</p>
+<p>这里有个比较形象的案例就是淘宝的自动确认收货，卖家发货后状态变为待收货，若买家迟迟不点确认收货的话，那么流程就停止在这里，卖家也迟迟收不到货款。</p>
+<p>因此，在这里，淘宝做了一个条件，判断时间是否达到 15 天，如果达到 15 天，做出确认收货的动作，使得状态得到流转。</p>
+<p>以小灯泡为例：假设为了节约，小灯泡开了超过 8 个小时就自动关闭，除非再次做打开开关的操作，画出此时的状态机图如下：</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/258a535c301c4c6ca40a5877f5d2707a.jpeg" alt="img"></p>
+<p>同样的状态判断应用了很多场景，例如：患者购买服务或商品时，订单由待支付-已支付的状态中的通过时间条件来实现状态得到继续流转。</p>
+<p>但是，判断不是状态机必要的，如：正常小灯泡的两种状态，可以不需要经过判断。起始和终止状态可能是相同的，也可能是不同的，即同一种状态可能是起始状态，也可能为终止状态。</p>
+<p>在这里以外卖 app 为例：制作了一个订单的简单的状态机图，以订单的状态变更推动。</p>
+<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/5dde037d12804ddabdb50f69a5080fd8.png" alt="img"></p>
+<p>三、总结</p>
+<p>新入门时，对状态机和业务流程图总是傻傻分不清楚，因此对于状态机和流程图进行了了解和归纳。</p>
+<p>总的来说，状态机图和业务流程图有些类似，但是又有不同：</p>
+<ul>
+<li>两者是两种不同的思维方式；</li>
+<li>两者思考的出发点不一样，因而两者所表达的目的也是不同的；</li>
+<li>两者的各个节点都是不同的，流程图为动作，状态机为状态。</li>
+</ul>
+<p>一般情况下，我们使用的均为有限状态机。状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
+<p>同时，使用状态机和相关人员，尤其是开发，进行表达时，也可以更加清晰，提升沟通效率。</p>
+
       
     </div>
 
@@ -290,7 +327,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -358,7 +395,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

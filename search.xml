@@ -34,32 +34,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Completion Record</title>
-    <url>/2020/11/21/Completion%20Record/</url>
-    <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于x变量具体的值，</p>
-<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
-<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
-<p>比如上面的<code>if</code>语句，它的  Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
-<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
-
-<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生break，continue，return，or throw，type 是一个非常关键的信息，</p>
-<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record里面一个重要的信息</p>
-<p>target：这个非常少见  target 是一个label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">javascript:<span class="keyword">void</span>();</span><br><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i, j)</span><br><span class="line">        <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span> outPoint;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上就是JavaScript 中的 Completion Record 了，我们单看Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
-]]></content>
-  </entry>
-  <entry>
     <title>AlohaHejaHe</title>
     <url>/2020/11/10/AlohaHejaHe/</url>
     <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=32337953&auto=1&height=66"></iframe>
@@ -112,6 +86,32 @@
       <tags>
         <tag>音乐</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Completion Record</title>
+    <url>/2020/11/21/Completion%20Record/</url>
+    <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于x变量具体的值，</p>
+<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
+<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
+<p>比如上面的<code>if</code>语句，它的  Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
+<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
+
+<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生break，continue，return，or throw，type 是一个非常关键的信息，</p>
+<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record里面一个重要的信息</p>
+<p>target：这个非常少见  target 是一个label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">javascript:<span class="keyword">void</span>();</span><br><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i, j)</span><br><span class="line">        <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span> outPoint;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是JavaScript 中的 Completion Record 了，我们单看Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+]]></content>
   </entry>
   <entry>
     <title>Generator函数的语法</title>
@@ -647,6 +647,42 @@
 ]]></content>
   </entry>
   <entry>
+    <title>人类将成为人工智能的宠物？</title>
+    <url>/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/</url>
+    <content><![CDATA[<p>前面几篇文章从图灵说到图灵机，再到人工智能，其实对于人工智能有很多话题。其中包括对人工智能的定义、人工智能技术实现、人工智能是使用场景和范围、人工智能是否会取代人类甚至屠杀人类等等。今天我们就“人工智能是否会取代人类？”这个很有争议性话题进行解读，希望大家对人工智能有更多的思考维度。</p>
+<p>现实版钢铁侠的马斯克（特斯拉 CEO），2017 年在社交平台回怼 Facebook 创始人扎克伯格，原因是扎克伯格不认为人工智能是末日，马斯克回怼：他对人工智能的理解很有限。</p>
+<p>马斯克多次在不同场合表示自己对人工智能发展的担忧，认为工人智能是人类文明的最大威胁，甚至发出警告：人工智能可能引发第三次世界大战。</p>
+<h1 id="一、人工智能威胁论"><a href="#一、人工智能威胁论" class="headerlink" title="一、人工智能威胁论"></a>一、人工智能威胁论</h1><p>2016 年阿尔法狗战胜了世界围棋冠军李世石，一时间整个世界哗然，围棋一直被冠以人类智力游戏的最后一高地，就这样突然被占领。 人工智能经过几十年的发展，特别在近几年大数据的共同发展，已经取得了不少的进展，人工智能在很多方面远超了人类。</p>
+<p>在全世界范围内，很多科技大佬表示对人工智能的担心，上面已经提到了特斯拉 CEO 马斯克，还有今年（2018 年）刚去世的著名物理学家，天文学家霍金也提出对人工智能的担心：“我真的害怕人工智能取代人类，成为新的物种。”、“我们已经拥有原始形式的人工智能，但我认为人工智能的完全发展会导致人类的终结”等等言论。</p>
+<p>对于普通民众来讲，很多人担心人工智能抢了自己的工作而丢了饭碗。在第一次工业期间，由于蒸汽机的发明，机器代替了人工在英国掀起了捣毁纺织机械为手段的工人罢工。但是其实机器大规模使用不但没有减少工作岗位，反而是增多了。</p>
+<h1 id="二、人工智能有意识吗？"><a href="#二、人工智能有意识吗？" class="headerlink" title="二、人工智能有意识吗？"></a>二、人工智能有意识吗？</h1><p>计算机在非离散数学计算、存储等方面已经远超于人类，也真是因为计算机，因为信息互联网给人类带来了巨大的便利，更创造了超之前几千年之和的财富。从最广义的角度看，传统软件也应属于人工智能的范畴：实际上很多早期的计算机科学家，比如图灵，就是以人工智能为动力展开对计算机科学的研究。从这个意义上来看，人工智能是一种为人类工作的工具或机器。</p>
+<p>如果人工智能只是一种可以代替人类工作的机器，它的出现并不足以让人们恐惧。 终极问题是：<strong>人工智能会有人一样，甚至超出人类的意识吗？</strong></p>
+<p>现在机器（人工智能）是被人类奴役着，如果人工智能得到长足发展后，在未来，人类奴役机器的剧情将得到反转，未来，人类才是那个被“奴役”的物种！这种情节我们在很多的电影中都看到过。</p>
+<p>从现在的人工智能发展水平来看，现在的人工智能其实还非常初级，只能算做弱人工智能，其实在我们有生之年估计看不到超级人工智能的存在。</p>
+<h1 id="三、人工智能是生命-3-0？"><a href="#三、人工智能是生命-3-0？" class="headerlink" title="三、人工智能是生命 3.0？"></a>三、人工智能是生命 3.0？</h1><p>最近在看人工智能专家，麻省理工终身教授泰格马克的《生命 3.0》，这本书题目是生命，但是其实一本讲人工智能的书，作者对人工智能的发展、人类的终极命运将会是什么，进行了预测，脑洞非常大。</p>
+<p>我们现在思考人工智能，动不动就担心机器会不会有人类的意识，人类的喜怒哀乐，情感都是因为意识。机器会自动驾驶，会人脸识别，会翻译等只不过是一种机械运动而已。但是实际上，图灵和现代生物学家都认为，人在做事的时候，本质上也是机械的，也就是可以用图灵机来进行表达，只是我们还没有找到表达的算法而已。</p>
+<p>在我们都在担心意识问题的时候，泰格马克教授从生命的角度进行了解读。他把生命分成了三个阶段：生命 1.0、生命 2.0 和生命 3.0</p>
+<p>生命是什么？这个问题争议很大，就像意识一样难以定义。</p>
+<blockquote>
+<p>泰格马克对生命进行了广阔的定义：生命是一个能够进行复制和保持自我复杂性的过程。</p>
+</blockquote>
+<p>1，生命 1.0 的有生之年都无法重新设计自己的硬件和软件，二者由基因 DNA 来决定，只有进化才能带来改变，而进行则需要许多代才能有很小的改变，因此生命 1.0 的进化是非常非常非常缓慢的，生命 1.0 典型的是细菌。</p>
+<p>2，生命 2.0 则能够重新设计自身大部分的软件，比如人类，人类可以学习复杂的新技能、语言、知识和职业技能，并且能够从认知上更新自己的目标，自己对世界的认识。</p>
+<p>3，生命 3.0 现在在地球上还没有出现，他不仅能够最大限度的重新设计自己的软件，还是重新设计自己的硬件，而不需要等待许多代进行缓慢的进化。</p>
+<p>当然，我们会问，那其他的动物算生命几点 0 呢？如果细菌是 1.0，人类是 2.0，老鼠可以看做 1.1，虽然它们可以学习许多知识，但是不足以进化出语言，所以许多的东西死亡就会消失，不能积累传承。</p>
+<p>那么问题来了，生命 3.0 什么时候出现？出现后，作为生命 2.0 的人类怎么共存呢？ 不知道大家有没有一个感觉？人工智能技术，特别是语音识别技术就是在近 5 年才突然爆发的，其实人工智的能力增长是指数级的，是爆发式的。超级人工智能的出现也许就需要一个契机，一个突破，比如量子计算机，他的出现肯定是爆发式的，突然出现的。</p>
+<p>如果有一天人类造出了超级人工智能，即生命 3.0，就可能触发一场智能革命，将人类远远甩在后面，就像我们人类对比细菌一样，甚至更大。 如果这场智能革命由某一小撮人类控制，那他们讲可能在短短几年内控制整个世界。 如果人类没有控制这场智能革命，那么，人工智能可能以更快的速度控制世界。 因为生命 3.0 比我们高一个维度，人类将成为人工智能的宠物。</p>
+<h1 id="说在最后"><a href="#说在最后" class="headerlink" title="说在最后"></a>说在最后</h1><p>有个图灵机、人工智能的话题差不多写完了，这些话题太大，很难写。在看了《生命 3.0》这本书，对人工智能有了更多的理解和想法，其实心情既兴奋也很担忧。在我们所做的宇宙，从宇宙大爆发那一刻开始，各种参数其实已经决定了整个宇宙发展的过程。图灵的结论告诉我们，即使未来是注定的，我们也没有一种算法去预测它，除非模拟它运行一遍。但是，要想模拟这个宇宙的运行，需要的计算量必然超出了这个宇宙自身的所有资源。运行这个宇宙的唯一方式，就是运行这个宇宙本身，或者参与其中才能知道最终的答案！</p>
+<p>除非有麦克斯韦妖修改宇宙大爆炸的时候的参数，生命 3.0，超级人工智能一定会把人类甩在后面，而不仅仅是取代，人类将成为人工智能的宠物。</p>
+]]></content>
+      <categories>
+        <category>大话说</category>
+      </categories>
+      <tags>
+        <tag>大话说</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>什么是图灵完备？</title>
     <url>/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/</url>
     <content><![CDATA[<p>这是一篇旨在帮助理解图灵机及相关概念是什么，而非证明其正确性的回答，它包含以下内容：</p>
@@ -726,42 +762,6 @@
       <tags>
         <tag>图灵</tag>
         <tag>图灵完备</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>人类将成为人工智能的宠物？</title>
-    <url>/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/</url>
-    <content><![CDATA[<p>前面几篇文章从图灵说到图灵机，再到人工智能，其实对于人工智能有很多话题。其中包括对人工智能的定义、人工智能技术实现、人工智能是使用场景和范围、人工智能是否会取代人类甚至屠杀人类等等。今天我们就“人工智能是否会取代人类？”这个很有争议性话题进行解读，希望大家对人工智能有更多的思考维度。</p>
-<p>现实版钢铁侠的马斯克（特斯拉 CEO），2017 年在社交平台回怼 Facebook 创始人扎克伯格，原因是扎克伯格不认为人工智能是末日，马斯克回怼：他对人工智能的理解很有限。</p>
-<p>马斯克多次在不同场合表示自己对人工智能发展的担忧，认为工人智能是人类文明的最大威胁，甚至发出警告：人工智能可能引发第三次世界大战。</p>
-<h1 id="一、人工智能威胁论"><a href="#一、人工智能威胁论" class="headerlink" title="一、人工智能威胁论"></a>一、人工智能威胁论</h1><p>2016 年阿尔法狗战胜了世界围棋冠军李世石，一时间整个世界哗然，围棋一直被冠以人类智力游戏的最后一高地，就这样突然被占领。 人工智能经过几十年的发展，特别在近几年大数据的共同发展，已经取得了不少的进展，人工智能在很多方面远超了人类。</p>
-<p>在全世界范围内，很多科技大佬表示对人工智能的担心，上面已经提到了特斯拉 CEO 马斯克，还有今年（2018 年）刚去世的著名物理学家，天文学家霍金也提出对人工智能的担心：“我真的害怕人工智能取代人类，成为新的物种。”、“我们已经拥有原始形式的人工智能，但我认为人工智能的完全发展会导致人类的终结”等等言论。</p>
-<p>对于普通民众来讲，很多人担心人工智能抢了自己的工作而丢了饭碗。在第一次工业期间，由于蒸汽机的发明，机器代替了人工在英国掀起了捣毁纺织机械为手段的工人罢工。但是其实机器大规模使用不但没有减少工作岗位，反而是增多了。</p>
-<h1 id="二、人工智能有意识吗？"><a href="#二、人工智能有意识吗？" class="headerlink" title="二、人工智能有意识吗？"></a>二、人工智能有意识吗？</h1><p>计算机在非离散数学计算、存储等方面已经远超于人类，也真是因为计算机，因为信息互联网给人类带来了巨大的便利，更创造了超之前几千年之和的财富。从最广义的角度看，传统软件也应属于人工智能的范畴：实际上很多早期的计算机科学家，比如图灵，就是以人工智能为动力展开对计算机科学的研究。从这个意义上来看，人工智能是一种为人类工作的工具或机器。</p>
-<p>如果人工智能只是一种可以代替人类工作的机器，它的出现并不足以让人们恐惧。 终极问题是：<strong>人工智能会有人一样，甚至超出人类的意识吗？</strong></p>
-<p>现在机器（人工智能）是被人类奴役着，如果人工智能得到长足发展后，在未来，人类奴役机器的剧情将得到反转，未来，人类才是那个被“奴役”的物种！这种情节我们在很多的电影中都看到过。</p>
-<p>从现在的人工智能发展水平来看，现在的人工智能其实还非常初级，只能算做弱人工智能，其实在我们有生之年估计看不到超级人工智能的存在。</p>
-<h1 id="三、人工智能是生命-3-0？"><a href="#三、人工智能是生命-3-0？" class="headerlink" title="三、人工智能是生命 3.0？"></a>三、人工智能是生命 3.0？</h1><p>最近在看人工智能专家，麻省理工终身教授泰格马克的《生命 3.0》，这本书题目是生命，但是其实一本讲人工智能的书，作者对人工智能的发展、人类的终极命运将会是什么，进行了预测，脑洞非常大。</p>
-<p>我们现在思考人工智能，动不动就担心机器会不会有人类的意识，人类的喜怒哀乐，情感都是因为意识。机器会自动驾驶，会人脸识别，会翻译等只不过是一种机械运动而已。但是实际上，图灵和现代生物学家都认为，人在做事的时候，本质上也是机械的，也就是可以用图灵机来进行表达，只是我们还没有找到表达的算法而已。</p>
-<p>在我们都在担心意识问题的时候，泰格马克教授从生命的角度进行了解读。他把生命分成了三个阶段：生命 1.0、生命 2.0 和生命 3.0</p>
-<p>生命是什么？这个问题争议很大，就像意识一样难以定义。</p>
-<blockquote>
-<p>泰格马克对生命进行了广阔的定义：生命是一个能够进行复制和保持自我复杂性的过程。</p>
-</blockquote>
-<p>1，生命 1.0 的有生之年都无法重新设计自己的硬件和软件，二者由基因 DNA 来决定，只有进化才能带来改变，而进行则需要许多代才能有很小的改变，因此生命 1.0 的进化是非常非常非常缓慢的，生命 1.0 典型的是细菌。</p>
-<p>2，生命 2.0 则能够重新设计自身大部分的软件，比如人类，人类可以学习复杂的新技能、语言、知识和职业技能，并且能够从认知上更新自己的目标，自己对世界的认识。</p>
-<p>3，生命 3.0 现在在地球上还没有出现，他不仅能够最大限度的重新设计自己的软件，还是重新设计自己的硬件，而不需要等待许多代进行缓慢的进化。</p>
-<p>当然，我们会问，那其他的动物算生命几点 0 呢？如果细菌是 1.0，人类是 2.0，老鼠可以看做 1.1，虽然它们可以学习许多知识，但是不足以进化出语言，所以许多的东西死亡就会消失，不能积累传承。</p>
-<p>那么问题来了，生命 3.0 什么时候出现？出现后，作为生命 2.0 的人类怎么共存呢？ 不知道大家有没有一个感觉？人工智能技术，特别是语音识别技术就是在近 5 年才突然爆发的，其实人工智的能力增长是指数级的，是爆发式的。超级人工智能的出现也许就需要一个契机，一个突破，比如量子计算机，他的出现肯定是爆发式的，突然出现的。</p>
-<p>如果有一天人类造出了超级人工智能，即生命 3.0，就可能触发一场智能革命，将人类远远甩在后面，就像我们人类对比细菌一样，甚至更大。 如果这场智能革命由某一小撮人类控制，那他们讲可能在短短几年内控制整个世界。 如果人类没有控制这场智能革命，那么，人工智能可能以更快的速度控制世界。 因为生命 3.0 比我们高一个维度，人类将成为人工智能的宠物。</p>
-<h1 id="说在最后"><a href="#说在最后" class="headerlink" title="说在最后"></a>说在最后</h1><p>有个图灵机、人工智能的话题差不多写完了，这些话题太大，很难写。在看了《生命 3.0》这本书，对人工智能有了更多的理解和想法，其实心情既兴奋也很担忧。在我们所做的宇宙，从宇宙大爆发那一刻开始，各种参数其实已经决定了整个宇宙发展的过程。图灵的结论告诉我们，即使未来是注定的，我们也没有一种算法去预测它，除非模拟它运行一遍。但是，要想模拟这个宇宙的运行，需要的计算量必然超出了这个宇宙自身的所有资源。运行这个宇宙的唯一方式，就是运行这个宇宙本身，或者参与其中才能知道最终的答案！</p>
-<p>除非有麦克斯韦妖修改宇宙大爆炸的时候的参数，生命 3.0，超级人工智能一定会把人类甩在后面，而不仅仅是取代，人类将成为人工智能的宠物。</p>
-]]></content>
-      <categories>
-        <category>大话说</category>
-      </categories>
-      <tags>
-        <tag>大话说</tag>
       </tags>
   </entry>
   <entry>
@@ -962,6 +962,21 @@
       </tags>
   </entry>
   <entry>
+    <title>命令模式</title>
+    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
+<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
+<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
+<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>回溯法</title>
     <url>/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/</url>
     <content><![CDATA[<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
@@ -982,21 +997,6 @@
       <tags>
         <tag>算法</tag>
         <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>命令模式</title>
-    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
-<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
-<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
-<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
-]]></content>
-      <categories>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
@@ -1172,7 +1172,7 @@
 <p>两位被询问者分别用 X 和 Y 表示，询问者用 C 表示，询问者 C 事先只知道 X 和 Y 中 有且仅有一位女性，而询问的目标是正确分辨 X 和 Y 中哪一位是女性。另一方面，两位被询问者 X 和 Y 的目标都是试图让询问者认为自己是女性。也就是说，男性被询问者需要把自己伪装成女性，而女性被询问者需要努力自证。</p>
 <p>现在我们问：如果我们把“模仿游戏”中的男性被询问者换成计算机，结果会怎样？相比人类男性，计算机能否使询问者更容易产生误判？”</p>
 </blockquote>
-<p><img data-src="https://tu.sunpma.com/imgs/2020/11/1bb628716cf805b9.webp" alt="img"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1bb628716cf805b9.webp"></p>
 <p>智能行为与人类行为的关系</p>
 <p>图灵测试其实对人工智能的一种充分的等价性。 如上图所示，“所有智能行为”对应的集合和“所有人类行为”对应的集合既有交集又互有不同。在全部智能行为中有一些是人类靠自身无法做到的（比如计算出国际象棋中白棋是否必胜），但人类也是有智能的，因此只要完成两个集合的交集部分—就应该被认作是“拥有智能”的。另一方面，人类行为并不总是和智能相关。图灵测试要求机器全面模拟“所有人类行为”，其中既包括了两个集合的交集，也包括了人类的“非智能”行为。</p>
 <p>因此图灵测试是 “拥有智能”的一个有效的充分条件，也就是说，由于没有办法严格定义智能，图灵把智能测试的范围扩大了，即不一定要全部通过图灵测试才算是真正的人工智能。</p>
@@ -1199,7 +1199,7 @@
     <content><![CDATA[<p>上一篇介绍了天才图灵所做的时代背景，我们了解那个时代对于数学逻辑，可计算理论的发展。站在更大的时间和空间维度来看，我们看问题的角度会有更高的视角。</p>
 <p><strong>这篇我们来具体看下图灵机到底是什么？</strong></p>
 <h2 id="一、图灵机的组成"><a href="#一、图灵机的组成" class="headerlink" title="一、图灵机的组成"></a>一、图灵机的组成</h2><p>网上有一张经典的图片来表达图灵机的构成，图如下：</p>
-<p><img data-src="https://tu.sunpma.com/imgs/2020/11/8cb735f76c4a001f.webp"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/8cb735f76c4a001f.webp"></p>
 <blockquote>
 <p>这张图片什么意思？这么一个简单的机器/装置怎么会所有电子计算机的理论模型？</p>
 </blockquote>
@@ -1241,9 +1241,10 @@
 </ol>
 <p>估计你还是不明白，别急。看过《三体》的同学都知道三体人把地球人看做<strong>“虫子”</strong>，三体人的维度比地球三维世界高，就好像我们人类把看虫子一样。 下面，我们把虫子放到一个二维的世界中，以虫子为例，给大家来说明最简单的图灵机模型（注：该例子非原创）。</p>
 <h4 id="假设理想的情况一："><a href="#假设理想的情况一：" class="headerlink" title="假设理想的情况一："></a>假设理想的情况一：</h4><ol>
-<li><p>虫子所处的二维世界是一个无限长的纸带，这个纸带上被分成了若干小的方格，而每个方格都仅仅只有黑和白两种颜色。纸带的片段为：</p>
-<p><img data-src="https://tu.sunpma.com/imgs/2020/11/42a1a69153b1d912.webp"></p>
-</li>
+<li>虫子所处的二维世界是一个无限长的纸带，这个纸带上被分成了若干小的方格，而每个方格都仅仅只有黑和白两种颜色。纸带的片段为：</li>
+</ol>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/42a1a69153b1d912.webp"></p>
+<ol start="2">
 <li><p>假设虫子的感官只有眼睛，并且它的视力短的可怜，只能看到当前所处格子的颜色</p>
 </li>
 <li><p>虫子可以向前爬一个格子或向后爬一个格子</p>
@@ -1357,7 +1358,7 @@
 </blockquote>
 <p>因此可见，二维虫子是图灵完备的。</p>
 <p>Bitcoin 的脚本由于没有条件分支，循环等控制指令，回到上面的虫子的例子，虫子就不能根据当前状态，判断选择移动还是吃食物等一系列的动作，因此不满足图灵机的模型，不是图灵完备的。</p>
-<h3 id="五、人也是图灵机？"><a href="#五、人也是图灵机？" class="headerlink" title="五、人也是图灵机？"></a>五、人也是图灵机？</h3><p><img data-src="https://tu.sunpma.com/imgs/2020/11/eaa00245c0f4f8d0.webp"></p>
+<h3 id="五、人也是图灵机？"><a href="#五、人也是图灵机？" class="headerlink" title="五、人也是图灵机？"></a>五、人也是图灵机？</h3><p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/eaa00245c0f4f8d0.webp"></p>
 <p>我们人能不能也被这样的抽象呢？<strong>显然是可以的。</strong></p>
 <p>其实我们每一个会决策、会思考的人就可以被抽象的看成一个图灵机，也就是笑来老师一直说：每个人都有自己的操作系统，因为有元认知能力，还可以自己升级操作系统。</p>
 <p>输入状态集合就是你所处的环境中能够看到、听到、闻到、感觉到的所有一起，可能的输出集合就是你的每一言每一行，以及你能够表达出来的所有表情动作。内部状态集合则要复杂得多。因为我们可以把任意一个神经细胞的状态组合看作是一个内部状态，那么所有可能的神经细胞的状态组合将是天文数字！这就是人类的记忆。只要图灵机具有了内部状态，它就相应的具有了记忆。</p>
@@ -1389,7 +1390,7 @@
 <p>1936 年 5 月，年仅 24 岁的图灵发表一篇题为《论数字计算在决断难题中的应用》的论文，论文中提出一种计算装置，后被称为<strong>“图灵机”</strong>，图灵机不是具体的计算机，而是一种计算概念、计算理论。</p>
 <p>1938 年在普林斯顿获博士学位，其论文题目为“以序数为基础的逻辑系统”，在数理逻辑研究中产生了深远的影响；同年图灵回到英国，在剑桥大学国王学院任研究员。</p>
 <p>第二次世界大战期间，1939 年图灵到英国外交部通信处从事军事工作，主要是破译敌方密码的工作。由于破译工作的需要，他参与了世界上最早的电子计算机的研制工作。他的工作取得了极好的成就，破译了德国人 Enigma 密码，于 1945 年获政府的最高奖——大英帝国荣誉勋章。</p>
-<p><img data-src="https://upload-images.jianshu.io/upload_images/10096448-17f4b1ad3b7968f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/519/format/webp" alt="img"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/10096448-17f4b1ad3b7968f3.png"></p>
 <p>图灵破解密码</p>
 <p>1945 年，图灵结束了在外交部的工作，他试图恢复战前在理论计算机科学方面的研究，具体研制出新的计算机来。</p>
 <p>1950 年他发表论文《计算机器与智能》（ Computing Machinery and Intelligence），为后来的人工智能科学提供了开创性的构思。提出著名的<strong>图灵测试</strong>。</p>
@@ -2321,6 +2322,74 @@
 ]]></content>
   </entry>
   <entry>
+    <title>装箱转换和拆箱转换</title>
+    <url>/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/</url>
+    <content><![CDATA[<p>JavaScript 是弱类型的语言，所以在 JavaScript 中类型转换这样的操作时时刻刻都在发生，基本类型之间的类型转换规则大都是清晰明了符合我们的直觉的，但是涉及到对象的类型转换就会使用到两种比较复杂的规则</p>
+<ul>
+<li>装箱转换（基本类型 -&gt; object）</li>
+<li>拆箱转换（object -&gt; 基本类型）</li>
+</ul>
+<h3 id="装箱转换"><a href="#装箱转换" class="headerlink" title="装箱转换"></a>装箱转换</h3><p>把基本类型转化为相应的对象</p>
+<blockquote>
+<p>《JavaScript 高级程序设计》：每当读取一个基本类型的时候，后台就会创建一个对应的基本包装类型对象，从而让我们能够调用一些方法来操作这些数据。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = s1.substring(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如上所视，变量 s1 是一个基本类型值，它不是对象，所以它不应该有方法。但是 JavaScript 在内部其实会去判断点运算符之前得到是一个对象还是一个基本类型，如果是基本类型则 JavaScript 就会自动的调用指定的包装类，将基本类型临时转换为对象类型再去访问其成员，而访问过后这个临时的对象就会被销毁</p>
+<p>这个过程也可以用代码来展现：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;some text&quot;</span>).substring(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在 object 类型中对以下基础类型提供给了一个包装类</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>对象</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Number</td>
+<td>new Number(1)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>String</td>
+<td>new String(“a”)</td>
+<td>“a”</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>new Boolean(true)</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Symbol</td>
+<td>new Object(Symbol(“a”))</td>
+<td>Symbol(“a”)</td>
+</tr>
+</tbody></table>
+<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 <code>Number 类型</code>跟 <code>Number类</code>是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分他到底是包装前的值，还是包装后的对象</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> aaa = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(aaa.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="拆箱转换"><a href="#拆箱转换" class="headerlink" title="拆箱转换"></a>拆箱转换</h3><p>把对象转化为相应的需要的基本类型</p>
+<p>拆箱转换是指把一个 Object 转成一个基本类型，这其中一个主要的过程叫做 <code>ToPrimitive</code> , <code>ToPrimitive</code> 发生在我们表达式定义的方法面面，比如 Object + Object，或者 Object 参与运算的情况，它都会调用 <code>ToPrimitive</code> 过程</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    toString() &#123;</span><br><span class="line">    	<span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line">   	&#125;,</span><br><span class="line">    valueOf() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    [<span class="built_in">Symbol</span>.toPrimitive]() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;toPrimitive&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们对象 o 身上的三个方法会影响到 <code>ToPrimitive</code> 过程</p>
+<ul>
+<li><code>toString</code></li>
+<li><code>valueOf</code></li>
+<li><code>[Symbol.toPrimitive]</code></li>
+</ul>
+<p>如果定义了 <code>Symbol.toPrimitive</code> 那么它就会忽略 <code>toString</code> 和 <code>valueOf</code>,直接调用<code>Symbol.toPrimitive</code>方法</p>
+<p>否则我们在进行不同的转换的时候，它会根据提示来决定调用 <code>toString</code> 和 <code>valueOf</code> 的先后顺序，我们来看两个例子</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 比如加法运算会优先调用 valueOf 如果返回了一个基本类型的数据，则终止 ToPrimitive 过程，否则继续调用 toString 方法如果依然没有返回基本类型则会抛错</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  valueOf() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;x&quot;</span> + o);</span><br><span class="line"><span class="comment">// valueOf</span></span><br><span class="line"><span class="comment">// x1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 当对象作为属性名的时候会优先调用toString方法</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  valueOf() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> x = &#123;&#125;;</span><br><span class="line">x[o] = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
     <title>贪心算法</title>
     <url>/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>所谓贪心算法是指：在对问题求解的时候，总是做出在当前看来最好的选择，也就是说，不从整体最优上加以考虑，他所做出的进士某种意义上的局部最优解</p>
@@ -2348,8 +2417,8 @@
       </tags>
   </entry>
   <entry>
-    <title>运算符和表达式</title>
-    <url>/2020/11/21/%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <title>运算符优先级</title>
+    <url>/2020/11/21/%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7/</url>
     <content><![CDATA[<h3 id="语法树和运算符优先级的关系"><a href="#语法树和运算符优先级的关系" class="headerlink" title="语法树和运算符优先级的关系"></a>语法树和运算符优先级的关系</h3><p>我们都知道四则运算中运算符的优先级是 <code> +- 小于 */ 小于 ()</code> ，所以如果我们要构造一棵描述四则运算的语法树的时候，我们需要考虑</p>
 <ul>
 <li>括号会形成比乘除更小一级的语法结构</li>
@@ -2359,12 +2428,10 @@
 <p>比如说我们的 <code>1+2*3</code> 的表示如下</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">  +</span><br><span class="line"> / \</span><br><span class="line">1   *</span><br><span class="line">   / \</span><br><span class="line">  2   3</span><br></pre></td></tr></table></figure>
 
-
-
 <p>这棵树并不严谨，它并不是一个抽象语法树，它是一个所谓的中缀树，但是它大概可以说明我们运算符优先级会影响到语法树的构成</p>
 <p>所以说我们会在 JavaScript 的标准中，它是用产生式来描述运算符的优先级的（产生式更加严谨）</p>
 <p>接下来我们就来从它的优先级由高到低来看看整个表达式</p>
-<h3 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h3><p>以下列表大概说明了JavaScript中表达式的优先级关系</p>
+<h3 id="运算符优先级"><a href="#运算符优先级" class="headerlink" title="运算符优先级"></a>运算符优先级</h3><p>以下列表大概说明了 JavaScript 中表达式的优先级关系</p>
 <ol>
 <li><p>Member</p>
 <ul>
@@ -2472,8 +2539,6 @@
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Stingleton = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line">Stingleton.prototype.instance = <span class="literal">null</span>;</span><br><span class="line">Stingleton.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line">Stingleton.getInstance = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="built_in">this</span>.instance)&#123;</span><br><span class="line">        <span class="built_in">this</span>.instance = <span class="keyword">new</span> Stingleton(name)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.instance</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = Stingleton.getInstance(<span class="string">&quot;sven1&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> b = Stingleton.getInstance(<span class="string">&quot;sven2&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a === b)</span><br></pre></td></tr></table></figure>
 
 <p>或者</p>
-<a id="more"></a>
-
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> Singleton = <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line">Singleton.prototype.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line">Singleton.getInstance = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   <span class="keyword">var</span>  instance = <span class="literal">null</span>;</span><br><span class="line">   <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">name</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(!instance)&#123;</span><br><span class="line">           instance = <span class="keyword">new</span> Singleton(name);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> instance</span><br><span class="line">   &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
 
 <p>我们通过<code>Singleton.getInstance</code>来获取 <code>Singleton</code> 类的唯一对象，这种方式相对简单，但有一个问题，就是为了增加这个类的‘不透明性’，<code>Singleton</code>类的使用者必须知道这是一个单例类，根以往通过<code>new XXX</code>的方式来获取对象不同，这里偏要使用 <code>Singleton.getInstance </code>来获取对象。</p>
@@ -2577,7 +2642,7 @@
 <p>通过上面的定义我们不难发现，持续突出的就是一个快字，商业软件的快速落地需求推动了软件工程的发展。可持续的、快速迭代的软件过程是当今主流开发规约。尤其在互联网行业，快速响应即是生命线。从一个想法到产品落地都处在冲锋的过程中，机会稍纵即逝。响应用户反馈也是万分敏捷，早晨的反馈在当天就会上线发布，快得让用户感觉倍受重视。“快”已经成为商业竞争力。这一切都要求企业具备快速响应的能力，这正是推动持续集成、持续交付、持续部署的动力。</p>
 <p>产品或者项目的参与者应该能够深刻体会到团队协作时，工作交接（系统集成）部分最容易出问题，会消耗大量的沟通成本与时间成本，直接拖慢进度。所以，一个行之有效的项目管理过程（包括沟通管理、流程管理）在大型项目中效果明显。当前敏捷开发是主流，持续集成、持续交付与持续部署正好能够帮助高效地实施敏捷过程，促进开发、运维和质量保障（QA）部门之间的沟通、协作与整合。</p>
 <h3 id="CI-amp-CD-带来的变化"><a href="#CI-amp-CD-带来的变化" class="headerlink" title="CI&amp;CD 带来的变化"></a>CI&amp;CD 带来的变化</h3><p>通常把开发工作过程分为编码、构建、集成、测试、交付、部署几个阶段（见图 1-1），持续集成、持续交付、持续部署刚好覆盖这些阶段。从提高效率上来讲，对每个阶段的优化都可以缩短软件交付时间。持续集成、持续交付及持续部署的过程即是一个软件开发优化过程。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-958984fefb4525db84839cdc619294bf_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-958984fefb4525db84839cdc619294bf_720w.jpg"></p>
 <p>墨菲定律大家都不陌生，越是担心什么就越会发生什么；在多团队协作时，比如系统对接时，我们都会担心对接是否顺利，往往也不枉我们担心，时常我们会被集成折磨得焦头烂额。有很多团队只是担心，并没有拿出有效的措施去避免这种事情发生，以至于延长了交付时间。既然担心，我们何不及早集成，把问题先暴露出来？</p>
 <p>目前多数公司都已经使用了版本管理工具来管理源码，比如 GitLab、SVN 等版本管理工具。在版本管理这一块，公司会根据自己的实际情况来制订版本管理办法。对于持续集成来说，业内建议只维护一个源码仓库，降低版本管理的复杂度。开发人员持续提交自己的修改，自动触发编译，自动集成，自动进行自动化的测试，及早反馈集成过程中的问题，就能更好地防止出现平时不集成、集成就出问题的现象。</p>
 <p>通过自动化的持续集成，把管理流程固化；保证集成的有序性、可靠性；减少版本发布的不合规性（开发或者测试手动打包，可能一天打多个包，更新多次，测试不充分），保证版本可控，问题可追溯（至于哪个版本出现的问题，可以回溯）。</p>
@@ -2586,7 +2651,7 @@
 <p>下面引自 2017 年 DevOps 现状调查报告。</p>
 <p>统计资料显示，DevOps 正在各个行业、各种规模的企业中落地。DevOps 团队的比例在 2014 年是 16%，在 2015 年是 19%，在 2016 年是 22%，在 2017 年已经增长到 27%，越来越多的企业和团队开始拥抱 DevOps。图 1-2 是 2017 年 DevOps 现状调查报告统计的从业分布情况。</p>
 <p>完整的报告可以从 qcloudimg 网站下载。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-b6711ac5c1f0729cf29b830bade2e49b_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-b6711ac5c1f0729cf29b830bade2e49b_720w.jpg"></p>
 <p>在本书撰写过程中 2018 年 DevOps 现状调查报告也已经出来，图 1-3 是精英级执行团队使用 DevOps 后的效率。精英级执行团队在以下几个方面有着突出的表现。</p>
 <ul>
 <li>代码发布频率高 46 倍。</li>
@@ -2595,10 +2660,10 @@
 <li>事故恢复时间快 2604 倍。</li>
 </ul>
 <p>另外，云计算持续增长（见图 1-4）。有 17%的调查者仍然没有使用云厂商的服务。AWS 最受欢迎，占比为 52%，Azure 屈居次席，占比为 34%。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-26406fab0121c4640689dd0b59cb9c4b_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-26406fab0121c4640689dd0b59cb9c4b_720w.jpg"></p>
 <h3 id="CI-amp-CD-技术栈"><a href="#CI-amp-CD-技术栈" class="headerlink" title="CI&amp;CD 技术栈"></a>CI&amp;CD 技术栈</h3><p>目前持续集成、持续交付、持续部署在开源社区都是热点，用户可以方便地利用这些开源组件来构建自己企业的持续集成、持续交付及持续部署平台。</p>
 <p>持续集成工具中以 Jenkins 使用最为广泛，由 Jenkins 来作业化持续集成过程；利用 GitLab 来管理程序版本；利用 Gerrit 来做代码审核；利用 Sonar 进行代码质量扫描；利用 JUnit 进行单元测试；利用 Docker compose 来构建镜像；利用 Docker 来部署容器；利用 Kubernetes、Rancher 等进行服务编排。图 1-5 显示了常见的 CI&amp;CD 技术栈。</p>
-<p><img data-src="https://pic2.zhimg.com/80/v2-b71a61ad92b47b87bd7be277d4a99d11_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-b71a61ad92b47b87bd7be277d4a99d11_720w.jpg"></p>
 <p>后续讲解 CI&amp;CD 落地时会运用到其中的一些技术与工具。当然，基本上都运用开源工具，这也有助于企业在落地时节省费用。</p>
 <h3 id="大规模部署的烦恼"><a href="#大规模部署的烦恼" class="headerlink" title="大规模部署的烦恼"></a>大规模部署的烦恼</h3><p>对于同样的功能，在用户量不同的系统中，工作量是完全不同的，后台为性能考虑而设计的架构完全不一样。对于 CI&amp;CD 也是如此，小规模的很容易，配几个作业就可以完成工作，但对于大规模的 CI&amp;CD，一旦系统数量、实例数量上去后各种问题就都来了。下面列举几个主要的问题。</p>
 <ol>
@@ -2623,7 +2688,7 @@
 <h3 id="实施云平台化"><a href="#实施云平台化" class="headerlink" title="实施云平台化"></a>实施云平台化</h3><p>虚拟化、云平台化为大规模部署提供了方便，尤其是在硬件资源管理及网络管理方面。互联网的火热更是推动了云的快速发展，基本上各大互联网企业都已经完成了云平台化，生产力也在不断提升。以 Docker 为代表的容器化技术出现后，云变得更灵活，容器化已经成为大潮，Docker 也占据了容器市场的绝对份额。容器部署方式能够满足快速大批量部署的要求，充分利用物理机器资源。以 Docker 为例，Docker 容器技术让应用一次构建，到处（物理机、虚拟机、公有云、私有云、Windows 系统、Linux 系统等）可运行，加快了本地开发和构建，实现了快速交付和部署；同时还可以在操作系统层面提供资源隔离服务。</p>
 <p>为了提高服务水平，企业服务需要能够快速水平扩展，在系统设计层面也大举采用 SOA 框架，这种框架天生适合使用容器大规模部署。当然，也存在一些问题，比如管理大量的服务实例成为一个挑战，运维、监控、问题分析等变得复杂。那么如何管理这些容器呢？于是就产生了大量的容器管理工具，支持 Docker 容器管理的工具使用得比较广的有 Swarm、Mesos、Kubernetes、Rancher 等工具。这些工具能够帮我们方便管理容器，虽然有一些问题的解决方式并不完美，但这也给运维开发、测试开发提供了更多的想象空间与工作机会。目前容器管理工具 Kubernetes 影响最大，但 Kubernetes 的学习与运维成本相对较高，需要专业人士的支持。目前国内大型互联网公司基本都基于 Kubernetes 来管理大量容器，包括 BAT、京东等企业。腾讯的蓝鲸（DevOps）也基于 Kubernetes，已经开始市场化；淘宝的云效也是与蓝鲸同类型的产品。</p>
 <p>对于中小型企业来说，上 Kubernetes 显得有点操之过急，需要有技术储备与维护团队，学习成本相对也会高一点，因此应该选择简单的、快速能够落地的、能够满足企业要求的、有一定市场的工具。当然，最好还是开源的，社区也支持的。所以我们选择 Rancher，据说早期云效也是整合 Rancher 的，作者也在基于 Rancher 做整合，利用 Rancher 实现容器的管理，利用 Jenkins 构建，利用 GitLab 实现源码管理，再加上静态扫描、自动化测试、性能测试、日志管理等功能，整合成 DevOps，足够运行、管理上千个实例级别的容器实例。实际上，拥有 DevOps 并且已经容器化，就相当于已经拥有一个相对智能化的私有云平台（不是真正意义上的云，并没有对物理资源进行管理，抽象成服务）。图 1-6 是作者早期开发的 DevOps 静态架构。</p>
-<p><img data-src="https://pic4.zhimg.com/80/v2-d0bd916daf8680bb7b549a67dfc6752f_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-d0bd916daf8680bb7b549a67dfc6752f_720w.jpg"></p>
 <p>此平台类似于一个私有云平台，基本涵盖了系统的生命周期：编译、打包、发布、测试、上线、运维、下线。同时把硬件资源管理起来，这些硬件对用户透明。平台主要分 3 层。</p>
 <ul>
 <li>基础组件层，提供了存储、网络与运算功能。对于上层来说，硬件只是一个服务而已。</li>
@@ -2631,7 +2696,7 @@
 <li>DevOps 用户层，直接面向运维人员，做到持续集成、持续交付、持续部署，在平台中完成各种测试。支持多种形式的发布，减少上线风险。</li>
 </ul>
 <p>图 1-7 是上述平台用到的技术栈。下面对用到的部分工具进行简单说明。</p>
-<p><img data-src="https://pic2.zhimg.com/80/v2-04844cd0f7bc996f21043a601acfb1f1_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-04844cd0f7bc996f21043a601acfb1f1_720w.jpg"></p>
 <ul>
 <li>Rancher：一个开源的企业级容器管理平台。通过 Rancher，企业再也不必自己使用一系列的开源软件去从头搭建容器服务平台。Rancher 提供了在生产环境中使用的管理 Docker 和 Kubernetes 的全栈化容器部署与管理平台。</li>
 <li>Jenkins：用于构建管理，定义管理工作过程。</li>
@@ -2652,7 +2717,7 @@
 <p>本书讲到的 CI&amp;CD 刚好是这个 DevOps 的一个子集，我们将围绕上述架构及技术栈展开，</p>
 <p>本书不仅讲解如何实现，还会结合实例展示如何落地。这些对于大多数中小型企业来说已经足够支撑业务。企业给 CI&amp;CD 加上 Web 版本的门户、集中的账户管理体系以及运维监控体系，即可打造一个智能的 DevOps 平台。</p>
 <p>图 1-8 是 CI&amp;CD 流程，后面的实例也将围绕这个流程。</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-ce251210246218a21194dba51d686f82_720w.jpg"></p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-ce251210246218a21194dba51d686f82_720w.jpg"></p>
 <p>下面先简单介绍该流程。</p>
 <ol>
 <li>程序员提交代码。</li>
