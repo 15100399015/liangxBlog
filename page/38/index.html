@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/" class="post-title-link" itemprop="url">类型兼容性</a>
+            <a href="/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">命令模式</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-09-21 09:57:05" itemprop="dateCreated datePublished" datetime="2020-09-21T09:57:05+08:00">2020-09-21</time>
+              <time title="创建时间：2020-09-22 14:35:57" itemprop="dateCreated datePublished" datetime="2020-09-22T14:35:57+08:00">2020-09-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:49:50" itemprop="dateModified" datetime="2020-11-10T10:49:50+08:00">2020-11-10</time>
+                <time title="修改时间：2020-11-10 10:50:22" itemprop="dateModified" datetime="2020-11-10T10:50:22+08:00">2020-11-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,19 +262,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>TypeScript 里的类型兼容性是基于结构子类型的。 结构类型是一种只使用其成员来描述类型的方式。 它正好与名义（nominal）类型形成对比。（译者注：在基于名义类型的类型系统中，数据类型的兼容性或等价性是通过明确的声明和/或类型的名称来决定的。这与结构性类型系统不同，它是基于类型的组成结构，且不要求明确地声明。） 看下面的例子：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Named &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> p: Named;</span><br><span class="line"><span class="comment">// OK, because of structural typing</span></span><br><span class="line">p = <span class="keyword">new</span> Person();</span><br></pre></td></tr></table></figure>
+          <p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
+<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
+<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
+<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
 
-<p>在使用基于名义类型的语言，比如 C#或 Java 中，这段代码会报错，因为 Person 类没有明确说明其实现了 Named 接口。</p>
-<p>TypeScript 的结构性子类型是根据 JavaScript 代码的典型写法来设计的。 因为 JavaScript 里广泛地使用匿名对象，例如函数表达式和对象字面量，所以使用结构类型系统来描述这些类型比使用名义类型系统更好。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/09/21/%E7%B1%BB%E5%9E%8B%E5%85%BC%E5%AE%B9%E6%80%A7/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 
@@ -292,7 +284,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/37/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><span class="page-number current">38</span><a class="page-number" href="/page/39/">39</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/39/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/37/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><span class="page-number current">38</span><a class="page-number" href="/page/39/">39</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/39/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -360,7 +352,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

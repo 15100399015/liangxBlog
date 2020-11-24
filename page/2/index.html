@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/21/Completion%20Record/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/21/Completion%20Record/" class="post-title-link" itemprop="url">Completion Record</a>
+            <a href="/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/" class="post-title-link" itemprop="url">装箱转换和拆箱转换</a>
         </h2>
 
         <div class="post-meta">
@@ -217,16 +217,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-11-21 11:55:05" itemprop="dateCreated datePublished" datetime="2020-11-21T11:55:05+08:00">2020-11-21</time>
+              <time title="创建时间：2020-11-22 22:01:14 / 修改时间：23:28:14" itemprop="dateCreated datePublished" datetime="2020-11-22T22:01:14+08:00">2020-11-22</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-22 22:01:01" itemprop="dateModified" datetime="2020-11-22T22:01:01+08:00">2020-11-22</time>
-              </span>
 
           
   
@@ -237,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/21/Completion%20Record/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/21/Completion%20Record/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -253,27 +247,69 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>JavaScript 用语句来完成流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+          <p>JavaScript 是弱类型的语言，所以在 JavaScript 中类型转换这样的操作时时刻刻都在发生，基本类型之间的类型转换规则大都是清晰明了符合我们的直觉的，但是涉及到对象的类型转换就会使用到两种比较复杂的规则</p>
+<ul>
+<li>装箱转换（基本类型 -&gt; object）</li>
+<li>拆箱转换（object -&gt; 基本类型）</li>
+</ul>
+<h3 id="装箱转换"><a href="#装箱转换" class="headerlink" title="装箱转换"></a>装箱转换</h3><p>把基本类型转化为相应的对象</p>
+<blockquote>
+<p>《JavaScript 高级程序设计》：每当读取一个基本类型的时候，后台就会创建一个对应的基本包装类型对象，从而让我们能够调用一些方法来操作这些数据。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = s1.substring(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
 
-<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于x变量具体的值，</p>
-<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
-<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
-<p>比如上面的<code>if</code>语句，它的  Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
-<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
+<p>如上所视，变量 s1 是一个基本类型值，它不是对象，所以它不应该有方法。但是 JavaScript 在内部其实会去判断点运算符之前得到是一个对象还是一个基本类型，如果是基本类型则 JavaScript 就会自动的调用指定的包装类，将基本类型临时转换为对象类型再去访问其成员，而访问过后这个临时的对象就会被销毁</p>
+<p>这个过程也可以用代码来展现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;some text&quot;</span>).substring(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
 
-<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生break，continue，return，or throw，type 是一个非常关键的信息，</p>
-<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 object 类型中对以下基础类型提供给了一个包装类</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>对象</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Number</td>
+<td>new Number(1)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>String</td>
+<td>new String(“a”)</td>
+<td>“a”</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>new Boolean(true)</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Symbol</td>
+<td>new Object(Symbol(“a”))</td>
+<td>Symbol(“a”)</td>
+</tr>
+</tbody></table>
+<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 <code>Number 类型</code>跟 <code>Number类</code>是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分他到底是包装前的值，还是包装后的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> aaa = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(aaa.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
 
+<h3 id="拆箱转换"><a href="#拆箱转换" class="headerlink" title="拆箱转换"></a>拆箱转换</h3><p>把对象转化为相应的需要的基本类型</p>
+<p>拆箱转换是指把一个 Object 转成一个基本类型，这其中一个主要的过程叫做 <code>ToPrimitive</code> , <code>ToPrimitive</code> 发生在我们表达式定义的方法面面，比如 Object + Object，或者 Object 参与运算的情况，它都会调用 <code>ToPrimitive</code> 过程</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    toString() &#123;</span><br><span class="line">    	<span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line">   	&#125;,</span><br><span class="line">    valueOf() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    [<span class="built_in">Symbol</span>.toPrimitive]() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;toPrimitive&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>我们对象 o 身上的三个方法会影响到 <code>ToPrimitive</code> 过程</p>
+<ul>
+<li><code>toString</code></li>
+<li><code>valueOf</code></li>
+<li><code>[Symbol.toPrimitive]</code></li>
+</ul>
+<p>如果定义了 <code>Symbol.toPrimitive</code> 那么它就会忽略 <code>toString</code> 和 <code>valueOf</code>,直接调用<code>Symbol.toPrimitive</code>方法</p>
+<p>否则我们在进行不同的转换的时候，它会根据提示来决定调用 <code>toString</code> 和 <code>valueOf</code> 的先后顺序，我们来看两个例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 比如加法运算会优先调用 valueOf 如果返回了一个基本类型的数据，则终止 ToPrimitive 过程，否则继续调用 toString 方法如果依然没有返回基本类型则会抛错</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  valueOf() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;x&quot;</span> + o);</span><br><span class="line"><span class="comment">// valueOf</span></span><br><span class="line"><span class="comment">// x1</span></span><br></pre></td></tr></table></figure>
 
-<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record里面一个重要的信息</p>
-<p>target：这个非常少见  target 是一个label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">javascript:<span class="keyword">void</span>();</span><br><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i, j)</span><br><span class="line">        <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span> outPoint;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上就是JavaScript 中的 Completion Record 了，我们单看Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当对象作为属性名的时候会优先调用toString方法</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  valueOf() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> x = &#123;&#125;;</span><br><span class="line">x[o] = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -292,7 +328,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -360,7 +396,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

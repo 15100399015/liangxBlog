@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">贪心算法</a>
+            <a href="/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/" class="post-title-link" itemprop="url">回溯法</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-11-05 15:03:24" itemprop="dateCreated datePublished" datetime="2020-11-05T15:03:24+08:00">2020-11-05</time>
+              <time title="创建时间：2020-11-05 15:22:20" itemprop="dateCreated datePublished" datetime="2020-11-05T15:22:20+08:00">2020-11-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-07 21:24:26" itemprop="dateModified" datetime="2020-11-07T21:24:26+08:00">2020-11-07</time>
+                <time title="修改时间：2020-11-09 17:47:25" itemprop="dateModified" datetime="2020-11-09T17:47:25+08:00">2020-11-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,21 +262,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>所谓贪心算法是指：在对问题求解的时候，总是做出在当前看来最好的选择，也就是说，不从整体最优上加以考虑，他所做出的进士某种意义上的局部最优解</p>
-<p>贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择，必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关，</p>
-<p>所有对采用的贪心策略一定要仔细分析其是否满足无后效性</p>
-<h3 id="贪心算法的基本思路"><a href="#贪心算法的基本思路" class="headerlink" title="贪心算法的基本思路"></a>贪心算法的基本思路</h3><ol>
-<li>建立数学模型来描述问题</li>
-<li>把求解的问题分成若干子问题</li>
-<li>对每一个子问题求解，知道子问题的局部最优解</li>
-<li>把子问题的局部最优解合成原来问题的一个解</li>
+          <h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
+<p>回溯法是一种优先搜索法，按选优条件向前搜索，但当探索到某一步时，发现原先选择并不优或达不到目标，就返回一步重新选择，这种走走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为 “回溯点”。</p>
+<p>许多复杂的，规模较大的问题都可以适用回溯法，有 “通用解提方法” 的美称</p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>在包含问题的所有解的空间树中，按照深度优先搜索的策略，从根节点出发深度探索解空间树，当探索到某一节点的时候，要先判断该节点是否包含问题的解，就从该节点继续探索下去，如果该节点不包含问题的解，则逐层向其祖先节点回溯，（其实回溯法就是对隐式图的深度优先搜索算法）</p>
+<p>若用回溯法求问题的所有解时，要回溯到根，其根节点的所有可行的子树都要以被搜索遍才结束</p>
+<p>而若使用回溯法求任一解时，只要搜索到问题的第一个解就可以结束</p>
+<h3 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h3><ol>
+<li>针对所给问题，确定问题的解空间：首先应明确定义问题的解空间，问题的解空间应至少包含问题的一个（最优）解。</li>
+<li>确定结点的扩展搜索规则</li>
+<li>以深度优先方式搜索解空间，并在搜索过程中用剪枝函数避免无效搜索。</li>
 </ol>
-<h3 id="贪心算法适用的问题"><a href="#贪心算法适用的问题" class="headerlink" title="贪心算法适用的问题"></a>贪心算法适用的问题</h3><p>贪心策略适用的前提是：局部最优策略能导致产生全局最优解。 实际上，贪心算法适用的情况很少。一般，对一个问题分析是否适用于贪心算法，可以先选择该问题下的几个实际数据进行分析，就可做出判断。</p>
-<h3 id="贪心算法的实现框架"><a href="#贪心算法的实现框架" class="headerlink" title="贪心算法的实现框架"></a>贪心算法的实现框架</h3><p>从问题的某一初始解出发；</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x； 能朝给定总目标前进一步</span></span><br><span class="line"><span class="keyword">while</span> (x) &#123;</span><br><span class="line">     <span class="comment">//利用可行的决策，求出可行解的一个解元素；</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由所有解元素组合成问题的一个可行解；</p>
-<h3 id="贪心算法的选择"><a href="#贪心算法的选择" class="headerlink" title="贪心算法的选择"></a>贪心算法的选择</h3><p>因为用贪心算法只能通过解局部最优解的策略来达到全局最优解，因此，一定要注意判断问题是否适合采用贪心算法策略，找到的解是否一定是问题的最优解。</p>
 
       
     </div>
@@ -295,7 +291,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/23/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/25/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -363,7 +359,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
