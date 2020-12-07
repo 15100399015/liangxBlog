@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">排序算法</a>
+            <a href="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">贪心算法</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-11-03 09:40:03" itemprop="dateCreated datePublished" datetime="2020-11-03T09:40:03+08:00">2020-11-03</time>
+              <time title="创建时间：2020-11-05 15:03:24" itemprop="dateCreated datePublished" datetime="2020-11-05T15:03:24+08:00">2020-11-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-09 17:48:20" itemprop="dateModified" datetime="2020-11-09T17:48:20+08:00">2020-11-09</time>
+                <time title="修改时间：2020-11-07 21:24:26" itemprop="dateModified" datetime="2020-11-07T21:24:26+08:00">2020-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,13 +262,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
-<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
-<p>冒泡排序</p>
-<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
-<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
-<p>让我们实现下冒泡排序</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>所谓贪心算法是指：在对问题求解的时候，总是做出在当前看来最好的选择，也就是说，不从整体最优上加以考虑，他所做出的进士某种意义上的局部最优解</p>
+<p>贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择，必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关，</p>
+<p>所有对采用的贪心策略一定要仔细分析其是否满足无后效性</p>
+<h3 id="贪心算法的基本思路"><a href="#贪心算法的基本思路" class="headerlink" title="贪心算法的基本思路"></a>贪心算法的基本思路</h3><ol>
+<li>建立数学模型来描述问题</li>
+<li>把求解的问题分成若干子问题</li>
+<li>对每一个子问题求解，知道子问题的局部最优解</li>
+<li>把子问题的局部最优解合成原来问题的一个解</li>
+</ol>
+<h3 id="贪心算法适用的问题"><a href="#贪心算法适用的问题" class="headerlink" title="贪心算法适用的问题"></a>贪心算法适用的问题</h3><p>贪心策略适用的前提是：局部最优策略能导致产生全局最优解。 实际上，贪心算法适用的情况很少。一般，对一个问题分析是否适用于贪心算法，可以先选择该问题下的几个实际数据进行分析，就可做出判断。</p>
+<h3 id="贪心算法的实现框架"><a href="#贪心算法的实现框架" class="headerlink" title="贪心算法的实现框架"></a>贪心算法的实现框架</h3><p>从问题的某一初始解出发；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x； 能朝给定总目标前进一步</span></span><br><span class="line"><span class="keyword">while</span> (x) &#123;</span><br><span class="line">     <span class="comment">//利用可行的决策，求出可行解的一个解元素；</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由所有解元素组合成问题的一个可行解；</p>
+<h3 id="贪心算法的选择"><a href="#贪心算法的选择" class="headerlink" title="贪心算法的选择"></a>贪心算法的选择</h3><p>因为用贪心算法只能通过解局部最优解的策略来达到全局最优解，因此，一定要注意判断问题是否适合采用贪心算法策略，找到的解是否一定是问题的最优解。</p>
 
       
     </div>
@@ -287,7 +295,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/28/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/30/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/28/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><span class="page-number current">29</span><a class="page-number" href="/page/30/">30</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/30/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -355,7 +363,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

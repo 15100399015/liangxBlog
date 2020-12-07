@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/24/MVC%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/" class="post-title-link" itemprop="url">状态机</a>
+            <a href="/2020/11/24/MVC%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">MVC概念详解</a>
         </h2>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-11-18 13:42:04 / 修改时间：13:59:46" itemprop="dateCreated datePublished" datetime="2020-11-18T13:42:04+08:00">2020-11-18</time>
+              <time title="创建时间：2020-11-24 15:36:11 / 修改时间：15:43:43" itemprop="dateCreated datePublished" datetime="2020-11-24T15:36:11+08:00">2020-11-24</time>
             </span>
 
           
@@ -231,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/24/MVC%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/24/MVC%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -247,68 +247,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
-<p>状态机是什么？状态机应该如何去应用呢？状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
-</blockquote>
-<p>在工作过程中，意外接触了一个词——“状态机”，这是个什么意思，可以为我们做产品提供怎样的用处？</p>
-<p><strong>作为产品，为什么需要学习状态机呢？</strong></p>
-<p>在刚进入公司的时候，根据公司产品做流程图的时候，发现自己经常会漏了这样或那样的状态，导致整体流程会有问题。后来知道了状态机这样的东西，发现用这幅图就可以很清晰的表达整个状态的流转。当然这个不是做好一款产品的必备品，但是却可以让你更加轻松的同技术等人员交流。</p>
-<p>一、什么是状态机？</p>
-<p>就是就是状态转移图。</p>
-<p>如果流程围绕某个事物的状态变化进行，显而易见，该轮到状态机图上场了。一个状态机图中只描述一个事物，该事物有多个状态，不同的动作作用到状态上导致状态的转换。</p>
-<p>举个最简单的例子：</p>
-<p>人有三个状态：</p>
-<ul>
-<li>健康</li>
-<li>感冒</li>
-<li>康复中</li>
-</ul>
-<p>触发的条件有</p>
-<ul>
-<li>淋雨(t1)</li>
-<li>吃药(t2)</li>
-<li>打针(t3)</li>
-<li>休息(t4)</li>
-</ul>
-<p>所以状态机就是健康-&gt;(t4)-&gt;健康；健康-&gt;(t1)-&gt;感冒；感冒-&gt;(t3)-&gt;健康；感冒-&gt;(t2)-&gt;康复中；康复中-&gt;(t4)-&gt;健康等等。就是这样状态在不同的条件下，跳转到自己或不同状态的图。</p>
-<p>状态机可归纳为 4 个要素，即<strong>现态、条件、动作、次态</strong>。这样的归纳，主要是出于对状态机的内在因果关系的考虑。<strong>“现态”和“条件”是因，“动作”和“次态”是果</strong>。</p>
-<p>详解如下：</p>
-<ol>
-<li>现态：是指当前所处的状态。</li>
-<li>条件：又称为“事件”，当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。</li>
-<li>动作：条件满足后执行的动作，动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。</li>
-<li>次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</li>
-</ol>
-<p>在了解关于状态机的文章后，结合自己的平时的学习总结，我发现：<strong>在平时的业务过程中，判断即对应状态机理论中的条件，我们做什么操作改变状态即理论中的动作</strong>，同时状态必须要有始有终，否则会出现状态卡住，无法继续正常推进。</p>
-<p>状态机的开始一般用空心圆表示，代表状态图的起始位置。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/d85d69eb32524248948b04def94de314.jpeg" alt="img"></p>
-<p>结尾一般用实心圆点表示，是一个状态的终止点。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/02677f6905fd4ffdbbf5129eff72cd78.jpeg" alt="img"></p>
-<p>二、那么状态机怎样去应用呢？</p>
-<p>以物理课学的灯泡图为例：就是一个最基本的小型状态机，这个例子人人里的很多大神都已经举过了，这里就简单说下。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/18bd7c123ed34779b7a987181ad226ed.jpeg" alt="img"></p>
-<p>这里就是两个状态：① 打开开关，灯泡亮；② 关闭开关，灯泡灭。</p>
-<p>可以画出以下的状态机图：</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/0e3c08e476844dd99026db2709c03464.jpeg" alt="img"></p>
-<p>如果进度卡住，该怎么办？</p>
-<p>这里有个比较形象的案例就是淘宝的自动确认收货，卖家发货后状态变为待收货，若买家迟迟不点确认收货的话，那么流程就停止在这里，卖家也迟迟收不到货款。</p>
-<p>因此，在这里，淘宝做了一个条件，判断时间是否达到 15 天，如果达到 15 天，做出确认收货的动作，使得状态得到流转。</p>
-<p>以小灯泡为例：假设为了节约，小灯泡开了超过 8 个小时就自动关闭，除非再次做打开开关的操作，画出此时的状态机图如下：</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/258a535c301c4c6ca40a5877f5d2707a.jpeg" alt="img"></p>
-<p>同样的状态判断应用了很多场景，例如：患者购买服务或商品时，订单由待支付-已支付的状态中的通过时间条件来实现状态得到继续流转。</p>
-<p>但是，判断不是状态机必要的，如：正常小灯泡的两种状态，可以不需要经过判断。起始和终止状态可能是相同的，也可能是不同的，即同一种状态可能是起始状态，也可能为终止状态。</p>
-<p>在这里以外卖 app 为例：制作了一个订单的简单的状态机图，以订单的状态变更推动。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/5dde037d12804ddabdb50f69a5080fd8.png" alt="img"></p>
-<p>三、总结</p>
-<p>新入门时，对状态机和业务流程图总是傻傻分不清楚，因此对于状态机和流程图进行了了解和归纳。</p>
-<p>总的来说，状态机图和业务流程图有些类似，但是又有不同：</p>
-<ul>
-<li>两者是两种不同的思维方式；</li>
-<li>两者思考的出发点不一样，因而两者所表达的目的也是不同的；</li>
-<li>两者的各个节点都是不同的，流程图为动作，状态机为状态。</li>
-</ul>
-<p>一般情况下，我们使用的均为有限状态机。状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
-<p>同时，使用状态机和相关人员，尤其是开发，进行表达时，也可以更加清晰，提升沟通效率。</p>
+          <p>模型－视图－控制器（Modal View Controler，MVC）是 Xerox PARC 在八十年代为编程语言 Smalltalk－80 发明的一种软件设计模式，至今已被广泛使用。最近几年被推荐为 Sun 公司 J2EE 平台的设计模式，并且受到越来越多的使用 ColdFusion 和 PHP 的开发者的欢迎。模型－视图－控制器模式是一个有用的工具箱，它有很多好处，但也有一些缺点。</p>
+<p>MVC 本来是存在于 Desktop 程序中的，M 是指数据模型，V 是指用户界面，C 则是控制器。使用 MVC 的目的是将 M 和 V 的实现代码分离，从而使同一个程序可以使用不同的表现形式。比如一批统计数据你可以分别用柱状图、饼图来表示。C 存在的目的则是确保 M 和 V 的同步，一旦 M 改变，V 应该同步更新。</p>
+<h3 id="MVC-如何工作"><a href="#MVC-如何工作" class="headerlink" title="MVC 如何工作"></a>MVC 如何工作</h3><p>MVC 是一个设计模式，它强制性的使应用程序的输入、处理和输出分开。使用 MVC 应用程序被分成三个核心部件：模型、视图、控制器。它们各自处理自己的任务。</p>
+<p>1、视图视图是用户看到并与之交互的界面。对老式的 Web 应用程序来说，视图就是由 HTML 元素组成的界面，在新式的 Web 应用程序中，HTML 依旧在视图中扮演着重要的角色，但一些新的技术已层出不穷，它们包括 Macromedia Flash 和象 XHTML，XML/XSL，WML 等一些标识语言和 Web services. 在 web 前端中视图是及其主要的环节。</p>
+<p>如何处理应用程序的界面变得越来越有挑战性。MVC 一个大的好处是它能为你的应用程序处理很多不同的视图。在视图中其实没有真正的处理发生，不管这些数据是联机存储的还是一个雇员列表，作为视图来讲，它只是作为一种输出数据并允许用户操纵的方式。</p>
+<p>2、模型模型表示企业数据和业务规则。在 MVC 的三个部件中，模型拥有最多的处理任务。例如它可能用象 EJBs 和 ColdFusion Components 这样的构件对象来处理数据库。被模型返回的数据是中立的，就是说模型与数据格式无关，这样一个模型能为多个视图提供数据。由于应用于模型的代码只需写一次就可以被多个视图重用，所以减少了代码的重复性。</p>
+<p>3、控制器控制器接受用户的输入并调用模型和视图去完成用户的需求。所以当单击 Web 页面中的超链接和发送 HTML 表单时，控制器本身不输出任何东西和做任何处理。它只是接收请求并决定调用哪个模型构件去处理请求，然后用确定用哪个视图来显示模型处理返回的数据。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1380592864-5a15420675842_articlex.jpg"></p>
+<p>现在我们总结 MVC 的处理过程，首先控制器接收用户的请求，并决定应该调用哪个模型来进行处理，然后模型用业务逻辑来处理用户的请求并返回数据，最后控制器用相应的视图格式化模型返回的数据，并通过表示层呈现给用户。</p>
+<h3 id="为什么要使用-MVC"><a href="#为什么要使用-MVC" class="headerlink" title="为什么要使用 MVC"></a>为什么要使用 MVC</h3><p>大部分 Web 应用程序都是用像 ASP，PHP，或者 CFML 这样的过程化语言来创建的。它们将像数据库查询语句这样的数据层代码和像 HTML 这样的表示层代码混在一起。经验比较丰富的开发者会将数据从表示层分离开来，但这通常不是很容易做到的，它需要精心的计划和不断的尝试。MVC 从根本上强制性的将它们分开。尽管构造 MVC 应用程序需要一些额外的工作，但是它给我们带来的好处是无庸质疑的。</p>
+<p>首先，最重要的一点是多个视图能共享一个模型，正如我所提及的，现在需要用越来越多的方式来访问你的应用程序。对此，其中一个解决之道是使用 MVC，无论你的用户想要 Flash 界面或是 WAP 界面；用一个模型就能处理它们。由于你已经将数据和业务规则从表示层分开，所以你可以最大化的重用你的代码了。</p>
+<p>由于模型返回的数据没有进行格式化，所以同样的构件能被不同界面使用。例如，很多数据可能用 HTML 来表示，但是它们也有可能要用 Macromedia Flash 和 WAP 来表示。模型也有状态管理和数据持久性处理的功能，例如，基于会话的购物车和电子商务过程也能被 Flash 网站或者无线联网的应用程序所重用。</p>
+<p>因为模型是自包含的，并且与控制器和视图相分离，所以很容易改变你的应用程序的数据层和业务规则。如果你想把你的数据库从 MySQL 移植到 Oracle，或者改变你的基于 RDBMS 数据源到 LDAP，只需改变你的模型即可。一旦你正确的实现了模型，不管你的数据来自数据库或是 LDAP 服务器，视图将会正确的显示它们。由于运用 MVC 的应用程序的三个部件是相互对立，改变其中一个不会影响其它两个，所以依据这种设计思想你能构造良好的松偶合的构件。</p>
+<p>对我来说，控制器的也提供了一个好处，就是可以使用控制器来联接不同的模型和视图去完成用户的需求，这样控制器可以为构造应用程序提供强有力的手段。给定一些可重用的模型和视图，控制器可以根据用户的需求选择模型进行处理，然后选择视图将处理结果显示给用户。</p>
+<h3 id="MVC-的缺点"><a href="#MVC-的缺点" class="headerlink" title="MVC 的缺点"></a>MVC 的缺点</h3><p>MVC 的缺点是由于它没有明确的定义，所以完全理解 MVC 并不是很容易。使用 MVC 需要精心的计划，由于它的内部原理比较复杂，所以需要花费一些时间去思考。</p>
+<p>你将不得不花费相当可观的时间去考虑如何将 MVC 运用到你的应用程序，同时由于模型和视图要严格的分离，这样也给调试应用程序到来了一定的困难。每个构件在使用之前都需要经过彻底的测试。一旦你的构件经过了测试，你就可以毫无顾忌的重用它们了。</p>
+<p>根据我个人经验，由于我们将一个应用程序分成了三个部件，所以使用 MVC 同时也意味着你将要管理比以前更多的文件，这一点是显而易见的。这样好像我们的工作量增加了，但是请记住这比起它所能带给我们的好处是不值一提。</p>
+<p>MVC 并不适合小型甚至中等规模的应用程序，花费大量时间将 MVC 应用到规模并不是很大的应用程序通常会得不偿失。</p>
+<h3 id="MVC-是一条创建软件的好途径"><a href="#MVC-是一条创建软件的好途径" class="headerlink" title="MVC 是一条创建软件的好途径"></a>MVC 是一条创建软件的好途径</h3><p>MVC 设计模式是一个很好创建软件的途径，它所提倡的一些原则，像内容和显示互相分离可能比较好理解。但是如果你要隔离模型、视图和控制器的构件，你可能需要重新思考你的应用程序，尤其是应用程序的构架方面。如果你肯接受 MVC，并且有能力应付它所带来的额外的工作和复杂性，MVC 将会使你的软件在健壮性，代码重用和结构方面上一个新的台阶。</p>
 
       
     </div>
@@ -327,7 +284,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -395,7 +352,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

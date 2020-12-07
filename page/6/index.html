@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">有限状态机是什么</a>
+            <a href="/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/" class="post-title-link" itemprop="url">装箱转换和拆箱转换</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-11-17 16:16:04" itemprop="dateCreated datePublished" datetime="2020-11-17T16:16:04+08:00">2020-11-17</time>
+              <time title="创建时间：2020-11-22 22:01:14" itemprop="dateCreated datePublished" datetime="2020-11-22T22:01:14+08:00">2020-11-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-18 13:36:27" itemprop="dateModified" datetime="2020-11-18T13:36:27+08:00">2020-11-18</time>
+                <time title="修改时间：2020-11-24 21:56:05" itemprop="dateModified" datetime="2020-11-24T21:56:05+08:00">2020-11-24</time>
               </span>
 
           
@@ -237,8 +237,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/22/%E8%A3%85%E7%AE%B1%E8%BD%AC%E6%8D%A2%E5%92%8C%E6%8B%86%E7%AE%B1%E8%BD%AC%E6%8D%A2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -253,26 +253,72 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
-<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
-<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
-<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
-<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
-<p>它有三个特征：</p>
+          <p>JavaScript 是弱类型的语言，所以在 JavaScript 中类型转换这样的操作时时刻刻都在发生，基本类型之间的类型转换规则大都是清晰明了符合我们的直觉的，但是涉及到对象的类型转换就会使用到两种比较复杂的规则</p>
 <ul>
-<li>状态总数（state）是有限的。</li>
-<li>任一时刻，只处在一种状态之中。</li>
-<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
+<li>装箱转换（基本类型 -&gt; object）</li>
+<li>拆箱转换（object -&gt; 基本类型）</li>
 </ul>
-<p>有限状态机一般都有以下特点：</p>
+<h3 id="装箱转换"><a href="#装箱转换" class="headerlink" title="装箱转换"></a>装箱转换</h3><p>把基本类型转化为相应的对象</p>
+<blockquote>
+<p>《JavaScript 高级程序设计》：每当读取一个基本类型的时候，后台就会创建一个对应的基本包装类型对象，从而让我们能够调用一些方法来操作这些数据。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = s1.substring(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如上所视，变量 s1 是一个基本类型值，它不是对象，所以它不应该有方法。但是 JavaScript 在内部其实会去判断点运算符之前得到是一个对象还是一个基本类型，如果是基本类型则 JavaScript 就会自动的调用指定的包装类，将基本类型临时转换为对象类型再去访问其成员，而访问过后这个临时的对象就会被销毁</p>
+<p>这个过程也可以用代码来展现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="string">&quot;some text&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;some text&quot;</span>).substring(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在 object 类型中对以下基础类型提供给了一个包装类</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>对象</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Number</td>
+<td>new Number(1)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>String</td>
+<td>new String(“a”)</td>
+<td>“a”</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>new Boolean(true)</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Symbol</td>
+<td>new Object(Symbol(“a”))</td>
+<td>Symbol(“a”)</td>
+</tr>
+</tbody></table>
+<p>我们使用点或者方括号去访问属性的时候，如果方括号之前的变量或者表达式得到的是一个基础类型，那么就会自动调用装箱过程，不需要我们再去调用标准里规定的这些构造器，所以大家会看到一个现象，在 Number 这个 class 上定义了什么样的值，那么我们正常的 Number 类型的值它也可以通过点运算去访问，这是 JavaScript 一个比较方便的地方 它的背后也包含了一些设计思想，但是这个过程也会往往诱导新人认为 Number 类型跟 Number 类是一个东西，但其实并不是这样，我们可以通过 <code>typeOf</code> 去区分它到底是包装前的值，还是包装后的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>.prototype.test = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> num = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(num.test);</span><br><span class="line"><span class="comment">// test</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> <span class="built_in">Number</span>(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(a)<span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(a))<span class="comment">// number</span></span><br><span class="line"><span class="built_in">console</span>.log(b)<span class="comment">// [Number 1]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(b))<span class="comment">// object</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="拆箱转换"><a href="#拆箱转换" class="headerlink" title="拆箱转换"></a>拆箱转换</h3><p>把对象转化为相应的需要的基本类型</p>
+<p>拆箱转换是指把一个 Object 转成一个基本类型，这其中一个主要的过程叫做 <code>ToPrimitive</code> , <code>ToPrimitive</code> 发生在我们表达式定义的方法面面，比如 Object + Object，或者 Object 参与运算的情况，它都会调用 <code>ToPrimitive</code> 过程</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    toString() &#123;</span><br><span class="line">    	<span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line">   	&#125;,</span><br><span class="line">    valueOf() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    [<span class="built_in">Symbol</span>.toPrimitive]() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;toPrimitive&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们对象 o 身上的三个方法会影响到 <code>ToPrimitive</code> 过程</p>
 <ul>
-<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
-<li>事物拥有的状态总数是有限的；</li>
-<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
-<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
-<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
+<li><code>toString</code></li>
+<li><code>valueOf</code></li>
+<li><code>[Symbol.toPrimitive]</code></li>
 </ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h3 id="编码演示"><a href="#编码演示" class="headerlink" title="编码演示"></a>编码演示</h3>
+<p>如果定义了 <code>Symbol.toPrimitive</code> 那么它就会忽略 <code>toString</code> 和 <code>valueOf</code>,直接调用<code>Symbol.toPrimitive</code>方法</p>
+<p>否则我们在进行不同的转换的时候，它会根据提示来决定调用 <code>toString</code> 和 <code>valueOf</code> 的先后顺序，我们来看两个例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 比如加法运算会优先调用 valueOf 如果返回了一个基本类型的数据，则终止 ToPrimitive 过程，否则继续调用 toString 方法如果依然没有返回基本类型则会抛错</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  valueOf() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;x&quot;</span> + o);</span><br><span class="line"><span class="comment">// valueOf</span></span><br><span class="line"><span class="comment">// x1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当对象作为属性名的时候会优先调用toString方法</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;toString&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  valueOf() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;valueOf&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> x = &#123;&#125;;</span><br><span class="line">x[o] = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -290,7 +336,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -358,7 +404,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

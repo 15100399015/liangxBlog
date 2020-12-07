@@ -91,26 +91,101 @@
     <title>Completion Record</title>
     <url>/2020/11/21/Completion%20Record/</url>
     <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
 
-<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于x变量具体的值，</p>
+<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于 x 变量具体的值，</p>
 <p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
 <p>每写一条一句就会产生 Completion Record 这样的东西，</p>
-<p>比如上面的<code>if</code>语句，它的  Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
+<p>比如上面的<code>if</code>语句，它的 Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
 <p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
 
-<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生break，continue，return，or throw，type 是一个非常关键的信息，</p>
+<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生 break，continue，return，or throw，type 是一个非常关键的信息，</p>
 <p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record 里面一个重要的信息</p>
+<p>target：这个非常少见 target 是一个 label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i, j);</span><br><span class="line">    <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">      <span class="keyword">break</span> outPoint;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>以上就是 JavaScript 中的 Completion Record 了，我们单看 Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Generator函数的语法</title>
+    <url>/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
+<p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
+<p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
+<p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，<code>function</code>关键字与函数名之间有一个星号；二是，函数体内部使用<code>yield</code>表达式，定义不同的内部状态（<code>yield</code>在英语里的意思就是“产出”）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
 
-<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record里面一个重要的信息</p>
-<p>target：这个非常少见  target 是一个label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">javascript:<span class="keyword">void</span>();</span><br><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i, j)</span><br><span class="line">        <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span> outPoint;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码定义了一个 Generator 函数<code>helloWorldGenerator</code>，它内部有两个<code>yield</code>表达式（<code>hello</code>和<code>world</code>），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
+<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
+<p>下一步，必须调用遍历器对象的<code>next</code>方法，使得指针移向下一个状态。也就是说，每次调用<code>next</code>方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个<code>yield</code>表达式（或<code>return</code>语句）为止。换言之，Generator 函数是分段执行的，<code>yield</code>表达式是暂停执行的标记，而<code>next</code>方法可以恢复执行。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;hello&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;world&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;ending&#x27;, done: true &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
 
-<p>以上就是JavaScript 中的 Completion Record 了，我们单看Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+<p>上面代码一共调用了四次<code>next</code>方法。</p>
+<p>第一次调用，Generator 函数开始执行，直到遇到第一个<code>yield</code>表达式为止。<code>next</code>方法返回一个对象，它的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>hello</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
+<p>第二次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到下一个<code>yield</code>表达式。<code>next</code>方法返回的对象的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>world</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
+<p>第三次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到<code>return</code>语句（如果没有<code>return</code>语句，就执行到函数结束）。<code>next</code>方法返回的对象的<code>value</code>属性，就是紧跟在<code>return</code>语句后面的表达式的值（如果没有<code>return</code>语句，则<code>value</code>属性的值为<code>undefined</code>），<code>done</code>属性的值<code>true</code>，表示遍历已经结束。</p>
+<p>第四次调用，此时 Generator 函数已经运行完毕，<code>next</code>方法返回对象的<code>value</code>属性为<code>undefined</code>，<code>done</code>属性为<code>true</code>。以后再调用<code>next</code>方法，返回的都是这个值。</p>
+<p>总结一下，调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的<code>next</code>方法，就会返回一个有着<code>value</code>和<code>done</code>两个属性的对象。<code>value</code>属性表示当前的内部状态的值，是<code>yield</code>表达式后面那个表达式的值；<code>done</code>属性是一个布尔值，表示是否遍历结束。</p>
+<p>ES6 没有规定，<code>function</code>关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在<code>function</code>关键字后面。本书也采用这种写法。</p>
+<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h4><p>由于 Generator 函数返回的遍历器对象，只有调用<code>next</code>方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。<code>yield</code>表达式就是暂停标志。</p>
+<p>遍历器对象的<code>next</code>方法的运行逻辑如下。</p>
+<ol>
+<li>遇到<code>yield</code>表达式，就暂停执行后面的操作，并将紧跟在<code>yield</code>后面的那个表达式的值，作为返回的对象的<code>value</code>属性值</li>
+<li>下一次调用<code>next</code>方法时，再继续往下执行，直到遇到下一个<code>yield</code>表达式。</li>
+<li>如果没有再遇到新的<code>yield</code>表达式，就一直运行到函数结束，直到<code>return</code>语句为止，并将<code>return</code>语句后面的表达式的值，作为返回的对象的<code>value</code>属性值。</li>
+<li>如果该函数没有<code>return</code>语句，则返回的对象的<code>value</code>属性值为<code>undefined</code>。</li>
+</ol>
+<p>需要注意的是，<code>yield</code>表达式后面的表达式，只有当调用<code>next</code>方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">gen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">123</span> + <span class="number">456</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>yield</code>后面的表达式<code>123 + 456</code>，不会立即求值，只会在<code>next</code>方法将指针移到这一句时，才会求值。</p>
+<p><code>yield</code>表达式与<code>return</code>语句既有相似之处，也有区别。相似之处在于，都能返回紧跟在语句后面的那个表达式的值。区别在于每次遇到<code>yield</code>，函数暂停执行，下一次再从该位置继续向后执行，而<code>return</code>语句不具备位置记忆的功能。一个函数里面，只能执行一次（或者说一个）<code>return</code>语句，但是可以执行多次（或者说多个）<code>yield</code>表达式。正常函数只能返回一个值，因为只能执行一次<code>return</code>；Generator 函数可以返回一系列的值，因为可以有任意多个<code>yield</code>。从另一个角度看，也可以说 Generator 生成了一系列的值，这也就是它的名称的来历（英语中，generator 这个词是“生成器”的意思）。</p>
+<p>Generator 函数可以不用<code>yield</code>表达式，这时就变成了一个单纯的暂缓执行函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;执行了！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> generator = f();</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  generator.next();</span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，函数<code>f</code>如果是普通函数，在为变量<code>generator</code>赋值时就会执行。但是，函数<code>f</code>是一个 Generator 函数，就变成只有调用<code>next</code>方法时，函数<code>f</code>才会执行。</p>
+<p>另外需要注意，<code>yield</code>表达式只能用在 Generator 函数里面，用在其他地方都会报错。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// SyntaxError: Unexpected number</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码在一个普通函数中使用<code>yield</code>表达式，结果产生一个句法错误。</p>
+<p>下面是另外一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  a.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&#x27;number&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr))&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码也会产生句法错误，因为<code>forEach</code>方法的参数是一个普通函数，但是在里面使用了<code>yield</code>表达式（这个函数里面还使用了<code>yield*</code>表达式，详细介绍见后文）。一种修改方法是改用<code>for</code>循环。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> length = a.length;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = a[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1, 2, 3, 4, 5, 6</span></span><br></pre></td></tr></table></figure>
+
+<p>另外，<code>yield</code>表达式如果用在另一个表达式之中，必须放在圆括号里面。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>yield</code>表达式用作函数参数或放在赋值表达式的右边，可以不加括号。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo(<span class="keyword">yield</span> <span class="string">&quot;a&quot;</span>, <span class="keyword">yield</span> <span class="string">&quot;b&quot;</span>); <span class="comment">// OK</span></span><br><span class="line">  <span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>ES6</category>
+      </categories>
+      <tags>
+        <tag>es6</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTML从字符流到抽象语法树</title>
+    <url>/2020/12/07/HTML%E4%BB%8E%E5%AD%97%E7%AC%A6%E6%B5%81%E5%88%B0%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/</url>
+    <content><![CDATA[<p>词法分析，语法分析，状态机，米利状态机，JS实现状态机</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// lexer.js 词法分析</span></span><br><span class="line"><span class="keyword">const</span> EOF = <span class="keyword">void</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// html词法分析器， 接受一个语法解析器</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params">syntaxer</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 状态</span></span><br><span class="line">  <span class="keyword">let</span> state = data;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 存储</span></span><br><span class="line">  <span class="keyword">let</span> token = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">let</span> attribute = <span class="literal">null</span>;</span><br><span class="line">  <span class="comment">// 接收输入</span></span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (state == <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&quot;there is an error&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 更新状态</span></span><br><span class="line">      state = state(char);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">this</span>.reset = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    state = data;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始状态判断</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> tagOpen; <span class="comment">// 标签开始</span></span><br><span class="line">    &#125;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 标签开始状态</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 标签结束</span></span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> endTagOpen;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 是否为任意大小写字母</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[a-zA-Z]/</span>.test(c)) &#123;</span><br><span class="line">      token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">      token.name = c.toLowerCase();</span><br><span class="line">      <span class="keyword">return</span> tagName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error(c);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 标签名状态</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagName</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> selfClosingTag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      emitToken(token);</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[a-zA-Z]/</span>.test(c)) &#123;</span><br><span class="line">      token.name += c.toLowerCase();</span><br><span class="line">      <span class="keyword">return</span> tagName;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 等待属性名</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">beforeAttributeName</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> selfClosingTag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      emitToken(token);</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[&quot;&#x27;&lt;]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> error(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    attribute = <span class="keyword">new</span> Attribute();</span><br><span class="line">    attribute.name = c.toLowerCase();</span><br><span class="line">    attribute.value = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> attributeName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 属性名</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeName</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> selfClosingTag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;=&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.name += c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> attributeName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 等待属性内容</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">beforeAttributeValue</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&#x27;&quot;&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> attributeValueDoubleQuoted;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&#x27;&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> attributeValueSingleQuoted;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/\t \f\n/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeValue;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueUnquoted;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 属性内容双引号</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeValueDoubleQuoted</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&#x27;&quot;&#x27;</span>) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueDoubleQuoted;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 属性内容单引号</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeValueSingleQuoted</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&#x27;&quot;</span>) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueSingleQuoted;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 属性内容</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeValueUnquoted</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueUnquoted;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 自封闭</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">selfClosingTag</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      emitToken(token);</span><br><span class="line">      endToken = <span class="keyword">new</span> EndTagToken();</span><br><span class="line">      endToken.name = token.name;</span><br><span class="line">      emitToken(endToken);</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 结束标签打开</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">endTagOpen</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[a-zA-Z]/</span>.test(c)) &#123;</span><br><span class="line">      token = <span class="keyword">new</span> EndTagToken();</span><br><span class="line">      token.name = c.toLowerCase();</span><br><span class="line">      <span class="keyword">return</span> tagName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> error(c);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 发出Token</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">emitToken</span>(<span class="params">token</span>) </span>&#123;</span><br><span class="line">    syntaxer.receiveInput(token);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">error</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`warn: unexpected char &#x27;<span class="subst">$&#123;c&#125;</span>&#x27;`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StartTagToken</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EndTagToken</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Attribute</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  HTMLLexicalParser,</span><br><span class="line">  StartTagToken,</span><br><span class="line">  EndTagToken,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// syntaxer.js 语法分析</span></span><br><span class="line"><span class="keyword">const</span> &#123; StartTagToken, EndTagToken &#125; = <span class="built_in">require</span>(<span class="string">&quot;./lexer&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HTMLDocument</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="built_in">this</span>.isDocument = <span class="literal">true</span>;</span><br><span class="line">    <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 根node节点</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">// 元素节点</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Element</span> <span class="keyword">extends</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(token) &#123;</span><br><span class="line">    <span class="built_in">super</span>(token);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> token) &#123;</span><br><span class="line">      <span class="built_in">this</span>[key] = token[key];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.childNodes = [];</span><br><span class="line">  &#125;</span><br><span class="line">  [<span class="built_in">Symbol</span>.toStringTag]() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`Element&lt;<span class="subst">$&#123;<span class="built_in">this</span>.name&#125;</span>&gt;`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 文本节点</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Text</span> <span class="keyword">extends</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(value) &#123;</span><br><span class="line">    <span class="built_in">super</span>(value);</span><br><span class="line">    <span class="built_in">this</span>.value = value || <span class="string">&quot;&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// html 分析器</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLSyntaticalParser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> stack = [<span class="keyword">new</span> HTMLDocument()];</span><br><span class="line"></span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">token</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> token === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (getTop(stack) <span class="keyword">instanceof</span> Text) &#123;</span><br><span class="line">        getTop(stack).value += token;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> t = <span class="keyword">new</span> Text(token);</span><br><span class="line">        getTop(stack).childNodes.push(t);</span><br><span class="line">        stack.push(t);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (getTop(stack) <span class="keyword">instanceof</span> Text) &#123;</span><br><span class="line">      stack.pop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (token <span class="keyword">instanceof</span> StartTagToken) &#123;</span><br><span class="line">      <span class="keyword">let</span> e = <span class="keyword">new</span> Element(token);</span><br><span class="line">      getTop(stack).childNodes.push(e);</span><br><span class="line">      <span class="keyword">return</span> stack.push(e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (token <span class="keyword">instanceof</span> EndTagToken) &#123;</span><br><span class="line">      <span class="keyword">return</span> stack.pop();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">this</span>.getOutput = <span class="function">() =&gt;</span> stack[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTop</span>(<span class="params">stack</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> stack[stack.length - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  HTMLSyntaticalParser,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// test.js</span></span><br><span class="line"><span class="keyword">const</span> &#123; HTMLSyntaticalParser &#125; = <span class="built_in">require</span>(<span class="string">&quot;./syntaxer&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> &#123; HTMLLexicalParser &#125; = <span class="built_in">require</span>(<span class="string">&quot;./lexer&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> syntaxer = <span class="keyword">new</span> HTMLSyntaticalParser();</span><br><span class="line"><span class="keyword">const</span> lexer = <span class="keyword">new</span> HTMLLexicalParser(syntaxer);</span><br><span class="line"></span><br><span class="line"><span class="comment">//  html 文档</span></span><br><span class="line"><span class="keyword">const</span> testHTML = <span class="string">`&lt;html maaa=a &gt;</span></span><br><span class="line"><span class="string">    &lt;head&gt;</span></span><br><span class="line"><span class="string">        &lt;title&gt;cool&lt;/title&gt;</span></span><br><span class="line"><span class="string">    &lt;/head&gt;</span></span><br><span class="line"><span class="string">    &lt;body&gt;</span></span><br><span class="line"><span class="string">        &lt;img src=&quot;a&quot; /&gt;</span></span><br><span class="line"><span class="string">    &lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> c <span class="keyword">of</span> testHTML) &#123;</span><br><span class="line">  lexer.receiveInput(c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(syntaxer.getOutput(), <span class="literal">null</span>, <span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+
+<p>这里我们最终得到了抽象语法树（虽然我们这里解析成了json）</p>
 ]]></content>
   </entry>
   <entry>
@@ -221,70 +296,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Generator函数的语法</title>
-    <url>/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
-<p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
-<p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
-<p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，<code>function</code>关键字与函数名之间有一个星号；二是，函数体内部使用<code>yield</code>表达式，定义不同的内部状态（<code>yield</code>在英语里的意思就是“产出”）。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&quot;world&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;ending&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
-
-<p>上面代码定义了一个 Generator 函数<code>helloWorldGenerator</code>，它内部有两个<code>yield</code>表达式（<code>hello</code>和<code>world</code>），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
-<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
-<p>下一步，必须调用遍历器对象的<code>next</code>方法，使得指针移向下一个状态。也就是说，每次调用<code>next</code>方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个<code>yield</code>表达式（或<code>return</code>语句）为止。换言之，Generator 函数是分段执行的，<code>yield</code>表达式是暂停执行的标记，而<code>next</code>方法可以恢复执行。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;hello&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;world&#x27;, done: false &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: &#x27;ending&#x27;, done: true &#125;</span></span><br><span class="line"></span><br><span class="line">hw.next();</span><br><span class="line"><span class="comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>上面代码一共调用了四次<code>next</code>方法。</p>
-<p>第一次调用，Generator 函数开始执行，直到遇到第一个<code>yield</code>表达式为止。<code>next</code>方法返回一个对象，它的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>hello</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
-<p>第二次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到下一个<code>yield</code>表达式。<code>next</code>方法返回的对象的<code>value</code>属性就是当前<code>yield</code>表达式的值<code>world</code>，<code>done</code>属性的值<code>false</code>，表示遍历还没有结束。</p>
-<p>第三次调用，Generator 函数从上次<code>yield</code>表达式停下的地方，一直执行到<code>return</code>语句（如果没有<code>return</code>语句，就执行到函数结束）。<code>next</code>方法返回的对象的<code>value</code>属性，就是紧跟在<code>return</code>语句后面的表达式的值（如果没有<code>return</code>语句，则<code>value</code>属性的值为<code>undefined</code>），<code>done</code>属性的值<code>true</code>，表示遍历已经结束。</p>
-<p>第四次调用，此时 Generator 函数已经运行完毕，<code>next</code>方法返回对象的<code>value</code>属性为<code>undefined</code>，<code>done</code>属性为<code>true</code>。以后再调用<code>next</code>方法，返回的都是这个值。</p>
-<p>总结一下，调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的<code>next</code>方法，就会返回一个有着<code>value</code>和<code>done</code>两个属性的对象。<code>value</code>属性表示当前的内部状态的值，是<code>yield</code>表达式后面那个表达式的值；<code>done</code>属性是一个布尔值，表示是否遍历结束。</p>
-<p>ES6 没有规定，<code>function</code>关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> * <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>*<span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123; ··· &#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在<code>function</code>关键字后面。本书也采用这种写法。</p>
-<h4 id="yield-表达式"><a href="#yield-表达式" class="headerlink" title="yield 表达式"></a>yield 表达式</h4><p>由于 Generator 函数返回的遍历器对象，只有调用<code>next</code>方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。<code>yield</code>表达式就是暂停标志。</p>
-<p>遍历器对象的<code>next</code>方法的运行逻辑如下。</p>
-<ol>
-<li>遇到<code>yield</code>表达式，就暂停执行后面的操作，并将紧跟在<code>yield</code>后面的那个表达式的值，作为返回的对象的<code>value</code>属性值</li>
-<li>下一次调用<code>next</code>方法时，再继续往下执行，直到遇到下一个<code>yield</code>表达式。</li>
-<li>如果没有再遇到新的<code>yield</code>表达式，就一直运行到函数结束，直到<code>return</code>语句为止，并将<code>return</code>语句后面的表达式的值，作为返回的对象的<code>value</code>属性值。</li>
-<li>如果该函数没有<code>return</code>语句，则返回的对象的<code>value</code>属性值为<code>undefined</code>。</li>
-</ol>
-<p>需要注意的是，<code>yield</code>表达式后面的表达式，只有当调用<code>next</code>方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">gen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">123</span> + <span class="number">456</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，<code>yield</code>后面的表达式<code>123 + 456</code>，不会立即求值，只会在<code>next</code>方法将指针移到这一句时，才会求值。</p>
-<p><code>yield</code>表达式与<code>return</code>语句既有相似之处，也有区别。相似之处在于，都能返回紧跟在语句后面的那个表达式的值。区别在于每次遇到<code>yield</code>，函数暂停执行，下一次再从该位置继续向后执行，而<code>return</code>语句不具备位置记忆的功能。一个函数里面，只能执行一次（或者说一个）<code>return</code>语句，但是可以执行多次（或者说多个）<code>yield</code>表达式。正常函数只能返回一个值，因为只能执行一次<code>return</code>；Generator 函数可以返回一系列的值，因为可以有任意多个<code>yield</code>。从另一个角度看，也可以说 Generator 生成了一系列的值，这也就是它的名称的来历（英语中，generator 这个词是“生成器”的意思）。</p>
-<p>Generator 函数可以不用<code>yield</code>表达式，这时就变成了一个单纯的暂缓执行函数。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;执行了！&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> generator = f();</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  generator.next();</span><br><span class="line">&#125;, <span class="number">2000</span>);</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中，函数<code>f</code>如果是普通函数，在为变量<code>generator</code>赋值时就会执行。但是，函数<code>f</code>是一个 Generator 函数，就变成只有调用<code>next</code>方法时，函数<code>f</code>才会执行。</p>
-<p>另外需要注意，<code>yield</code>表达式只能用在 Generator 函数里面，用在其他地方都会报错。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// SyntaxError: Unexpected number</span></span><br></pre></td></tr></table></figure>
-
-<p>上面代码在一个普通函数中使用<code>yield</code>表达式，结果产生一个句法错误。</p>
-<p>下面是另外一个例子。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  a.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&#x27;number&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr))&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码也会产生句法错误，因为<code>forEach</code>方法的参数是一个普通函数，但是在里面使用了<code>yield</code>表达式（这个函数里面还使用了<code>yield*</code>表达式，详细介绍见后文）。一种修改方法是改用<code>for</code>循环。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, [[<span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> flat = <span class="function"><span class="keyword">function</span>* (<span class="params">a</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> length = a.length;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = a[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> item !== <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* flat(item);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">yield</span> item;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> f <span class="keyword">of</span> flat(arr)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(f);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1, 2, 3, 4, 5, 6</span></span><br></pre></td></tr></table></figure>
-
-<p>另外，<code>yield</code>表达式如果用在另一个表达式之中，必须放在圆括号里面。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span>); <span class="comment">// SyntaxError</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + <span class="keyword">yield</span> <span class="number">123</span>); <span class="comment">// SyntaxError</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span>)); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Hello&#x27;</span> + (<span class="keyword">yield</span> <span class="number">123</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>yield</code>表达式用作函数参数或放在赋值表达式的右边，可以不加括号。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">demo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  foo(<span class="keyword">yield</span> <span class="string">&quot;a&quot;</span>, <span class="keyword">yield</span> <span class="string">&quot;b&quot;</span>); <span class="comment">// OK</span></span><br><span class="line">  <span class="keyword">let</span> input = <span class="keyword">yield</span>; <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>ES6</category>
-      </categories>
-      <tags>
-        <tag>es6</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>KMP</title>
     <url>/2020/10/29/KMP/</url>
     <content><![CDATA[<p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
@@ -337,71 +348,201 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Star Sky</title>
-    <url>/2020/11/10/SkySky/</url>
-    <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=31654478&auto=1&height=66"></iframe>
+    <title>Navigator对象和Screen对象</title>
+    <url>/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/</url>
+    <content><![CDATA[<h1 id="Navigator-对象，Screen-对象。"><a href="#Navigator-对象，Screen-对象。" class="headerlink" title="Navigator 对象，Screen 对象。"></a>Navigator 对象，Screen 对象。</h1><p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。</p>
+<h2 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h2><h3 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h3><p><code>navigator.userAgent</code>属性返回浏览器的 User Agent 字符串，表示浏览器的厂商和版本信息。</p>
+<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.userAgent;</span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p><a href="https://music.163.com/#/song?id=31654478">https://music.163.com/#/song?id=31654478</a></p>
-<p>Here we are 我们在此地</p>
-<p>Riding the sky 翱翔于天际</p>
-<p>Painting the night with sun 绘夜空以晨旭</p>
-<p>You and I, Mirrors of light 你和我 交相辉映</p>
-<p>Twin flames of fire 如两团火焰</p>
-<p>Lit in another time and place 闪亮在彼时彼地</p>
-<p>I knew your name 我曾知你生名</p>
-<p>I knew your face 也曾忆你音容</p>
-<p>Your love and grace 与你爱和魅力</p>
-<p>Past and present now embrace 过往与现在汇聚</p>
-<p>Worlds collide in inner space 世界激荡于内心</p>
-<p>Unstoppable, the song we play 我们奏响的歌 永不停息</p>
-<p>（chorus）（合唱）</p>
-<p>Burn the page for me 忘记我的过去</p>
-<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
-<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
-<p>I cannot deliver your love 我不能接受你的爱</p>
-<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
-<p>turn that page for me 就让过往逝去</p>
-<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
-<p>I cannot find solace in your words 也找不到安慰的话语</p>
-<p>I cannot deliver you your love 我不能回应你的爱意</p>
-<p>or caress your soul 也不能抚慰你（的灵魂）</p>
-<p>Age to age 年复一年</p>
-<p>I feel the call 我感到那呼唤</p>
-<p>Memory of future dreams 未来梦想的记忆</p>
-<p>You and I, riding the sky 你和我 相依比翼</p>
-<p>Keeping the fire bright 让火焰永不熄</p>
-<p>From another time and place 在彼时彼地</p>
-<p>I know your name 我知你生名</p>
-<p>I know your face 将你容颜记</p>
-<p>Your touch and grace 和你的怀抱和魅力</p>
-<p>All of time can not erase 时间也无法抹去</p>
-<p>What our hearts remember stays 我们记得要留在哪里</p>
-<p>Forever on a song we play 永远留在 我们的那首歌里</p>
-<p>（chorus）（合唱）</p>
-<p>Burn the page for me 忘记我的过去</p>
-<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
-<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
-<p>I cannot deliver your love 我不能接受你的爱</p>
-<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
-<p>turn that page for me 就让过往逝去</p>
-<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
-<p>I cannot find solace in your words 也找不到安慰的话语</p>
-<p>I cannot deliver you your love 我不能回应你的爱意</p>
-<p>or caress your soul 也不能抚慰你（的灵魂）</p>
-<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><ul>
-<li>女神站在高山之巅，圣咏这和平和凡世绝美，众生顶礼</li>
-<li>我的学生都战死了，现在轮到我这个老师上去了！这是 1940 年一名中央航空教练员驾驶飞机冲向 32 架日本轰炸机前留在日记本上的最后一句话！传奇不该被遗忘！！</li>
-<li>不和亲，不赔款，不割地，不纳贡，天子守国门，君王死社稷！——明朝祖训 “朕死，无面目见祖宗，自去冠冕，以发覆面，任贼分尸，勿伤百姓一人。”——崇祯于 1644 年三月十九日凌晨于煤山自缢前，留在衣服上的那份遗诏。</li>
-<li>世界上通用的语言就两种：音乐和利剑。一样征服人，一样征服心。</li>
-<li>秦始皇：朕统六国，天下归一，筑长城以镇九州龙脉，卫我大秦、护我社稷。朕以始皇之名在此立誓！朕在，当守土开疆，扫平四夷，定我大秦万世之基！朕亡，亦将身化龙魂，佑我华夏永世不衰！此誓，日月为证，天地共鉴，仙魔鬼神共听之！</li>
+<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
+<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.userAgent.toLowerCase();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.test(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.test(ua);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h3><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是 Plugin 实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.plugins.length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].name);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].filename);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].description);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].version);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h3><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.platform;</span><br><span class="line"><span class="comment">// &quot;Linux x86_64&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h3><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.onLine; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
+<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;offline&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;offline&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;online&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;online&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h3><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.language; <span class="comment">// &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.languages; <span class="comment">// [&quot;en-US&quot;, &quot;en&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-TW&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
+<h3 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h3><p><code>Navigator.geolocation</code>属性返回一个 Geolocation 对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
+<p>Geolocation 对象提供下面三个方法。</p>
+<ul>
+<li>Geolocation.getCurrentPosition()：得到用户的当前位置</li>
+<li>Geolocation.watchPosition()：监听用户位置变化</li>
+<li>Geolocation.clearWatch()：取消<code>watchPosition()</code>方法指定的监听函数</li>
 </ul>
+<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
+<h3 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h3><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.cookieEnabled; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
+<h2 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h2><h3 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h3><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.javaEnabled(); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h3><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据，详见《XMLHttpRequest 对象》一章。</p>
+<h2 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h2><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。</p>
+<p>该对象有下面的属性。</p>
+<ul>
+<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
+<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
+<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
+<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
+<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供 24 位色彩。</li>
+<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，colorDepth 表示应用程序的颜色深度，pixelDepth 表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
+<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>表示颠倒的竖放。</li>
+</ul>
+<p>下面是<code>Screen.orientation</code>的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.orientation;</span><br><span class="line"><span class="comment">// &#123; angle: 0, type: &quot;landscape-primary&quot;, onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.screen.width &gt;= <span class="number">1024</span> &amp;&amp; <span class="built_in">window</span>.screen.height &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (screen.width &lt;= <span class="number">800</span> &amp;&amp; screen.height &lt;= <span class="number">600</span>) &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;small.html&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;wide.html&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
-      <categories>
-        <category>音乐</category>
-      </categories>
-      <tags>
-        <tag>音乐</tag>
-      </tags>
+  </entry>
+  <entry>
+    <title>Object对象相关方法</title>
+    <url>/2020/11/25/Object%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="Object-对象的相关方法"><a href="#Object-对象的相关方法" class="headerlink" title="Object 对象的相关方法"></a>Object 对象的相关方法</h1><p>JavaScript 在<code>Object</code>对象上面，提供了很多相关方法，处理面向对象编程的相关操作。本章介绍这些方法。</p>
+<h2 id="Object-getPrototypeOf"><a href="#Object-getPrototypeOf" class="headerlink" title="Object.getPrototypeOf()"></a>Object.getPrototypeOf()</h2><p><code>Object.getPrototypeOf</code>方法返回参数对象的原型。这是获取原型对象的标准方法。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">new</span> F();</span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(f) === F.prototype; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，实例对象<code>f</code>的原型是<code>F.prototype</code>。</p>
+<p>下面是几种特殊对象的原型。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 空对象的原型是 Object.prototype</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(&#123;&#125;) === <span class="built_in">Object</span>.prototype; <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Object.prototype 的原型是 null</span></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(<span class="built_in">Object</span>.prototype) === <span class="literal">null</span>; <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数的原型是 Function.prototype</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(f) === <span class="built_in">Function</span>.prototype; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Object-setPrototypeOf"><a href="#Object-setPrototypeOf" class="headerlink" title="Object.setPrototypeOf()"></a>Object.setPrototypeOf()</h2><p><code>Object.setPrototypeOf</code>方法为参数对象设置原型，返回该参数对象。它接受两个参数，第一个是现有对象，第二个是原型对象。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> b = &#123; <span class="attr">x</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(a, b);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(a) === b; <span class="comment">// true</span></span><br><span class="line">a.x; <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>Object.setPrototypeOf</code>方法将对象<code>a</code>的原型，设置为对象<code>b</code>，因此<code>a</code>可以共享<code>b</code>的属性。</p>
+<p><code>new</code>命令可以使用<code>Object.setPrototypeOf</code>方法模拟。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> F = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.foo = <span class="string">&quot;bar&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> f = <span class="keyword">new</span> F();</span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">var</span> f = <span class="built_in">Object</span>.setPrototypeOf(&#123;&#125;, F.prototype);</span><br><span class="line">F.call(f);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>new</code>命令新建实例对象，其实可以分成两步。第一步，将一个空对象的原型设为构造函数的<code>prototype</code>属性（上例是<code>F.prototype</code>）；第二步，将构造函数内部的<code>this</code>绑定这个空对象，然后执行构造函数，使得定义在<code>this</code>上面的方法和属性（上例是<code>this.foo</code>），都转移到这个空对象上。</p>
+<h2 id="Object-create"><a href="#Object-create" class="headerlink" title="Object.create()"></a>Object.create()</h2><p>生成实例对象的常用方法是，使用<code>new</code>命令让构造函数返回一个实例。但是很多时候，只能拿到一个实例对象，它可能根本不是由构建函数生成的，那么能不能从一个实例对象，生成另一个实例对象呢？</p>
+<p>JavaScript 提供了<code>Object.create()</code>方法，用来满足这种需求。该方法接受一个对象作为参数，然后以它为原型，返回一个实例对象。该实例完全继承原型对象的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原型对象</span></span><br><span class="line"><span class="keyword">var</span> A = &#123;</span><br><span class="line">  print: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例对象</span></span><br><span class="line"><span class="keyword">var</span> B = <span class="built_in">Object</span>.create(A);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(B) === A; <span class="comment">// true</span></span><br><span class="line">B.print(); <span class="comment">// hello</span></span><br><span class="line">B.print === A.print; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>Object.create()</code>方法以<code>A</code>对象为原型，生成了<code>B</code>对象。<code>B</code>继承了<code>A</code>的所有属性和方法。</p>
+<p>实际上，<code>Object.create()</code>方法可以用下面的代码代替。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Object</span>.create !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">  <span class="built_in">Object</span>.create = <span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">    F.prototype = obj;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> F();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码表明，<code>Object.create()</code>方法的实质是新建一个空的构造函数<code>F</code>，然后让<code>F.prototype</code>属性指向参数对象<code>obj</code>，最后返回一个<code>F</code>的实例，从而实现让该实例继承<code>obj</code>的属性。</p>
+<p>下面三种方式生成的新对象是等价的。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj1 = <span class="built_in">Object</span>.create(&#123;&#125;);</span><br><span class="line"><span class="keyword">var</span> obj2 = <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.prototype);</span><br><span class="line"><span class="keyword">var</span> obj3 = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br></pre></td></tr></table></figure>
+
+<p>如果想要生成一个不继承任何属性（比如没有<code>toString()</code>和<code>valueOf()</code>方法）的对象，可以将<code>Object.create()</code>的参数设为<code>null</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">obj.valueOf();</span><br><span class="line"><span class="comment">// TypeError: Object [object Object] has no method &#x27;valueOf&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，对象<code>obj</code>的原型是<code>null</code>，它就不具备一些定义在<code>Object.prototype</code>对象上面的属性，比如<code>valueOf()</code>方法。</p>
+<p>使用<code>Object.create()</code>方法的时候，必须提供对象原型，即参数不能为空，或者不是对象，否则会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Object</span>.create();</span><br><span class="line"><span class="comment">// TypeError: Object prototype may only be an Object or null</span></span><br><span class="line"><span class="built_in">Object</span>.create(<span class="number">123</span>);</span><br><span class="line"><span class="comment">// TypeError: Object prototype may only be an Object or null</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Object.create()</code>方法生成的新对象，动态继承了原型。在原型上添加或修改任何方法，会立刻反映在新对象之上。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj1 = &#123; <span class="attr">p</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> obj2 = <span class="built_in">Object</span>.create(obj1);</span><br><span class="line"></span><br><span class="line">obj1.p = <span class="number">2</span>;</span><br><span class="line">obj2.p; <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，修改对象原型<code>obj1</code>会影响到实例对象<code>obj2</code>。</p>
+<p>除了对象的原型，<code>Object.create()</code>方法还可以接受第二个参数。该参数是一个属性描述对象，它所描述的对象属性，会添加到实例对象，作为该对象自身的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="built_in">Object</span>.create(</span><br><span class="line">  &#123;&#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    p1: &#123;</span><br><span class="line">      value: <span class="number">123</span>,</span><br><span class="line">      enumerable: <span class="literal">true</span>,</span><br><span class="line">      configurable: <span class="literal">true</span>,</span><br><span class="line">      writable: <span class="literal">true</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    p2: &#123;</span><br><span class="line">      value: <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">      enumerable: <span class="literal">true</span>,</span><br><span class="line">      configurable: <span class="literal">true</span>,</span><br><span class="line">      writable: <span class="literal">true</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">var</span> obj = <span class="built_in">Object</span>.create(&#123;&#125;);</span><br><span class="line">obj.p1 = <span class="number">123</span>;</span><br><span class="line">obj.p2 = <span class="string">&quot;abc&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>Object.create()</code>方法生成的对象，继承了它的原型对象的构造函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> A();</span><br><span class="line"><span class="keyword">var</span> b = <span class="built_in">Object</span>.create(a);</span><br><span class="line"></span><br><span class="line">b.constructor === A; <span class="comment">// true</span></span><br><span class="line">b <span class="keyword">instanceof</span> A; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>b</code>对象的原型是<code>a</code>对象，因此继承了<code>a</code>对象的构造函数<code>A</code>。</p>
+<h2 id="Object-prototype-isPrototypeOf"><a href="#Object-prototype-isPrototypeOf" class="headerlink" title="Object.prototype.isPrototypeOf()"></a>Object.prototype.isPrototypeOf()</h2><p>实例对象的<code>isPrototypeOf</code>方法，用来判断该对象是否为参数对象的原型。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> o2 = <span class="built_in">Object</span>.create(o1);</span><br><span class="line"><span class="keyword">var</span> o3 = <span class="built_in">Object</span>.create(o2);</span><br><span class="line"></span><br><span class="line">o2.isPrototypeOf(o3); <span class="comment">// true</span></span><br><span class="line">o1.isPrototypeOf(o3); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>o1</code>和<code>o2</code>都是<code>o3</code>的原型。这表明只要实例对象处在参数对象的原型链上，<code>isPrototypeOf</code>方法都返回<code>true</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(&#123;&#125;); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf([]); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(<span class="regexp">/xyz/</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.isPrototypeOf(<span class="built_in">Object</span>.create(<span class="literal">null</span>)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，由于<code>Object.prototype</code>处于原型链的最顶端，所以对各种实例都返回<code>true</code>，只有直接继承自<code>null</code>的对象除外。</p>
+<h2 id="Object-prototype-proto"><a href="#Object-prototype-proto" class="headerlink" title="Object.prototype.__proto__"></a>Object.prototype.__proto__</h2><p>实例对象的<code>__proto__</code>属性（前后各两个下划线），返回该对象的原型。该属性可读写。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> p = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">obj.__proto__ = p;</span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(obj) === p; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码通过<code>__proto__</code>属性，将<code>p</code>对象设为<code>obj</code>对象的原型。</p>
+<p>根据语言标准，<code>__proto__</code>属性只有浏览器才需要部署，其他环境可以没有这个属性。它前后的两根下划线，表明它本质是一个内部属性，不应该对使用者暴露。因此，应该尽量少用这个属性，而是用<code>Object.getPrototypeOf()</code>和<code>Object.setPrototypeOf()</code>，进行原型对象的读写操作。</p>
+<p>原型链可以用<code>__proto__</code>很直观地表示。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> A = &#123;</span><br><span class="line">  name: <span class="string">&quot;张三&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> B = &#123;</span><br><span class="line">  name: <span class="string">&quot;李四&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> proto = &#123;</span><br><span class="line">  print: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">A.__proto__ = proto;</span><br><span class="line">B.__proto__ = proto;</span><br><span class="line"></span><br><span class="line">A.print(); <span class="comment">// 张三</span></span><br><span class="line">B.print(); <span class="comment">// 李四</span></span><br><span class="line"></span><br><span class="line">A.print === B.print; <span class="comment">// true</span></span><br><span class="line">A.print === proto.print; <span class="comment">// true</span></span><br><span class="line">B.print === proto.print; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>A</code>对象和<code>B</code>对象的原型都是<code>proto</code>对象，它们都共享<code>proto</code>对象的<code>print</code>方法。也就是说，<code>A</code>和<code>B</code>的<code>print</code>方法，都是在调用<code>proto</code>对象的<code>print</code>方法。</p>
+<h2 id="获取原型对象方法的比较"><a href="#获取原型对象方法的比较" class="headerlink" title="获取原型对象方法的比较"></a>获取原型对象方法的比较</h2><p>如前所述，<code>__proto__</code>属性指向当前对象的原型对象，即构造函数的<code>prototype</code>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"></span><br><span class="line">obj.__proto__ === <span class="built_in">Object</span>.prototype;</span><br><span class="line"><span class="comment">// true</span></span><br><span class="line">obj.__proto__ === obj.constructor.prototype;</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码首先新建了一个对象<code>obj</code>，它的<code>__proto__</code>属性，指向构造函数（<code>Object</code>或<code>obj.constructor</code>）的<code>prototype</code>属性。</p>
+<p>因此，获取实例对象<code>obj</code>的原型对象，有三种方法。</p>
+<ul>
+<li><code>obj.__proto__</code></li>
+<li><code>obj.constructor.prototype</code></li>
+<li><code>Object.getPrototypeOf(obj)</code></li>
+</ul>
+<p>上面三种方法之中，前两种都不是很可靠。<code>__proto__</code>属性只有浏览器才需要部署，其他环境可以不部署。而<code>obj.constructor.prototype</code>在手动改变原型对象时，可能会失效。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> P = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> P();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> C = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line">C.prototype = p;</span><br><span class="line"><span class="keyword">var</span> c = <span class="keyword">new</span> C();</span><br><span class="line"></span><br><span class="line">c.constructor.prototype === p; <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，构造函数<code>C</code>的原型对象被改成了<code>p</code>，但是实例对象的<code>c.constructor.prototype</code>却没有指向<code>p</code>。所以，在改变原型对象时，一般要同时设置<code>constructor</code>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">C.prototype = p;</span><br><span class="line">C.prototype.constructor = C;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> c = <span class="keyword">new</span> C();</span><br><span class="line">c.constructor.prototype === p; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>因此，推荐使用第三种<code>Object.getPrototypeOf</code>方法，获取原型对象。</p>
+<h2 id="Object-getOwnPropertyNames"><a href="#Object-getOwnPropertyNames" class="headerlink" title="Object.getOwnPropertyNames()"></a>Object.getOwnPropertyNames()</h2><p><code>Object.getOwnPropertyNames</code>方法返回一个数组，成员是参数对象本身的所有属性的键名，不包含继承的属性键名。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Object</span>.getOwnPropertyNames(<span class="built_in">Date</span>);</span><br><span class="line"><span class="comment">// [&quot;parse&quot;, &quot;arguments&quot;, &quot;UTC&quot;, &quot;caller&quot;, &quot;name&quot;, &quot;prototype&quot;, &quot;now&quot;, &quot;length&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>Object.getOwnPropertyNames</code>方法返回<code>Date</code>所有自身的属性名。</p>
+<p>对象本身的属性之中，有的是可以遍历的（enumerable），有的是不可以遍历的。<code>Object.getOwnPropertyNames</code>方法返回所有键名，不管是否可以遍历。只获取那些可以遍历的属性，使用<code>Object.keys</code>方法。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Object</span>.keys(<span class="built_in">Date</span>); <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码表明，<code>Date</code>对象所有自身的属性，都是不可以遍历的。</p>
+<h2 id="Object-prototype-hasOwnProperty"><a href="#Object-prototype-hasOwnProperty" class="headerlink" title="Object.prototype.hasOwnProperty()"></a>Object.prototype.hasOwnProperty()</h2><p>对象实例的<code>hasOwnProperty</code>方法返回一个布尔值，用于判断某个属性定义在对象自身，还是定义在原型链上。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Date</span>.hasOwnProperty(<span class="string">&quot;length&quot;</span>); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">Date</span>.hasOwnProperty(<span class="string">&quot;toString&quot;</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码表明，<code>Date.length</code>（构造函数<code>Date</code>可以接受多少个参数）是<code>Date</code>自身的属性，<code>Date.toString</code>是继承的属性。</p>
+<p>另外，<code>hasOwnProperty</code>方法是 JavaScript 之中唯一一个处理对象属性时，不会遍历原型链的方法。</p>
+<h2 id="in-运算符和-for…in-循环"><a href="#in-运算符和-for…in-循环" class="headerlink" title="in 运算符和 for…in 循环"></a>in 运算符和 for…in 循环</h2><p><code>in</code>运算符返回一个布尔值，表示一个对象是否具有某个属性。它不区分该属性是对象自身的属性，还是继承的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;length&quot;</span> <span class="keyword">in</span> <span class="built_in">Date</span>; <span class="comment">// true</span></span><br><span class="line"><span class="string">&quot;toString&quot;</span> <span class="keyword">in</span> <span class="built_in">Date</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p><code>in</code>运算符常用于检查一个属性是否存在。</p>
+<p>获得对象的所有可遍历属性（不管是自身的还是继承的），可以使用<code>for...in</code>循环。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123; <span class="attr">p1</span>: <span class="number">123</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o2 = <span class="built_in">Object</span>.create(o1, &#123;</span><br><span class="line">  p2: &#123; <span class="attr">value</span>: <span class="string">&quot;abc&quot;</span>, <span class="attr">enumerable</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (p <span class="keyword">in</span> o2) &#123;</span><br><span class="line">  <span class="built_in">console</span>.info(p);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// p2</span></span><br><span class="line"><span class="comment">// p1</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，对象<code>o2</code>的<code>p2</code>属性是自身的，<code>p1</code>属性是继承的。这两个属性都会被<code>for...in</code>循环遍历。</p>
+<p>为了在<code>for...in</code>循环中获得对象自身的属性，可以采用<code>hasOwnProperty</code>方法判断一下。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> name <span class="keyword">in</span> object) &#123;</span><br><span class="line">  <span class="keyword">if</span> (object.hasOwnProperty(name)) &#123;</span><br><span class="line">    <span class="comment">/* loop code */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获得对象的所有属性（不管是自身的还是继承的，也不管是否可枚举），可以使用下面的函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritedPropertyNames</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> props = &#123;&#125;;</span><br><span class="line">  <span class="keyword">while</span> (obj) &#123;</span><br><span class="line">    <span class="built_in">Object</span>.getOwnPropertyNames(obj).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">p</span>) </span>&#123;</span><br><span class="line">      props[p] = <span class="literal">true</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    obj = <span class="built_in">Object</span>.getPrototypeOf(obj);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.getOwnPropertyNames(props);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码依次获取<code>obj</code>对象的每一级原型对象“自身”的属性，从而获取<code>obj</code>对象的“所有”属性，不管是否可遍历。</p>
+<p>下面是一个例子，列出<code>Date</code>对象的所有属性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">inheritedPropertyNames(<span class="built_in">Date</span>);</span><br><span class="line"><span class="comment">// [</span></span><br><span class="line"><span class="comment">//  &quot;caller&quot;,</span></span><br><span class="line"><span class="comment">//  &quot;constructor&quot;,</span></span><br><span class="line"><span class="comment">//  &quot;toString&quot;,</span></span><br><span class="line"><span class="comment">//  &quot;UTC&quot;,</span></span><br><span class="line"><span class="comment">//  ...</span></span><br><span class="line"><span class="comment">// ]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="对象的拷贝"><a href="#对象的拷贝" class="headerlink" title="对象的拷贝"></a>对象的拷贝</h2><p>如果要拷贝一个对象，需要做到下面两件事情。</p>
+<ul>
+<li>确保拷贝后的对象，与原对象具有同样的原型。</li>
+<li>确保拷贝后的对象，与原对象具有同样的实例属性。</li>
+</ul>
+<p>下面就是根据上面两点，实现的对象拷贝函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyObject</span>(<span class="params">orig</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> copy = <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.getPrototypeOf(orig));</span><br><span class="line">  copyOwnPropertiesFrom(copy, orig);</span><br><span class="line">  <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyOwnPropertiesFrom</span>(<span class="params">target, source</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">Object</span>.getOwnPropertyNames(source).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">propKey</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> desc = <span class="built_in">Object</span>.getOwnPropertyDescriptor(source, propKey);</span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(target, propKey, desc);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另一种更简单的写法，是利用 ES2017 才引入标准的<code>Object.getOwnPropertyDescriptors</code>方法。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyObject</span>(<span class="params">orig</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.getPrototypeOf(orig), <span class="built_in">Object</span>.getOwnPropertyDescriptors(orig));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
   </entry>
   <entry>
     <title>Proxy</title>
@@ -483,51 +624,70 @@
       </tags>
   </entry>
   <entry>
-    <title>TypeScript 中的高级类型</title>
-    <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
-<p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
+    <title>Star Sky</title>
+    <url>/2020/11/10/SkySky/</url>
+    <content><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=31654478&auto=1&height=66"></iframe>
 
-<a id="more"></a>
-
-<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
-
-<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
-<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
-
-<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
-<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
-
-<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
-<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了让这段代码工作，我们需要使用类型断言</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用户自定义的类型保护</strong></p>
-<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
-<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
-<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
+<p><a href="https://music.163.com/#/song?id=31654478">https://music.163.com/#/song?id=31654478</a></p>
+<p>Here we are 我们在此地</p>
+<p>Riding the sky 翱翔于天际</p>
+<p>Painting the night with sun 绘夜空以晨旭</p>
+<p>You and I, Mirrors of light 你和我 交相辉映</p>
+<p>Twin flames of fire 如两团火焰</p>
+<p>Lit in another time and place 闪亮在彼时彼地</p>
+<p>I knew your name 我曾知你生名</p>
+<p>I knew your face 也曾忆你音容</p>
+<p>Your love and grace 与你爱和魅力</p>
+<p>Past and present now embrace 过往与现在汇聚</p>
+<p>Worlds collide in inner space 世界激荡于内心</p>
+<p>Unstoppable, the song we play 我们奏响的歌 永不停息</p>
+<p>（chorus）（合唱）</p>
+<p>Burn the page for me 忘记我的过去</p>
+<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
+<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
+<p>I cannot deliver your love 我不能接受你的爱</p>
+<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
+<p>turn that page for me 就让过往逝去</p>
+<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
+<p>I cannot find solace in your words 也找不到安慰的话语</p>
+<p>I cannot deliver you your love 我不能回应你的爱意</p>
+<p>or caress your soul 也不能抚慰你（的灵魂）</p>
+<p>Age to age 年复一年</p>
+<p>I feel the call 我感到那呼唤</p>
+<p>Memory of future dreams 未来梦想的记忆</p>
+<p>You and I, riding the sky 你和我 相依比翼</p>
+<p>Keeping the fire bright 让火焰永不熄</p>
+<p>From another time and place 在彼时彼地</p>
+<p>I know your name 我知你生名</p>
+<p>I know your face 将你容颜记</p>
+<p>Your touch and grace 和你的怀抱和魅力</p>
+<p>All of time can not erase 时间也无法抹去</p>
+<p>What our hearts remember stays 我们记得要留在哪里</p>
+<p>Forever on a song we play 永远留在 我们的那首歌里</p>
+<p>（chorus）（合唱）</p>
+<p>Burn the page for me 忘记我的过去</p>
+<p>I cannot erase the time of sleep 沉睡时光我无法抹去</p>
+<p>I cannot be loved so set me free 我不能被爱 所以放我自由</p>
+<p>I cannot deliver your love 我不能接受你的爱</p>
+<p>Or caress your soul so 也无法抚慰你（的灵魂） 那</p>
+<p>turn that page for me 就让过往逝去</p>
+<p>I cannot embrace the touch that you give 我不能接受你的拥抱</p>
+<p>I cannot find solace in your words 也找不到安慰的话语</p>
+<p>I cannot deliver you your love 我不能回应你的爱意</p>
+<p>or caress your soul 也不能抚慰你（的灵魂）</p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><ul>
+<li>女神站在高山之巅，圣咏这和平和凡世绝美，众生顶礼</li>
+<li>我的学生都战死了，现在轮到我这个老师上去了！这是 1940 年一名中央航空教练员驾驶飞机冲向 32 架日本轰炸机前留在日记本上的最后一句话！传奇不该被遗忘！！</li>
+<li>不和亲，不赔款，不割地，不纳贡，天子守国门，君王死社稷！——明朝祖训 “朕死，无面目见祖宗，自去冠冕，以发覆面，任贼分尸，勿伤百姓一人。”——崇祯于 1644 年三月十九日凌晨于煤山自缢前，留在衣服上的那份遗诏。</li>
+<li>世界上通用的语言就两种：音乐和利剑。一样征服人，一样征服心。</li>
+<li>秦始皇：朕统六国，天下归一，筑长城以镇九州龙脉，卫我大秦、护我社稷。朕以始皇之名在此立誓！朕在，当守土开疆，扫平四夷，定我大秦万世之基！朕亡，亦将身化龙魂，佑我华夏永世不衰！此誓，日月为证，天地共鉴，仙魔鬼神共听之！</li>
+</ul>
 ]]></content>
       <categories>
-        <category>TypeScript</category>
+        <category>音乐</category>
       </categories>
       <tags>
-        <tag>TypeScript</tag>
+        <tag>音乐</tag>
       </tags>
   </entry>
   <entry>
@@ -654,6 +814,54 @@
       </categories>
       <tags>
         <tag>css</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>TypeScript 中的高级类型</title>
+    <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
+<p>我们大多是在混入或其他不适合经典面向对象的地方看到交叉类型的使用，（在<code>JavaScript</code>中发生这种情况的场合会很多）下面是如何创建混入的一个简单的例子:</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">first: T, second: U</span>): <span class="title">T</span> &amp; <span class="title">U</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = &lt;T &amp; U&gt;&#123;&#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> first) &#123;</span><br><span class="line">    (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;first)[id];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> id <span class="keyword">in</span> second) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!result.hasOwnProperty(id)) &#123;</span><br><span class="line">      (&lt;<span class="built_in">any</span>&gt;result)[id] = (&lt;<span class="built_in">any</span>&gt;second)[id];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person &#123;</span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">public</span> name: <span class="built_in">string</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> Loggable &#123;</span><br><span class="line">  log(): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> ConsoleLogger <span class="keyword">implements</span> Loggable &#123;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> jim = extend(<span class="keyword">new</span> Person(<span class="string">&quot;Jim&quot;</span>), <span class="keyword">new</span> ConsoleLogger());</span><br><span class="line"><span class="keyword">var</span> n = jim.name;</span><br><span class="line">jim.log();</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h3 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a>联合类型</h3><p>联合类型与交叉类型很有关联，但是使用上却完全不同，偶尔你会遇到这种情况，一个代码库希望传入<code>number</code>或<code>string</code>类型作为参数，例如下面的函数</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;number&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(padding + <span class="number">1</span>).join(<span class="string">&quot; &quot;</span>) + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> padding === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> padding + value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expected string or number, got &#x27;<span class="subst">$&#123;padding&#125;</span>&#x27;.`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="number">4</span>); <span class="comment">// returns &quot;    Hello world&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在 <code> padLeft</code> 存在一个问题，<code>padding</code> 参数的类型指定为了 <code>any</code> ，这就是说我们可以传入一个既不是<code>number</code> 也不是 <code>string</code> 类型的参数，但是<code>typescript</code>却不报错，</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// 编译阶段通过，运行时报错</span></span><br></pre></td></tr></table></figure>
+
+<p>在传统的面向对象语言里，我们可能会将这两种抽象成底层的类型，这么做显然是非常清晰的，但同时也存在了过度设计，<code>padleft</code> 原始版本的好处之一就是允许我们呢出传入原始类型，这样做的话用起来简单又方便，如果我们就是想使用已经存在的函数的话，这种新的方式就不适用了。</p>
+<p>代替<code>any</code>，我们可以使用联合类型作为 <code>padding</code> 的参数</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Takes a string and adds &quot;padding&quot; to the left.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a string, then &#x27;padding&#x27; is appended to the left side.</span></span><br><span class="line"><span class="comment"> * If &#x27;padding&#x27; is a number, then that number of spaces is added to the left side.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">padLeft</span>(<span class="params">value: <span class="built_in">string</span>, padding: <span class="built_in">string</span> | <span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> indentedString = padLeft(<span class="string">&quot;Hello world&quot;</span>, <span class="literal">true</span>); <span class="comment">// errors during compilation</span></span><br></pre></td></tr></table></figure>
+
+<p>联合类型表示一个值可以是几种类型之一，我们用竖线（<code>|</code>）分割每个类型，所以<code>number|string|boolean</code>，表示值可以是<code>number</code> <code>string</code> 或 <code>boolean</code></p>
+<p>如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> Bird &#123;</span><br><span class="line">  fly();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Fish &#123;</span><br><span class="line">  swim();</span><br><span class="line">  layEggs();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSmallPet</span>(<span class="params"></span>): <span class="title">Fish</span> | <span class="title">Bird</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line">pet.layEggs(); <span class="comment">// okay</span></span><br><span class="line">pet.swim(); <span class="comment">// errors</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的联合类型可能有点复杂，但是你很容易就习惯了。 如果一个值的类型是 <code>A | B</code>，我们能够 确定的是它包含了 <code>A</code> 和 <code>B</code> 中共有的成员。 这个例子里， <code>Bird</code>具有一个 <code>fly</code>成员。 我们不能确定一个 <code>Bird | Fish</code>类型的变量是否有 <code>fly</code>方法。 如果变量在运行时是 <code>Fish</code> 类型，那么调用 <code>pet.fly()</code> 就出错了。</p>
+<h3 id="类型保护与区分类型"><a href="#类型保护与区分类型" class="headerlink" title="类型保护与区分类型"></a>类型保护与区分类型</h3><p>联合类型适合于那些值可以作为不同类型的情况，但当我们想确切的了解是否为 <code>Fish</code> 时怎么办？ <code>JavaScript</code> 里常用来区分两个可能的值的方法是检查成员是否存在，如之前提及的，我们只能访问联合类型中共同拥有的成员</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每一个成员访问都会报错</span></span><br><span class="line"><span class="keyword">if</span> (pet.swim) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (pet.fly) &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了让这段代码工作，我们需要使用类型断言</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> pet = getSmallPet();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((&lt;Fish&gt;pet).swim) &#123;</span><br><span class="line">  (&lt;Fish&gt;pet).swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  (&lt;Bird&gt;pet).fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用户自定义的类型保护</strong></p>
+<p>这里可以注意到，我们不得不多次使用类型断言，假如我们一旦检查过类型，就能在之后的每个分支里清楚的知道 <code>pet</code> 的类型的话就好了</p>
+<p>这样 <code>TypeScript</code> 里的 类型保护机制让它成为了现实。 类型保护就是一些表达式，它们会在运行时检查以确保在某个作用域里的类型。 要定义一个类型保护，我们只要简单地定义一个函数，它的返回值是一个 _类型谓词_：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFish</span>(<span class="params">pet: Fish | Bird</span>): <span class="title">pet</span> <span class="title">is</span> <span class="title">Fish</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (&lt;Fish&gt;pet).swim !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子里， <code>pet is Fish</code>就是类型谓词。 谓词为 <code>parameterName is Type</code> 这种形式， <code>parameterName</code> 必须是来自于当前函数签名里的一个参数名。</p>
+<p>每当使用一些变量调用 <code>isFish</code> 时，<code>TypeScript</code> 会将变量缩减为那个具体的类型，只要这个类型与变量的原始类型是兼容的。</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;swim&#x27; 和 &#x27;fly&#x27; 调用都没有问题了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isFish(pet)) &#123;</span><br><span class="line">  pet.swim();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  pet.fly();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意<code>typescript</code>不仅知道在<code>if</code>分支里 <code>pet</code> 是 <code>Fish</code> 类型的，它还清楚在 <code>else</code> 分支里，一定不是 <code>Fish</code> 类型的，一定是 <code>Bird</code> 类型的</p>
+]]></content>
+      <categories>
+        <category>TypeScript</category>
+      </categories>
+      <tags>
+        <tag>TypeScript</tag>
       </tags>
   </entry>
   <entry>
@@ -878,50 +1086,6 @@
       </tags>
   </entry>
   <entry>
-    <title>动态规划算法</title>
-    <url>/2020/11/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>动态规划过程是：每次决策依赖于当前状态，又随即引起状态的转移，一个决策序列就是在变化的状态中产生出来的，所以，这种多阶段最优化决策解决问题的过程叫做动态规划</p>
-<h3 id="基本思想与决策"><a href="#基本思想与决策" class="headerlink" title="基本思想与决策"></a>基本思想与决策</h3><p>基本思想与分治法类似，也是将待求解的问题分解为若干个子问题（阶段），按顺序求解子阶段，前一子问题的解，为后一子问题的求解提供了有用的信息。在求解任一子问题时，列出各种可能的局部解，通过决策保留那些有可能达到最优的局部解，丢弃其他局部解。依次解决各子问题，最后一个子问题就是初始问题的解。</p>
-<p>由于动态规划解决的问题多数有重叠子问题这个特点，为减少重复计算，对每一个子问题只解一次，将其不同阶段的不同状态保存在一个二维数组中。</p>
-<p>与分治法最大的差别是：适合于用动态规划法求解的问题，经分解后得到的子问题往往不是互相独立的（即下一个子阶段的求解是建立在上一个子阶段的解的基础上，进行进一步的求解）。</p>
-<h3 id="适用的情况"><a href="#适用的情况" class="headerlink" title="适用的情况"></a>适用的情况</h3><p>能采用动态规划求解的问题的一般要具有 3 个性质：</p>
-<ol>
-<li>最优化原理：如果问题的最优解所包含的子问题的解也是最优的，就称该问题具有最优子结构，即满足最优化原理。</li>
-<li>无后效性：即某阶段状态一旦确定，就不受这个状态以后决策的影响。也就是说，某状态以后的过程不会影响以前的状态，只与当前状态有关。</li>
-<li>有重叠子问题：即子问题之间是不独立的，一个子问题在下一阶段决策中可能被多次使用到。（该性质并不是动态规划适用的必要条件，但是如果没有这条性质，动态规划算法同其他算法相比就不具备优势）</li>
-</ol>
-<h3 id="求解的基本步骤"><a href="#求解的基本步骤" class="headerlink" title="求解的基本步骤"></a>求解的基本步骤</h3><p>动态规划所处理的问题是一个多阶段决策问题，一般由初始状态开始，通过对中间阶段决策的选择，达到结束状态。这些决策形成了一个决策序列，同时确定了完成整个过程的一条活动路线(通常是求最优的活动路线)。如图所示。动态规划的设计都有着一定的模式，一般要经历以下几个步骤。</p>
-<blockquote>
-<p>初始状态 →│ 决策１ │→│ 决策２ │→…→│ 决策ｎ │→ 结束状态</p>
-</blockquote>
-<ol>
-<li>划分阶段：按照问题的时间或空间特征，把问题分为若干个阶段。在划分阶段时，注意划分后的阶段一定要是有序的或者是可排序的，否则问题就无法求解。</li>
-<li>确定状态和状态变量：将问题发展到各个阶段时所处于的各种客观情况用不同的状态表示出来。当然，状态的选择要满足无后效性。</li>
-<li>确定决策并写出状态转移方程：因为决策和状态转移有着天然的联系，状态转移就是根据上一阶段的状态和决策来导出本阶段的状态。所以如果确定了决策，状态转移方程也就可写出。但事实上常常是反过来做，根据相邻两个阶段的状态之间的关系来确定决策方法和状态转移方程。</li>
-<li>寻找边界条件：给出的状态转移方程是一个递推式，需要一个递推的终止条件或边界条件。一般，只要解决问题的阶段、状态和状态转移决策确定了，就可以写出状态转移方程（包括边界条件）。实际应用中可以按以下几个简化的步骤进行设计： 1. 分析最优解的性质，并刻画其结构特征。 2. 递归的定义最优解。 3. 以自底向上或自顶向下的记忆化方式（备忘录法）计算出最优值 4. 根据计算最优值时得到的信息，构造问题的最优解</li>
-</ol>
-<h3 id="算法实现的说明"><a href="#算法实现的说明" class="headerlink" title="算法实现的说明"></a>算法实现的说明</h3><p>动态规划的主要难点在于理论上的设计，也就是上面 4 个步骤的确定，一旦设计完成，实现部分就会非常简单。</p>
-<p>使用动态规划求解问题，最重要的就是确定动态规划三要素：</p>
-<ol>
-<li>问题的阶段</li>
-<li>每个阶段的状态</li>
-<li>从前一个阶段转化到后一个阶段之间的递推关系。</li>
-</ol>
-<p>递推关系必须是从次小的问题开始到较大的问题之间的转化，从这个角度来说，动态规划往往可以用递归程序来实现，不过因为递推可以充分利用前面保存的子问题的解来减少重复计算，所以对于大规模问题来说，有递归不可比拟的优势，这也是动态规划算法的核心之处。</p>
-<p>确定了动态规划的这三要素，整个求解过程就可以用一个最优决策表来描述，最优决策表是一个二维表，其中行表示决策的阶段，列表示问题状态，表格需要填写的数据一般对应此问题的在某个阶段某个状态下的最优值（如最短路径，最长公共子序列，最大价值等），填表的过程就是根据递推关系，从 1 行 1 列开始，以行或者列优先的顺序，依次填写表格，最后根据整个表格的数据通过简单的取舍或者运算求得问题的最优解。</p>
-<blockquote>
-<p>f(n,m)=max{f(n-1,m), f(n-1,m-w[n])+P(n,m)}</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>前端测试开篇</title>
     <url>/2020/09/19/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95%E5%BC%80%E7%AF%87/</url>
     <content><![CDATA[<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="什么是自动化测试"><a href="#什么是自动化测试" class="headerlink" title="什么是自动化测试"></a>什么是自动化测试</h3><blockquote>
@@ -980,6 +1144,50 @@
       <tags>
         <tag>测试</tag>
         <tag>工程体系</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>动态规划算法</title>
+    <url>/2020/11/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>动态规划过程是：每次决策依赖于当前状态，又随即引起状态的转移，一个决策序列就是在变化的状态中产生出来的，所以，这种多阶段最优化决策解决问题的过程叫做动态规划</p>
+<h3 id="基本思想与决策"><a href="#基本思想与决策" class="headerlink" title="基本思想与决策"></a>基本思想与决策</h3><p>基本思想与分治法类似，也是将待求解的问题分解为若干个子问题（阶段），按顺序求解子阶段，前一子问题的解，为后一子问题的求解提供了有用的信息。在求解任一子问题时，列出各种可能的局部解，通过决策保留那些有可能达到最优的局部解，丢弃其他局部解。依次解决各子问题，最后一个子问题就是初始问题的解。</p>
+<p>由于动态规划解决的问题多数有重叠子问题这个特点，为减少重复计算，对每一个子问题只解一次，将其不同阶段的不同状态保存在一个二维数组中。</p>
+<p>与分治法最大的差别是：适合于用动态规划法求解的问题，经分解后得到的子问题往往不是互相独立的（即下一个子阶段的求解是建立在上一个子阶段的解的基础上，进行进一步的求解）。</p>
+<h3 id="适用的情况"><a href="#适用的情况" class="headerlink" title="适用的情况"></a>适用的情况</h3><p>能采用动态规划求解的问题的一般要具有 3 个性质：</p>
+<ol>
+<li>最优化原理：如果问题的最优解所包含的子问题的解也是最优的，就称该问题具有最优子结构，即满足最优化原理。</li>
+<li>无后效性：即某阶段状态一旦确定，就不受这个状态以后决策的影响。也就是说，某状态以后的过程不会影响以前的状态，只与当前状态有关。</li>
+<li>有重叠子问题：即子问题之间是不独立的，一个子问题在下一阶段决策中可能被多次使用到。（该性质并不是动态规划适用的必要条件，但是如果没有这条性质，动态规划算法同其他算法相比就不具备优势）</li>
+</ol>
+<h3 id="求解的基本步骤"><a href="#求解的基本步骤" class="headerlink" title="求解的基本步骤"></a>求解的基本步骤</h3><p>动态规划所处理的问题是一个多阶段决策问题，一般由初始状态开始，通过对中间阶段决策的选择，达到结束状态。这些决策形成了一个决策序列，同时确定了完成整个过程的一条活动路线(通常是求最优的活动路线)。如图所示。动态规划的设计都有着一定的模式，一般要经历以下几个步骤。</p>
+<blockquote>
+<p>初始状态 →│ 决策１ │→│ 决策２ │→…→│ 决策ｎ │→ 结束状态</p>
+</blockquote>
+<ol>
+<li>划分阶段：按照问题的时间或空间特征，把问题分为若干个阶段。在划分阶段时，注意划分后的阶段一定要是有序的或者是可排序的，否则问题就无法求解。</li>
+<li>确定状态和状态变量：将问题发展到各个阶段时所处于的各种客观情况用不同的状态表示出来。当然，状态的选择要满足无后效性。</li>
+<li>确定决策并写出状态转移方程：因为决策和状态转移有着天然的联系，状态转移就是根据上一阶段的状态和决策来导出本阶段的状态。所以如果确定了决策，状态转移方程也就可写出。但事实上常常是反过来做，根据相邻两个阶段的状态之间的关系来确定决策方法和状态转移方程。</li>
+<li>寻找边界条件：给出的状态转移方程是一个递推式，需要一个递推的终止条件或边界条件。一般，只要解决问题的阶段、状态和状态转移决策确定了，就可以写出状态转移方程（包括边界条件）。实际应用中可以按以下几个简化的步骤进行设计： 1. 分析最优解的性质，并刻画其结构特征。 2. 递归的定义最优解。 3. 以自底向上或自顶向下的记忆化方式（备忘录法）计算出最优值 4. 根据计算最优值时得到的信息，构造问题的最优解</li>
+</ol>
+<h3 id="算法实现的说明"><a href="#算法实现的说明" class="headerlink" title="算法实现的说明"></a>算法实现的说明</h3><p>动态规划的主要难点在于理论上的设计，也就是上面 4 个步骤的确定，一旦设计完成，实现部分就会非常简单。</p>
+<p>使用动态规划求解问题，最重要的就是确定动态规划三要素：</p>
+<ol>
+<li>问题的阶段</li>
+<li>每个阶段的状态</li>
+<li>从前一个阶段转化到后一个阶段之间的递推关系。</li>
+</ol>
+<p>递推关系必须是从次小的问题开始到较大的问题之间的转化，从这个角度来说，动态规划往往可以用递归程序来实现，不过因为递推可以充分利用前面保存的子问题的解来减少重复计算，所以对于大规模问题来说，有递归不可比拟的优势，这也是动态规划算法的核心之处。</p>
+<p>确定了动态规划的这三要素，整个求解过程就可以用一个最优决策表来描述，最优决策表是一个二维表，其中行表示决策的阶段，列表示问题状态，表格需要填写的数据一般对应此问题的在某个阶段某个状态下的最优值（如最短路径，最长公共子序列，最大价值等），填表的过程就是根据递推关系，从 1 行 1 列开始，以行或者列优先的顺序，依次填写表格，最后根据整个表格的数据通过简单的取舍或者运算求得问题的最优解。</p>
+<blockquote>
+<p>f(n,m)=max{f(n-1,m), f(n-1,m-w[n])+P(n,m)}</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>五大常用经典算法</tag>
       </tags>
   </entry>
   <entry>
@@ -1475,6 +1683,24 @@
       </tags>
   </entry>
   <entry>
+    <title>排序算法</title>
+    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
+<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
+<p>冒泡排序</p>
+<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
+<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
+<p>让我们实现下冒泡排序</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据结构总结</title>
     <url>/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript 中的数组和其他编程语言中的数组还有些不同，JavaScript 中的数组中可以存储不同类型的元素，JavaScript 中的数组长度是动态变化的</p>
@@ -1495,22 +1721,28 @@
       </tags>
   </entry>
   <entry>
-    <title>排序算法</title>
-    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
-<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
-<p>冒泡排序</p>
-<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
-<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
-<p>让我们实现下冒泡排序</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
+    <title>有限状态机是什么</title>
+    <url>/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/</url>
+    <content><![CDATA[<h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
+<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
+<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
+<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
+<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
+<p>它有三个特征：</p>
+<ul>
+<li>状态总数（state）是有限的。</li>
+<li>任一时刻，只处在一种状态之中。</li>
+<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
+</ul>
+<p>有限状态机一般都有以下特点：</p>
+<ul>
+<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
+<li>事物拥有的状态总数是有限的；</li>
+<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
+<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
+<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h3 id="编码演示"><a href="#编码演示" class="headerlink" title="编码演示"></a>编码演示</h3>]]></content>
   </entry>
   <entry>
     <title>泛用语言分类方法</title>
@@ -1537,30 +1769,6 @@
 <h3 id="乔姆斯基谱系"><a href="#乔姆斯基谱系" class="headerlink" title="乔姆斯基谱系"></a>乔姆斯基谱系</h3><p>乔姆斯基体系是由诺·乔姆斯基于1956年提出的，是刻画形式文法表达能力的一个分类谱系。</p>
 <p>太深奥看不懂，以后再说，，，，</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>有限状态机是什么</title>
-    <url>/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/</url>
-    <content><![CDATA[<h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
-<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
-<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
-<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
-<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
-<p>它有三个特征：</p>
-<ul>
-<li>状态总数（state）是有限的。</li>
-<li>任一时刻，只处在一种状态之中。</li>
-<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
-</ul>
-<p>有限状态机一般都有以下特点：</p>
-<ul>
-<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
-<li>事物拥有的状态总数是有限的；</li>
-<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
-<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
-<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
-</ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h3 id="编码演示"><a href="#编码演示" class="headerlink" title="编码演示"></a>编码演示</h3>]]></content>
   </entry>
   <entry>
     <title>浏览器DOM API</title>
@@ -3183,5 +3391,187 @@
       <tags>
         <tag>TypeScript</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>表单和FormData对象</title>
+    <url>/2020/11/25/%E8%A1%A8%E5%8D%95%E5%92%8CFormData%E5%AF%B9%E8%B1%A1/</url>
+    <content><![CDATA[<h1 id="表单，FormData-对象"><a href="#表单，FormData-对象" class="headerlink" title="表单，FormData 对象"></a>表单，FormData 对象</h1><h2 id="表单概述"><a href="#表单概述" class="headerlink" title="表单概述"></a>表单概述</h2><p>表单（<code>&lt;form&gt;</code>）用来收集用户提交的数据，发送到服务器。比如，用户提交用户名和密码，让服务器验证，就要通过表单。表单提供多种控件，让开发者使用，具体的控件种类和用法请参考 HTML 语言的教程。本章主要介绍 JavaScript 与表单的交互。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/handling-page&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;name&quot;</span>&gt;</span>用户名：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;name&quot;</span> <span class="attr">name</span>=<span class="string">&quot;user_name&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;passwd&quot;</span>&gt;</span>密码：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">id</span>=<span class="string">&quot;passwd&quot;</span> <span class="attr">name</span>=<span class="string">&quot;user_passwd&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">id</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;submit_button&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码就是一个简单的表单，包含三个控件：用户名输入框、密码输入框和提交按钮。</p>
+<p>用户点击“提交”按钮，每一个控件都会生成一个键值对，键名是控件的<code>name</code>属性，键值是控件的<code>value</code>属性，键名和键值之间由等号连接。比如，用户名输入框的<code>name</code>属性是<code>user_name</code>，<code>value</code>属性是用户输入的值，假定是“张三”，提交到服务器的时候，就会生成一个键值对<code>user_name=张三</code>。</p>
+<p>所有的键值对都会提交到服务器。但是，提交的数据格式跟<code>&lt;form&gt;</code>元素的<code>method</code>属性有关。该属性指定了提交数据的 HTTP 方法。如果是 GET 方法，所有键值对会以 URL 的查询字符串形式，提交到服务器，比如<code>/handling-page?user_name=张三&amp;user_passwd=123&amp;submit_button=提交</code>。下面就是 GET 请求的 HTTP 头信息。</p>
+<figure class="highlight http"><table><tr><td class="code"><pre><span class="line">GET /handling-page?user_name=张三&amp;user_passwd=123&amp;submit_button=提交</span><br><span class="line"><span class="attribute">Host</span>: example.com</span><br></pre></td></tr></table></figure>
+
+<p>如果是 POST 方法，所有键值对会连接成一行，作为 HTTP 请求的数据体发送到服务器，比如<code>user_name=张三&amp;user_passwd=123&amp;submit_button=提交</code>。下面就是 POST 请求的头信息。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/handling-page</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: example.com</span><br><span class="line"><span class="attribute">Content-Type</span>: application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">Content-Length</span>: 74</span><br><span class="line"></span><br><span class="line">user_name=张三&amp;user_passwd=123&amp;submit_button=提交</span><br></pre></td></tr></table></figure>
+
+<p>注意，实际提交的时候，只要键值不是 URL 的合法字符（比如汉字“张三”和“提交”），浏览器会自动对其进行编码。</p>
+<p>点击<code>submit</code>控件，就可以提交表单。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面表单就包含一个<code>submit</code>控件，点击这个控件，浏览器就会把表单数据向服务器提交。</p>
+<p>注意，表单里面的<code>&lt;button&gt;</code>元素如果没有用<code>type</code>属性指定类型，那么默认就是<code>submit</code>控件。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面表单的<code>&lt;button&gt;</code>元素，点击以后也会提交表单。</p>
+<p>除了点击<code>submit</code>控件提交表单，还可以用表单元素的<code>submit()</code>方法，通过脚本提交表单。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">formElement.submit();</span><br></pre></td></tr></table></figure>
+
+<p>表单元素的<code>reset()</code>方法可以重置所有控件的值（重置为默认值）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">formElement.reset();</span><br></pre></td></tr></table></figure>
+
+<h2 id="FormData-对象"><a href="#FormData-对象" class="headerlink" title="FormData 对象"></a>FormData 对象</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>表单数据以键值对的形式向服务器发送，这个过程是浏览器自动完成的。但是有时候，我们希望通过脚本完成过程，构造和编辑表单键值对，然后通过<code>XMLHttpRequest.send()</code>方法发送。浏览器原生提供了 FormData 对象来完成这项工作。</p>
+<p>FormData 首先是一个构造函数，用来生成实例。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> formdata = <span class="keyword">new</span> FormData(form);</span><br></pre></td></tr></table></figure>
+
+<p><code>FormData()</code>构造函数的参数是一个表单元素，这个参数是可选的。如果省略参数，就表示一个空的表单，否则就会处理表单元素里面的键值对。</p>
+<p>下面是一个表单。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">&quot;myForm&quot;</span> <span class="attr">name</span>=<span class="string">&quot;myForm&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;username&quot;</span>&gt;</span>用户名：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;username&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;useracc&quot;</span>&gt;</span>账号：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;useracc&quot;</span> <span class="attr">name</span>=<span class="string">&quot;useracc&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;userfile&quot;</span>&gt;</span>上传文件：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;userfile&quot;</span> <span class="attr">name</span>=<span class="string">&quot;userfile&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit!&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们用 FormData 对象处理上面这个表单。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myForm = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myForm&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> formData = <span class="keyword">new</span> FormData(myForm);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取某个控件的值</span></span><br><span class="line">formData.get(<span class="string">&quot;username&quot;</span>); <span class="comment">// &quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置某个控件的值</span></span><br><span class="line">formData.set(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;张三&quot;</span>);</span><br><span class="line"></span><br><span class="line">formData.get(<span class="string">&quot;username&quot;</span>); <span class="comment">// &quot;张三&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h3><p>FormData 提供以下实例方法。</p>
+<ul>
+<li><code>FormData.get(key)</code>：获取指定键名对应的键值，参数为键名。如果有多个同名的键值对，则返回第一个键值对的键值。</li>
+<li><code>FormData.getAll(key)</code>：返回一个数组，表示指定键名对应的所有键值。如果有多个同名的键值对，数组会包含所有的键值。</li>
+<li><code>FormData.set(key, value)</code>：设置指定键名的键值，参数为键名。如果键名不存在，会添加这个键值对，否则会更新指定键名的键值。如果第二个参数是文件，还可以使用第三个参数，表示文件名。</li>
+<li><code>FormData.delete(key)</code>：删除一个键值对，参数为键名。</li>
+<li><code>FormData.append(key, value)</code>：添加一个键值对。如果键名重复，则会生成两个相同键名的键值对。如果第二个参数是文件，还可以使用第三个参数，表示文件名。</li>
+<li><code>FormData.has(key)</code>：返回一个布尔值，表示是否具有该键名的键值对。</li>
+<li><code>FormData.keys()</code>：返回一个遍历器对象，用于<code>for...of</code>循环遍历所有的键名。</li>
+<li><code>FormData.values()</code>：返回一个遍历器对象，用于<code>for...of</code>循环遍历所有的键值。</li>
+<li><code>FormData.entries()</code>：返回一个遍历器对象，用于<code>for...of</code>循环遍历所有的键值对。如果直接用<code>for...of</code>循环遍历 FormData 实例，默认就会调用这个方法。</li>
+</ul>
+<p>下面是<code>get()</code>、<code>getAll()</code>、<code>set()</code>、<code>append()</code>方法的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> formData = <span class="keyword">new</span> FormData();</span><br><span class="line"></span><br><span class="line">formData.set(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;张三&quot;</span>);</span><br><span class="line">formData.append(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;李四&quot;</span>);</span><br><span class="line">formData.get(<span class="string">&quot;username&quot;</span>); <span class="comment">// &quot;张三&quot;</span></span><br><span class="line">formData.getAll(<span class="string">&quot;username&quot;</span>); <span class="comment">// [&quot;张三&quot;, &quot;李四&quot;]</span></span><br><span class="line"></span><br><span class="line">formData.append(<span class="string">&quot;userpic[]&quot;</span>, myFileInput.files[<span class="number">0</span>], <span class="string">&quot;user1.jpg&quot;</span>);</span><br><span class="line">formData.append(<span class="string">&quot;userpic[]&quot;</span>, myFileInput.files[<span class="number">1</span>], <span class="string">&quot;user2.jpg&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>下面是遍历器的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> formData = <span class="keyword">new</span> FormData();</span><br><span class="line">formData.append(<span class="string">&quot;key1&quot;</span>, <span class="string">&quot;value1&quot;</span>);</span><br><span class="line">formData.append(<span class="string">&quot;key2&quot;</span>, <span class="string">&quot;value2&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">of</span> formData.keys()) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(key);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// &quot;key1&quot;</span></span><br><span class="line"><span class="comment">// &quot;key2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> value <span class="keyword">of</span> formData.values()) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// &quot;value1&quot;</span></span><br><span class="line"><span class="comment">// &quot;value2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> pair <span class="keyword">of</span> formData.entries()) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(pair[<span class="number">0</span>] + <span class="string">&quot;: &quot;</span> + pair[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// key1: value1</span></span><br><span class="line"><span class="comment">// key2: value2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于遍历 formData.entries()</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> pair <span class="keyword">of</span> formData) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(pair[<span class="number">0</span>] + <span class="string">&quot;: &quot;</span> + pair[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// key1: value1</span></span><br><span class="line"><span class="comment">// key2: value2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="表单的内置验证"><a href="#表单的内置验证" class="headerlink" title="表单的内置验证"></a>表单的内置验证</h2><h3 id="自动校验"><a href="#自动校验" class="headerlink" title="自动校验"></a>自动校验</h3><p>表单提交的时候，浏览器允许开发者指定一些条件，它会自动验证各个表单控件的值是否符合条件。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 必填 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">required</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 必须符合正则表达式 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">pattern</span>=<span class="string">&quot;banana|cherry&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 字符串长度必须为6个字符 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">minlength</span>=<span class="string">&quot;6&quot;</span> <span class="attr">maxlength</span>=<span class="string">&quot;6&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 数值必须在1到10之间 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> <span class="attr">min</span>=<span class="string">&quot;1&quot;</span> <span class="attr">max</span>=<span class="string">&quot;10&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 必须填入 Email 地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;email&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 必须填入 URL --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;URL&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果一个控件通过验证，它就会匹配<code>:valid</code>的 CSS 伪类，浏览器会继续进行表单提交的流程。如果没有通过验证，该控件就会匹配<code>:invalid</code>的 CSS 伪类，浏览器会终止表单提交，并显示一个错误信息。</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">:invalid</span> &#123;</span><br><span class="line">  <span class="attribute">border-color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">input</span>,</span><br><span class="line"><span class="selector-tag">input</span><span class="selector-pseudo">:valid</span> &#123;</span><br><span class="line">  <span class="attribute">border-color</span>: <span class="number">#ccc</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="checkValidity"><a href="#checkValidity" class="headerlink" title="checkValidity()"></a>checkValidity()</h3><p>除了提交表单的时候，浏览器自动校验表单，还可以手动触发表单的校验。表单元素和表单控件都有<code>checkValidity()</code>方法，用于手动触发校验。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 触发整个表单的校验</span></span><br><span class="line">form.checkValidity();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 触发单个表单控件的校验</span></span><br><span class="line">formControl.checkValidity();</span><br></pre></td></tr></table></figure>
+
+<p><code>checkValidity()</code>方法返回一个布尔值，<code>true</code>表示通过校验，<code>false</code>表示没有通过校验。因此，提交表单可以封装为下面的函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">submitForm</span>(<span class="params">action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;form&quot;</span>);</span><br><span class="line">  form.action = action;</span><br><span class="line">  <span class="keyword">if</span> (form.checkValidity()) &#123;</span><br><span class="line">    form.submit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="willValidate-属性"><a href="#willValidate-属性" class="headerlink" title="willValidate 属性"></a>willValidate 属性</h3><p>控件元素的<code>willValidate</code>属性是一个布尔值，表示该控件是否会在提交时进行校验。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML 代码如下</span></span><br><span class="line"><span class="comment">// &lt;form novalidate&gt;</span></span><br><span class="line"><span class="comment">//   &lt;input id=&quot;name&quot; name=&quot;name&quot; required /&gt;</span></span><br><span class="line"><span class="comment">// &lt;/form&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> input = <span class="built_in">document</span>.querySelector(<span class="string">&quot;#name&quot;</span>);</span><br><span class="line">input.willValidate; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="validationMessage-属性"><a href="#validationMessage-属性" class="headerlink" title="validationMessage 属性"></a>validationMessage 属性</h3><p>控件元素的<code>validationMessage</code>属性返回一个字符串，表示控件不满足校验条件时，浏览器显示的提示文本。以下两种情况，该属性返回空字符串。</p>
+<ul>
+<li>该控件不会在提交时自动校验</li>
+<li>该控件满足校验条件</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML 代码如下</span></span><br><span class="line"><span class="comment">// &lt;form&gt;&lt;input type=&quot;text&quot; required&gt;&lt;/form&gt;</span></span><br><span class="line"><span class="built_in">document</span>.querySelector(<span class="string">&quot;form input&quot;</span>).validationMessage;</span><br><span class="line"><span class="comment">// &quot;请填写此字段。&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面是另一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myInput = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myinput&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (!myInput.checkValidity()) &#123;</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">&quot;prompt&quot;</span>).innerHTML = myInput.validationMessage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="setCustomValidity"><a href="#setCustomValidity" class="headerlink" title="setCustomValidity()"></a>setCustomValidity()</h3><p>控件元素的<code>setCustomValidity()</code>方法用来定制校验失败时的报错信息。它接受一个字符串作为参数，该字符串就是定制的报错信息。如果参数为空字符串，则上次设置的报错信息被清除。</p>
+<p>这个方法可以替换浏览器内置的表单验证报错信息，参数就是要显示的报错信息。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;somefile.php&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Username&quot;</span> <span class="attr">pattern</span>=<span class="string">&quot;[a-z]&#123;1,15&#125;&quot;</span> <span class="attr">id</span>=<span class="string">&quot;username&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的表单输入框，要求只能输入小写字母，且不得超过 15 个字符。如果输入不符合要求（比如输入“ABC”），提交表单的时候，Chrome 浏览器会弹出报错信息“Please match the requested format.”，禁止表单提交。下面使用<code>setCustomValidity()</code>方法替换掉报错信息。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> input = <span class="built_in">document</span>.getElementById(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">input.oninvalid = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.target.setCustomValidity(<span class="string">&quot;用户名必须是小写字母，不能为空，最长不超过15个字符&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>setCustomValidity()</code>方法是在<code>invalid</code>事件的监听函数里面调用。该方法也可以直接调用，这时如果参数不为空字符串，浏览器就会认为该控件没有通过校验，就会立刻显示该方法设置的报错信息。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* HTML 代码如下</span></span><br><span class="line"><span class="comment">&lt;form&gt;</span></span><br><span class="line"><span class="comment">  &lt;p&gt;&lt;input type=&quot;file&quot; id=&quot;fs&quot;&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="comment">  &lt;p&gt;&lt;input type=&quot;submit&quot;&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="comment">&lt;/form&gt;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;fs&quot;</span>).onchange = checkFileSize;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkFileSize</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> fs = <span class="built_in">document</span>.getElementById(<span class="string">&quot;fs&quot;</span>);</span><br><span class="line">  <span class="keyword">var</span> files = fs.files;</span><br><span class="line">  <span class="keyword">if</span> (files.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (files[<span class="number">0</span>].size &gt; <span class="number">75</span> * <span class="number">1024</span>) &#123;</span><br><span class="line">      fs.setCustomValidity(<span class="string">&quot;文件不能大于 75KB&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  fs.setCustomValidity(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码一旦发现文件大于 75KB，就会设置校验失败，同时给出自定义的报错信息。然后，点击提交按钮时，就会显示报错信息。这种校验失败是不会自动消除的，所以如果所有文件都符合条件，要将报错信息设为空字符串，手动消除校验失败的状态。</p>
+<h3 id="validity-属性"><a href="#validity-属性" class="headerlink" title="validity 属性"></a>validity 属性</h3><p>控件元素的属性<code>validity</code>属性返回一个<code>ValidityState</code>对象，包含当前校验状态的信息。</p>
+<p>该对象有以下属性，全部为只读属性。</p>
+<ul>
+<li><code>ValidityState.badInput</code>：布尔值，表示浏览器是否不能将用户的输入转换成正确的类型，比如用户在数值框里面输入字符串。</li>
+<li><code>ValidityState.customError</code>：布尔值，表示是否已经调用<code>setCustomValidity()</code>方法，将校验信息设置为一个非空字符串。</li>
+<li><code>ValidityState.patternMismatch</code>：布尔值，表示用户输入的值是否不满足模式的要求。</li>
+<li><code>ValidityState.rangeOverflow</code>：布尔值，表示用户输入的值是否大于最大范围。</li>
+<li><code>ValidityState.rangeUnderflow</code>：布尔值，表示用户输入的值是否小于最小范围。</li>
+<li><code>ValidityState.stepMismatch</code>：布尔值，表示用户输入的值不符合步长的设置（即不能被步长值整除）。</li>
+<li><code>ValidityState.tooLong</code>：布尔值，表示用户输入的字数超出了最长字数。</li>
+<li><code>ValidityState.tooShort</code>：布尔值，表示用户输入的字符少于最短字数。</li>
+<li><code>ValidityState.typeMismatch</code>：布尔值，表示用户填入的值不符合类型要求（主要是类型为 Email 或 URL 的情况）。</li>
+<li><code>ValidityState.valid</code>：布尔值，表示用户是否满足所有校验条件。</li>
+<li><code>ValidityState.valueMissing</code>：布尔值，表示用户没有填入必填的值。</li>
+</ul>
+<p>下面是一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> input = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myinput&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (input.validity.valid) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;通过校验&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;校验失败&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是另外一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> txt = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.getElementById(<span class="string">&quot;myInput&quot;</span>).validity.rangeOverflow) &#123;</span><br><span class="line">  txt = <span class="string">&quot;数值超过上限&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;prompt&quot;</span>).innerHTML = txt;</span><br></pre></td></tr></table></figure>
+
+<p>如果想禁止浏览器弹出表单验证的报错信息，可以监听<code>invalid</code>事件。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> input = <span class="built_in">document</span>.getElementById(<span class="string">&quot;username&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> form = <span class="built_in">document</span>.getElementById(<span class="string">&quot;form&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> elem = <span class="built_in">document</span>.createElement(<span class="string">&quot;div&quot;</span>);</span><br><span class="line">elem.id = <span class="string">&quot;notify&quot;</span>;</span><br><span class="line">elem.style.display = <span class="string">&quot;none&quot;</span>;</span><br><span class="line">form.appendChild(elem);</span><br><span class="line"></span><br><span class="line">input.addEventListener(<span class="string">&quot;invalid&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  event.preventDefault();</span><br><span class="line">  <span class="keyword">if</span> (!event.target.validity.valid) &#123;</span><br><span class="line">    elem.textContent = <span class="string">&quot;用户名必须是小写字母&quot;</span>;</span><br><span class="line">    elem.className = <span class="string">&quot;error&quot;</span>;</span><br><span class="line">    elem.style.display = <span class="string">&quot;block&quot;</span>;</span><br><span class="line">    input.className = <span class="string">&quot;invalid animated shake&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">input.addEventListener(<span class="string">&quot;input&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="string">&quot;block&quot;</span> === elem.style.display) &#123;</span><br><span class="line">    input.className = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    elem.style.display = <span class="string">&quot;none&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，一旦发生<code>invalid</code>事件（表单验证失败），<code>event.preventDefault()</code>用来禁止浏览器弹出默认的验证失败提示，然后设置定制的报错提示框。</p>
+<h3 id="表单的-novalidate-属性"><a href="#表单的-novalidate-属性" class="headerlink" title="表单的 novalidate 属性"></a>表单的 novalidate 属性</h3><p>表单元素的 HTML 属性<code>novalidate</code>，可以关闭浏览器的自动校验。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">novalidate</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个属性也可以在脚本里设置。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">form.noValidate = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果表单元素没有设置<code>novalidate</code>属性，那么提交按钮（<code>&lt;button&gt;</code>或<code>&lt;input&gt;</code>元素）的<code>formnovalidate</code>属性也有同样的作用。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">formnovalidate</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="enctype-属性"><a href="#enctype-属性" class="headerlink" title="enctype 属性"></a>enctype 属性</h2><p>表单能够用四种编码，向服务器发送数据。编码格式由表单的<code>enctype</code>属性决定。</p>
+<p>假定表单有两个字段，分别是<code>foo</code>和<code>baz</code>，其中<code>foo</code>字段的值等于<code>bar</code>，<code>baz</code>字段的值是一个分为两行的字符串。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line">The <span class="keyword">first</span> <span class="built_in">line</span>.</span><br><span class="line">The <span class="keyword">second</span> <span class="built_in">line</span>.</span><br></pre></td></tr></table></figure>
+
+<p>下面四种格式，都可以将这个表单发送到服务器。</p>
+<p><strong>（1）GET 方法</strong></p>
+<p>如果表单使用<code>GET</code>方法发送数据，<code>enctype</code>属性无效。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;register.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;get&quot;</span> <span class="attr">onsubmit</span>=<span class="string">&quot;AJAXSubmit(this); return false;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>数据将以 URL 的查询字符串发出。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">?foo=bar&amp;baz=The%20first%20line.%0AThe%20second%20line.</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）application/x-www-form-urlencoded</strong></p>
+<p>如果表单用<code>POST</code>方法发送数据，并省略<code>enctype</code>属性，那么数据以<code>application/x-www-form-urlencoded</code>格式发送（因为这是默认值）。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;register.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">onsubmit</span>=<span class="string">&quot;AJAXSubmit(this); return false;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发送的 HTTP 请求如下。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Content-Type</span>: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">foo=bar&amp;baz=The+first+line.%0D%0AThe+second+line.%0D%0A</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，数据体里面的<code>%0D%0A</code>代表换行符（<code>\r\n</code>）。</p>
+<p><strong>（3）text/plain</strong></p>
+<p>如果表单使用<code>POST</code>方法发送数据，<code>enctype</code>属性为<code>text/plain</code>，那么数据将以纯文本格式发送。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;register.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;text/plain&quot;</span> <span class="attr">onsubmit</span>=<span class="string">&quot;AJAXSubmit(this); return false;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发送的 HTTP 请求如下。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Content-Type</span>: text/plain</span><br><span class="line"></span><br><span class="line">foo=bar</span><br><span class="line">baz=The first line.</span><br><span class="line">The second line.</span><br></pre></td></tr></table></figure>
+
+<p><strong>（4）multipart/form-data</strong></p>
+<p>如果表单使用<code>POST</code>方法，<code>enctype</code>属性为<code>multipart/form-data</code>，那么数据将以混合的格式发送。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;register.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span> <span class="attr">onsubmit</span>=<span class="string">&quot;AJAXSubmit(this); return false;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发送的 HTTP 请求如下。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Content-Type</span>: multipart/form-data; boundary=---------------------------314911788813839</span><br><span class="line"></span><br><span class="line">-----------------------------314911788813839</span><br><span class="line"><span class="attribute">Content-Disposition</span>: form-data; name=&quot;foo&quot;</span><br><span class="line"></span><br><span class="line"><span class="attribute">bar</span></span><br><span class="line"><span class="attribute">-----------------------------314911788813839</span></span><br><span class="line"><span class="attribute">Content-Disposition</span>: form-data; name=&quot;baz&quot;</span><br><span class="line"></span><br><span class="line">The first line.</span><br><span class="line">The second line.</span><br><span class="line"></span><br><span class="line">-----------------------------314911788813839--</span><br></pre></td></tr></table></figure>
+
+<p>这种格式也是文件上传的格式。</p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>用户上传文件，也是通过表单。具体来说，就是通过文件输入框选择本地文件，提交表单的时候，浏览器就会把这个文件发送到服务器。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;myFile&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>此外，还需要将表单<code>&lt;form&gt;</code>元素的<code>method</code>属性设为<code>POST</code>，<code>enctype</code>属性设为<code>multipart/form-data</code>。其中，<code>enctype</code>属性决定了 HTTP 头信息的<code>Content-Type</code>字段的值，默认情况下这个字段的值是<code>application/x-www-form-urlencoded</code>，但是文件上传的时候要改成<code>multipart/form-data</code>。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;file&quot;</span>&gt;</span>选择一个文件<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;myFile&quot;</span> <span class="attr">multiple</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">id</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;submit_button&quot;</span> <span class="attr">value</span>=<span class="string">&quot;上传&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的 HTML 代码中，file 控件的<code>multiple</code>属性，指定可以一次选择多个文件；如果没有这个属性，则一次只能选择一个文件。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fileSelect = <span class="built_in">document</span>.getElementById(<span class="string">&quot;file&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> files = fileSelect.files;</span><br></pre></td></tr></table></figure>
+
+<p>然后，新建一个 FormData 实例对象，模拟发送到服务器的表单数据，把选中的文件添加到这个对象上面。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> formData = <span class="keyword">new</span> FormData();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; files.length; i++) &#123;</span><br><span class="line">  <span class="keyword">var</span> file = files[i];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 只上传图片文件</span></span><br><span class="line">  <span class="keyword">if</span> (!file.type.match(<span class="string">&quot;image.*&quot;</span>)) &#123;</span><br><span class="line">    <span class="keyword">continue</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  formData.append(<span class="string">&quot;photos[]&quot;</span>, file, file.name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用 Ajax 向服务器上传文件。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line"></span><br><span class="line">xhr.open(<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;handler.php&quot;</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">xhr.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (xhr.status !== <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;An error occurred!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">xhr.send(formData);</span><br></pre></td></tr></table></figure>
+
+<p>除了发送 FormData 实例，也可以直接 AJAX 发送文件。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> file = <span class="built_in">document</span>.getElementById(<span class="string">&quot;test-input&quot;</span>).files[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line"></span><br><span class="line">xhr.open(<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;myserver/uploads&quot;</span>);</span><br><span class="line">xhr.setRequestHeader(<span class="string">&quot;Content-Type&quot;</span>, file.type);</span><br><span class="line">xhr.send(file);</span><br></pre></td></tr></table></figure>
+]]></content>
   </entry>
 </search>

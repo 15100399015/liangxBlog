@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/21/Completion%20Record/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/21/Completion%20Record/" class="post-title-link" itemprop="url">Completion Record</a>
+            <a href="/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">Navigator对象和Screen对象</a>
         </h2>
 
         <div class="post-meta">
@@ -217,16 +217,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-11-21 11:55:05" itemprop="dateCreated datePublished" datetime="2020-11-21T11:55:05+08:00">2020-11-21</time>
+              <time title="创建时间：2020-11-25 13:01:04 / 修改时间：13:12:26" itemprop="dateCreated datePublished" datetime="2020-11-25T13:01:04+08:00">2020-11-25</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-22 22:01:01" itemprop="dateModified" datetime="2020-11-22T22:01:01+08:00">2020-11-22</time>
-              </span>
 
           
   
@@ -237,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/21/Completion%20Record/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/21/Completion%20Record/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -253,27 +247,73 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>JavaScript 用语句来完成流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+          <h1 id="Navigator-对象，Screen-对象。"><a href="#Navigator-对象，Screen-对象。" class="headerlink" title="Navigator 对象，Screen 对象。"></a>Navigator 对象，Screen 对象。</h1><p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。</p>
+<h2 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h2><h3 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h3><p><code>navigator.userAgent</code>属性返回浏览器的 User Agent 字符串，表示浏览器的厂商和版本信息。</p>
+<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">navigator.userAgent;</span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于x变量具体的值，</p>
-<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
-<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
-<p>比如上面的<code>if</code>语句，它的  Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
-<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
+<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
+<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.userAgent.toLowerCase();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.test(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生break，continue，return，or throw，type 是一个非常关键的信息，</p>
-<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.test(ua);</span><br></pre></td></tr></table></figure>
 
+<h3 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h3><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是 Plugin 实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.plugins.length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].name);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].filename);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].description);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].version);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h3><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">navigator.platform;</span><br><span class="line"><span class="comment">// &quot;Linux x86_64&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record里面一个重要的信息</p>
-<p>target：这个非常少见  target 是一个label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">javascript:<span class="keyword">void</span>();</span><br><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i, j)</span><br><span class="line">        <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span> outPoint;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h3><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.onLine; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p>以上就是JavaScript 中的 Completion Record 了，我们单看Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
+<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;offline&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;offline&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;online&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;online&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h3><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.language; <span class="comment">// &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.languages; <span class="comment">// [&quot;en-US&quot;, &quot;en&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-TW&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
+<h3 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h3><p><code>Navigator.geolocation</code>属性返回一个 Geolocation 对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
+<p>Geolocation 对象提供下面三个方法。</p>
+<ul>
+<li>Geolocation.getCurrentPosition()：得到用户的当前位置</li>
+<li>Geolocation.watchPosition()：监听用户位置变化</li>
+<li>Geolocation.clearWatch()：取消<code>watchPosition()</code>方法指定的监听函数</li>
+</ul>
+<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
+<h3 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h3><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.cookieEnabled; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
+<h2 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h2><h3 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h3><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.javaEnabled(); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h3><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据，详见《XMLHttpRequest 对象》一章。</p>
+<h2 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h2><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。</p>
+<p>该对象有下面的属性。</p>
+<ul>
+<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
+<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
+<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
+<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
+<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供 24 位色彩。</li>
+<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，colorDepth 表示应用程序的颜色深度，pixelDepth 表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
+<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>表示颠倒的竖放。</li>
+</ul>
+<p>下面是<code>Screen.orientation</code>的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.orientation;</span><br><span class="line"><span class="comment">// &#123; angle: 0, type: &quot;landscape-primary&quot;, onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.screen.width &gt;= <span class="number">1024</span> &amp;&amp; <span class="built_in">window</span>.screen.height &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (screen.width &lt;= <span class="number">800</span> &amp;&amp; screen.height &lt;= <span class="number">600</span>) &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;small.html&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;wide.html&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -292,7 +332,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -360,7 +400,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
