@@ -88,6 +88,30 @@
       </tags>
   </entry>
   <entry>
+    <title>Completion Record</title>
+    <url>/2020/11/21/Completion%20Record/</url>
+    <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于 x 变量具体的值，</p>
+<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
+<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
+<p>比如上面的<code>if</code>语句，它的 Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
+<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
+
+<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生 break，continue，return，or throw，type 是一个非常关键的信息，</p>
+<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record 里面一个重要的信息</p>
+<p>target：这个非常少见 target 是一个 label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i, j);</span><br><span class="line">    <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">      <span class="keyword">break</span> outPoint;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是 JavaScript 中的 Completion Record 了，我们单看 Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+]]></content>
+  </entry>
+  <entry>
     <title>Generator函数的语法</title>
     <url>/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
@@ -150,30 +174,6 @@
       <tags>
         <tag>es6</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Completion Record</title>
-    <url>/2020/11/21/Completion%20Record/</url>
-    <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于 x 变量具体的值，</p>
-<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
-<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
-<p>比如上面的<code>if</code>语句，它的 Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
-<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
-
-<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生 break，continue，return，or throw，type 是一个非常关键的信息，</p>
-<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record 里面一个重要的信息</p>
-<p>target：这个非常少见 target 是一个 label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i, j);</span><br><span class="line">    <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">      <span class="keyword">break</span> outPoint;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上就是 JavaScript 中的 Completion Record 了，我们单看 Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
-]]></content>
   </entry>
   <entry>
     <title>HTML从字符流到抽象语法树</title>
@@ -348,78 +348,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Navigator对象和Screen对象</title>
-    <url>/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/</url>
-    <content><![CDATA[<h1 id="Navigator-对象，Screen-对象。"><a href="#Navigator-对象，Screen-对象。" class="headerlink" title="Navigator 对象，Screen 对象。"></a>Navigator 对象，Screen 对象。</h1><p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。</p>
-<h2 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h2><h3 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h3><p><code>navigator.userAgent</code>属性返回浏览器的 User Agent 字符串，表示浏览器的厂商和版本信息。</p>
-<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.userAgent;</span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
-<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.userAgent.toLowerCase();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.test(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.test(ua);</span><br></pre></td></tr></table></figure>
-
-<h3 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h3><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是 Plugin 实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.plugins.length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].name);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].filename);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].description);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].version);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h3><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.platform;</span><br><span class="line"><span class="comment">// &quot;Linux x86_64&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h3><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.onLine; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
-<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;offline&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;offline&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;online&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;online&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h3><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.language; <span class="comment">// &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.languages; <span class="comment">// [&quot;en-US&quot;, &quot;en&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-TW&quot;]</span></span><br></pre></td></tr></table></figure>
-
-<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
-<h3 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h3><p><code>Navigator.geolocation</code>属性返回一个 Geolocation 对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
-<p>Geolocation 对象提供下面三个方法。</p>
-<ul>
-<li>Geolocation.getCurrentPosition()：得到用户的当前位置</li>
-<li>Geolocation.watchPosition()：监听用户位置变化</li>
-<li>Geolocation.clearWatch()：取消<code>watchPosition()</code>方法指定的监听函数</li>
-</ul>
-<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
-<h3 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h3><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.cookieEnabled; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
-<h2 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h2><h3 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h3><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.javaEnabled(); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h3><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据，详见《XMLHttpRequest 对象》一章。</p>
-<h2 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h2><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。</p>
-<p>该对象有下面的属性。</p>
-<ul>
-<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
-<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
-<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
-<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
-<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供 24 位色彩。</li>
-<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，colorDepth 表示应用程序的颜色深度，pixelDepth 表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
-<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>表示颠倒的竖放。</li>
-</ul>
-<p>下面是<code>Screen.orientation</code>的例子。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.orientation;</span><br><span class="line"><span class="comment">// &#123; angle: 0, type: &quot;landscape-primary&quot;, onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.screen.width &gt;= <span class="number">1024</span> &amp;&amp; <span class="built_in">window</span>.screen.height &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (screen.width &lt;= <span class="number">800</span> &amp;&amp; screen.height &lt;= <span class="number">600</span>) &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;small.html&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;wide.html&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-  </entry>
-  <entry>
     <title>Object对象相关方法</title>
     <url>/2020/11/25/Object%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<h1 id="Object-对象的相关方法"><a href="#Object-对象的相关方法" class="headerlink" title="Object 对象的相关方法"></a>Object 对象的相关方法</h1><p>JavaScript 在<code>Object</code>对象上面，提供了很多相关方法，处理面向对象编程的相关操作。本章介绍这些方法。</p>
@@ -542,6 +470,78 @@
 
 <p>另一种更简单的写法，是利用 ES2017 才引入标准的<code>Object.getOwnPropertyDescriptors</code>方法。</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyObject</span>(<span class="params">orig</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.getPrototypeOf(orig), <span class="built_in">Object</span>.getOwnPropertyDescriptors(orig));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>Navigator对象和Screen对象</title>
+    <url>/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/</url>
+    <content><![CDATA[<h1 id="Navigator-对象，Screen-对象。"><a href="#Navigator-对象，Screen-对象。" class="headerlink" title="Navigator 对象，Screen 对象。"></a>Navigator 对象，Screen 对象。</h1><p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。</p>
+<h2 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h2><h3 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h3><p><code>navigator.userAgent</code>属性返回浏览器的 User Agent 字符串，表示浏览器的厂商和版本信息。</p>
+<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.userAgent;</span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
+<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.userAgent.toLowerCase();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.test(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.test(ua);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h3><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是 Plugin 实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.plugins.length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].name);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].filename);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].description);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].version);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h3><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.platform;</span><br><span class="line"><span class="comment">// &quot;Linux x86_64&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h3><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.onLine; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
+<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;offline&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;offline&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;online&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;online&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h3><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.language; <span class="comment">// &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.languages; <span class="comment">// [&quot;en-US&quot;, &quot;en&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-TW&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
+<h3 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h3><p><code>Navigator.geolocation</code>属性返回一个 Geolocation 对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
+<p>Geolocation 对象提供下面三个方法。</p>
+<ul>
+<li>Geolocation.getCurrentPosition()：得到用户的当前位置</li>
+<li>Geolocation.watchPosition()：监听用户位置变化</li>
+<li>Geolocation.clearWatch()：取消<code>watchPosition()</code>方法指定的监听函数</li>
+</ul>
+<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
+<h3 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h3><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.cookieEnabled; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
+<h2 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h2><h3 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h3><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">navigator.javaEnabled(); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h3><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据，详见《XMLHttpRequest 对象》一章。</p>
+<h2 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h2><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。</p>
+<p>该对象有下面的属性。</p>
+<ul>
+<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
+<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
+<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
+<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
+<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供 24 位色彩。</li>
+<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，colorDepth 表示应用程序的颜色深度，pixelDepth 表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
+<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>表示颠倒的竖放。</li>
+</ul>
+<p>下面是<code>Screen.orientation</code>的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.orientation;</span><br><span class="line"><span class="comment">// &#123; angle: 0, type: &quot;landscape-primary&quot;, onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.screen.width &gt;= <span class="number">1024</span> &amp;&amp; <span class="built_in">window</span>.screen.height &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (screen.width &lt;= <span class="number">800</span> &amp;&amp; screen.height &lt;= <span class="number">600</span>) &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;small.html&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;wide.html&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
   </entry>
   <entry>
@@ -997,38 +997,6 @@
       </tags>
   </entry>
   <entry>
-    <title>分支界限法</title>
-    <url>/2020/11/07/%E5%88%86%E6%94%AF%E7%95%8C%E9%99%90%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>类似于回溯法，也是一种在问题的空间树 T 上搜索问题的解的算法，但在一般情况下，分支界限方与回溯法的求解目标不同，回溯法的求解目标是找出 T 中满足约束条件的所有解，而分支界限发的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一个目标函数值达到极大或极小的解，即在某种意义上的最优解</p>
-<h4 id="分支搜索法"><a href="#分支搜索法" class="headerlink" title="分支搜索法"></a>分支搜索法</h4><p>所谓 “分支” 就是采用广度优先搜索策略，依次搜索 E-结点的所有分支，也就是所有相邻节点，抛弃不满足约束条件的节点，其余节点加入活节点表，然后从表中选择一个节点作为下一个 E-节点，继续搜索</p>
-<p>选择一个 E-节点的方式不同，则会有几种不同的分支搜索方式，</p>
-<ul>
-<li>FIFO 搜索</li>
-<li>LIFO 搜索</li>
-<li>优先队列式搜索</li>
-</ul>
-<h4 id="分支界限搜索法"><a href="#分支界限搜索法" class="headerlink" title="分支界限搜索法"></a>分支界限搜索法</h4><h3 id="分支界限搜索法的一般过程"><a href="#分支界限搜索法的一般过程" class="headerlink" title="分支界限搜索法的一般过程"></a>分支界限搜索法的一般过程</h3><p>由于求解目标不同，导致分支限界法与回溯法在解空间树 T 上的搜索方式也不相同。回溯法以深度优先的方式搜索解空间树 T，而分支限界法则以广度优先或以最小耗费优先的方式搜索解空间树 T。</p>
-<p>分支限界法的搜索策略是：在扩展结点处，先生成其所有的儿子结点（分支），然后再从当前的活结点表中选择下一个扩展对点。为了有效地选择下一扩展结点，以加速搜索的进程，在每一活结点处，计算一个函数值（限界），并根据这些已计算出的函数值，从当前活结点表中选择一个最有利的结点作为扩展结点，使搜索朝着解空间树上有最优解的分支推进，以便尽快地找出一个最优解。</p>
-<p>分支限界法常以广度优先或以最小耗费（最大效益）优先的方式搜索问题的解空间树。问题的解空间树是表示问题解空间的一棵有序树，常见的有子集树和排列树。在搜索问题的解空间树时，分支限界法与回溯法对当前扩展结点所使用的扩展方式不同。在分支限界法中，每一个活结点只有一次机会成为扩展结点。活结点一旦成为扩展结点，就一次性产生其所有儿子结点。在这些儿子结点中，那些导致不可行解或导致非最优解的儿子结点被舍弃，其余儿子结点被子加入活结点表中。此后，从活结点表中取下一结点成为当前扩展结点，并重复上述结点扩展过程。这个过程一直持续到找到所求的解或活结点表为空时为止。</p>
-<h3 id="回溯法和分支限界法的一些区别"><a href="#回溯法和分支限界法的一些区别" class="headerlink" title="回溯法和分支限界法的一些区别"></a>回溯法和分支限界法的一些区别</h3><p>有一些问题其实无论用回溯法还是分支限界法都可以得到很好的解决，但是另外一些则不然。也许我们需要具体一些的分析——到底何时使用分支限界而何时使用回溯呢？</p>
-<p>回溯法和分支限界法的一些区别：</p>
-<ul>
-<li>方法对解空间树的搜索方式</li>
-<li>存储结点的常用数据结构</li>
-<li>结点存储特性常用应用</li>
-</ul>
-<p>回溯法深度优先搜索堆栈活结点的所有可行子结点被遍历后才被从栈中弹出找出满足约束条件的所有解</p>
-<p>分支限界法广度优先或最小消耗优先搜索队列、优先队列每个结点只有一次成为活结点的机会找出满足约束条件的一个解或特定意义下的最优解</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>五大常用经典算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>分治算法</title>
     <url>/2020/11/05/%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在计算机科学中，分治法是一种很重要的算法，字面上的解释是 “分而治之”，就是把一个复杂问题分成两个或更多的相同或类似的子问题，再把子问题分成更小的子问题……直到最后的子问题可以简单的直接求解，原问题的解即是子问题的解的合并，这个技巧是很多高效算法的基础，如排序算法（快速排序，归并排序）,傅立叶变换(快速傅立叶变换)……</p>
@@ -1076,6 +1044,82 @@
 <li>然后考虑随着问题规模增大时的求解方法</li>
 <li>找到求解的递归函数式后（各种规模或因子），设计递归程序即可。</li>
 </ol>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>五大常用经典算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分支界限法</title>
+    <url>/2020/11/07/%E5%88%86%E6%94%AF%E7%95%8C%E9%99%90%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>类似于回溯法，也是一种在问题的空间树 T 上搜索问题的解的算法，但在一般情况下，分支界限方与回溯法的求解目标不同，回溯法的求解目标是找出 T 中满足约束条件的所有解，而分支界限发的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一个目标函数值达到极大或极小的解，即在某种意义上的最优解</p>
+<h4 id="分支搜索法"><a href="#分支搜索法" class="headerlink" title="分支搜索法"></a>分支搜索法</h4><p>所谓 “分支” 就是采用广度优先搜索策略，依次搜索 E-结点的所有分支，也就是所有相邻节点，抛弃不满足约束条件的节点，其余节点加入活节点表，然后从表中选择一个节点作为下一个 E-节点，继续搜索</p>
+<p>选择一个 E-节点的方式不同，则会有几种不同的分支搜索方式，</p>
+<ul>
+<li>FIFO 搜索</li>
+<li>LIFO 搜索</li>
+<li>优先队列式搜索</li>
+</ul>
+<h4 id="分支界限搜索法"><a href="#分支界限搜索法" class="headerlink" title="分支界限搜索法"></a>分支界限搜索法</h4><h3 id="分支界限搜索法的一般过程"><a href="#分支界限搜索法的一般过程" class="headerlink" title="分支界限搜索法的一般过程"></a>分支界限搜索法的一般过程</h3><p>由于求解目标不同，导致分支限界法与回溯法在解空间树 T 上的搜索方式也不相同。回溯法以深度优先的方式搜索解空间树 T，而分支限界法则以广度优先或以最小耗费优先的方式搜索解空间树 T。</p>
+<p>分支限界法的搜索策略是：在扩展结点处，先生成其所有的儿子结点（分支），然后再从当前的活结点表中选择下一个扩展对点。为了有效地选择下一扩展结点，以加速搜索的进程，在每一活结点处，计算一个函数值（限界），并根据这些已计算出的函数值，从当前活结点表中选择一个最有利的结点作为扩展结点，使搜索朝着解空间树上有最优解的分支推进，以便尽快地找出一个最优解。</p>
+<p>分支限界法常以广度优先或以最小耗费（最大效益）优先的方式搜索问题的解空间树。问题的解空间树是表示问题解空间的一棵有序树，常见的有子集树和排列树。在搜索问题的解空间树时，分支限界法与回溯法对当前扩展结点所使用的扩展方式不同。在分支限界法中，每一个活结点只有一次机会成为扩展结点。活结点一旦成为扩展结点，就一次性产生其所有儿子结点。在这些儿子结点中，那些导致不可行解或导致非最优解的儿子结点被舍弃，其余儿子结点被子加入活结点表中。此后，从活结点表中取下一结点成为当前扩展结点，并重复上述结点扩展过程。这个过程一直持续到找到所求的解或活结点表为空时为止。</p>
+<h3 id="回溯法和分支限界法的一些区别"><a href="#回溯法和分支限界法的一些区别" class="headerlink" title="回溯法和分支限界法的一些区别"></a>回溯法和分支限界法的一些区别</h3><p>有一些问题其实无论用回溯法还是分支限界法都可以得到很好的解决，但是另外一些则不然。也许我们需要具体一些的分析——到底何时使用分支限界而何时使用回溯呢？</p>
+<p>回溯法和分支限界法的一些区别：</p>
+<ul>
+<li>方法对解空间树的搜索方式</li>
+<li>存储结点的常用数据结构</li>
+<li>结点存储特性常用应用</li>
+</ul>
+<p>回溯法深度优先搜索堆栈活结点的所有可行子结点被遍历后才被从栈中弹出找出满足约束条件的所有解</p>
+<p>分支限界法广度优先或最小消耗优先搜索队列、优先队列每个结点只有一次成为活结点的机会找出满足约束条件的一个解或特定意义下的最优解</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>五大常用经典算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>动态规划算法</title>
+    <url>/2020/11/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>动态规划过程是：每次决策依赖于当前状态，又随即引起状态的转移，一个决策序列就是在变化的状态中产生出来的，所以，这种多阶段最优化决策解决问题的过程叫做动态规划</p>
+<h3 id="基本思想与决策"><a href="#基本思想与决策" class="headerlink" title="基本思想与决策"></a>基本思想与决策</h3><p>基本思想与分治法类似，也是将待求解的问题分解为若干个子问题（阶段），按顺序求解子阶段，前一子问题的解，为后一子问题的求解提供了有用的信息。在求解任一子问题时，列出各种可能的局部解，通过决策保留那些有可能达到最优的局部解，丢弃其他局部解。依次解决各子问题，最后一个子问题就是初始问题的解。</p>
+<p>由于动态规划解决的问题多数有重叠子问题这个特点，为减少重复计算，对每一个子问题只解一次，将其不同阶段的不同状态保存在一个二维数组中。</p>
+<p>与分治法最大的差别是：适合于用动态规划法求解的问题，经分解后得到的子问题往往不是互相独立的（即下一个子阶段的求解是建立在上一个子阶段的解的基础上，进行进一步的求解）。</p>
+<h3 id="适用的情况"><a href="#适用的情况" class="headerlink" title="适用的情况"></a>适用的情况</h3><p>能采用动态规划求解的问题的一般要具有 3 个性质：</p>
+<ol>
+<li>最优化原理：如果问题的最优解所包含的子问题的解也是最优的，就称该问题具有最优子结构，即满足最优化原理。</li>
+<li>无后效性：即某阶段状态一旦确定，就不受这个状态以后决策的影响。也就是说，某状态以后的过程不会影响以前的状态，只与当前状态有关。</li>
+<li>有重叠子问题：即子问题之间是不独立的，一个子问题在下一阶段决策中可能被多次使用到。（该性质并不是动态规划适用的必要条件，但是如果没有这条性质，动态规划算法同其他算法相比就不具备优势）</li>
+</ol>
+<h3 id="求解的基本步骤"><a href="#求解的基本步骤" class="headerlink" title="求解的基本步骤"></a>求解的基本步骤</h3><p>动态规划所处理的问题是一个多阶段决策问题，一般由初始状态开始，通过对中间阶段决策的选择，达到结束状态。这些决策形成了一个决策序列，同时确定了完成整个过程的一条活动路线(通常是求最优的活动路线)。如图所示。动态规划的设计都有着一定的模式，一般要经历以下几个步骤。</p>
+<blockquote>
+<p>初始状态 →│ 决策１ │→│ 决策２ │→…→│ 决策ｎ │→ 结束状态</p>
+</blockquote>
+<ol>
+<li>划分阶段：按照问题的时间或空间特征，把问题分为若干个阶段。在划分阶段时，注意划分后的阶段一定要是有序的或者是可排序的，否则问题就无法求解。</li>
+<li>确定状态和状态变量：将问题发展到各个阶段时所处于的各种客观情况用不同的状态表示出来。当然，状态的选择要满足无后效性。</li>
+<li>确定决策并写出状态转移方程：因为决策和状态转移有着天然的联系，状态转移就是根据上一阶段的状态和决策来导出本阶段的状态。所以如果确定了决策，状态转移方程也就可写出。但事实上常常是反过来做，根据相邻两个阶段的状态之间的关系来确定决策方法和状态转移方程。</li>
+<li>寻找边界条件：给出的状态转移方程是一个递推式，需要一个递推的终止条件或边界条件。一般，只要解决问题的阶段、状态和状态转移决策确定了，就可以写出状态转移方程（包括边界条件）。实际应用中可以按以下几个简化的步骤进行设计： 1. 分析最优解的性质，并刻画其结构特征。 2. 递归的定义最优解。 3. 以自底向上或自顶向下的记忆化方式（备忘录法）计算出最优值 4. 根据计算最优值时得到的信息，构造问题的最优解</li>
+</ol>
+<h3 id="算法实现的说明"><a href="#算法实现的说明" class="headerlink" title="算法实现的说明"></a>算法实现的说明</h3><p>动态规划的主要难点在于理论上的设计，也就是上面 4 个步骤的确定，一旦设计完成，实现部分就会非常简单。</p>
+<p>使用动态规划求解问题，最重要的就是确定动态规划三要素：</p>
+<ol>
+<li>问题的阶段</li>
+<li>每个阶段的状态</li>
+<li>从前一个阶段转化到后一个阶段之间的递推关系。</li>
+</ol>
+<p>递推关系必须是从次小的问题开始到较大的问题之间的转化，从这个角度来说，动态规划往往可以用递归程序来实现，不过因为递推可以充分利用前面保存的子问题的解来减少重复计算，所以对于大规模问题来说，有递归不可比拟的优势，这也是动态规划算法的核心之处。</p>
+<p>确定了动态规划的这三要素，整个求解过程就可以用一个最优决策表来描述，最优决策表是一个二维表，其中行表示决策的阶段，列表示问题状态，表格需要填写的数据一般对应此问题的在某个阶段某个状态下的最优值（如最短路径，最长公共子序列，最大价值等），填表的过程就是根据递推关系，从 1 行 1 列开始，以行或者列优先的顺序，依次填写表格，最后根据整个表格的数据通过简单的取舍或者运算求得问题的最优解。</p>
+<blockquote>
+<p>f(n,m)=max{f(n-1,m), f(n-1,m-w[n])+P(n,m)}</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -1144,50 +1188,6 @@
       <tags>
         <tag>测试</tag>
         <tag>工程体系</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>动态规划算法</title>
-    <url>/2020/11/05/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>动态规划过程是：每次决策依赖于当前状态，又随即引起状态的转移，一个决策序列就是在变化的状态中产生出来的，所以，这种多阶段最优化决策解决问题的过程叫做动态规划</p>
-<h3 id="基本思想与决策"><a href="#基本思想与决策" class="headerlink" title="基本思想与决策"></a>基本思想与决策</h3><p>基本思想与分治法类似，也是将待求解的问题分解为若干个子问题（阶段），按顺序求解子阶段，前一子问题的解，为后一子问题的求解提供了有用的信息。在求解任一子问题时，列出各种可能的局部解，通过决策保留那些有可能达到最优的局部解，丢弃其他局部解。依次解决各子问题，最后一个子问题就是初始问题的解。</p>
-<p>由于动态规划解决的问题多数有重叠子问题这个特点，为减少重复计算，对每一个子问题只解一次，将其不同阶段的不同状态保存在一个二维数组中。</p>
-<p>与分治法最大的差别是：适合于用动态规划法求解的问题，经分解后得到的子问题往往不是互相独立的（即下一个子阶段的求解是建立在上一个子阶段的解的基础上，进行进一步的求解）。</p>
-<h3 id="适用的情况"><a href="#适用的情况" class="headerlink" title="适用的情况"></a>适用的情况</h3><p>能采用动态规划求解的问题的一般要具有 3 个性质：</p>
-<ol>
-<li>最优化原理：如果问题的最优解所包含的子问题的解也是最优的，就称该问题具有最优子结构，即满足最优化原理。</li>
-<li>无后效性：即某阶段状态一旦确定，就不受这个状态以后决策的影响。也就是说，某状态以后的过程不会影响以前的状态，只与当前状态有关。</li>
-<li>有重叠子问题：即子问题之间是不独立的，一个子问题在下一阶段决策中可能被多次使用到。（该性质并不是动态规划适用的必要条件，但是如果没有这条性质，动态规划算法同其他算法相比就不具备优势）</li>
-</ol>
-<h3 id="求解的基本步骤"><a href="#求解的基本步骤" class="headerlink" title="求解的基本步骤"></a>求解的基本步骤</h3><p>动态规划所处理的问题是一个多阶段决策问题，一般由初始状态开始，通过对中间阶段决策的选择，达到结束状态。这些决策形成了一个决策序列，同时确定了完成整个过程的一条活动路线(通常是求最优的活动路线)。如图所示。动态规划的设计都有着一定的模式，一般要经历以下几个步骤。</p>
-<blockquote>
-<p>初始状态 →│ 决策１ │→│ 决策２ │→…→│ 决策ｎ │→ 结束状态</p>
-</blockquote>
-<ol>
-<li>划分阶段：按照问题的时间或空间特征，把问题分为若干个阶段。在划分阶段时，注意划分后的阶段一定要是有序的或者是可排序的，否则问题就无法求解。</li>
-<li>确定状态和状态变量：将问题发展到各个阶段时所处于的各种客观情况用不同的状态表示出来。当然，状态的选择要满足无后效性。</li>
-<li>确定决策并写出状态转移方程：因为决策和状态转移有着天然的联系，状态转移就是根据上一阶段的状态和决策来导出本阶段的状态。所以如果确定了决策，状态转移方程也就可写出。但事实上常常是反过来做，根据相邻两个阶段的状态之间的关系来确定决策方法和状态转移方程。</li>
-<li>寻找边界条件：给出的状态转移方程是一个递推式，需要一个递推的终止条件或边界条件。一般，只要解决问题的阶段、状态和状态转移决策确定了，就可以写出状态转移方程（包括边界条件）。实际应用中可以按以下几个简化的步骤进行设计： 1. 分析最优解的性质，并刻画其结构特征。 2. 递归的定义最优解。 3. 以自底向上或自顶向下的记忆化方式（备忘录法）计算出最优值 4. 根据计算最优值时得到的信息，构造问题的最优解</li>
-</ol>
-<h3 id="算法实现的说明"><a href="#算法实现的说明" class="headerlink" title="算法实现的说明"></a>算法实现的说明</h3><p>动态规划的主要难点在于理论上的设计，也就是上面 4 个步骤的确定，一旦设计完成，实现部分就会非常简单。</p>
-<p>使用动态规划求解问题，最重要的就是确定动态规划三要素：</p>
-<ol>
-<li>问题的阶段</li>
-<li>每个阶段的状态</li>
-<li>从前一个阶段转化到后一个阶段之间的递推关系。</li>
-</ol>
-<p>递推关系必须是从次小的问题开始到较大的问题之间的转化，从这个角度来说，动态规划往往可以用递归程序来实现，不过因为递推可以充分利用前面保存的子问题的解来减少重复计算，所以对于大规模问题来说，有递归不可比拟的优势，这也是动态规划算法的核心之处。</p>
-<p>确定了动态规划的这三要素，整个求解过程就可以用一个最优决策表来描述，最优决策表是一个二维表，其中行表示决策的阶段，列表示问题状态，表格需要填写的数据一般对应此问题的在某个阶段某个状态下的最优值（如最短路径，最长公共子序列，最大价值等），填表的过程就是根据递推关系，从 1 行 1 列开始，以行或者列优先的顺序，依次填写表格，最后根据整个表格的数据通过简单的取舍或者运算求得问题的最优解。</p>
-<blockquote>
-<p>f(n,m)=max{f(n-1,m), f(n-1,m-w[n])+P(n,m)}</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-        <tag>五大常用经典算法</tag>
       </tags>
   </entry>
   <entry>
@@ -1377,52 +1377,6 @@
       </tags>
   </entry>
   <entry>
-    <title>带你深入理解图灵机-什么是人工智能AI？</title>
-    <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI%EF%BC%9F/</url>
-    <content><![CDATA[<h1 id="一、什么是机器？"><a href="#一、什么是机器？" class="headerlink" title="一、什么是机器？"></a>一、什么是机器？</h1><p>为了方便大家回忆和理解，我们简单做下回顾希尔伯特提出的第十数学问题：</p>
-<blockquote>
-<p>随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解？</p>
-</blockquote>
-<p>对于这个问题，大家普遍认为，这样的一套步骤是不存在的，也就是说我们没有一种判断一个数学命题是否为真的通用方法。其实这里最关键的问题是：<strong>什么叫做“一系列有限的步骤”</strong>？</p>
-<p>在没有计算机的时代，人们对“一系列有限的步骤”的体会是模糊。现在大家都很清楚了，其实就是算法，是有读写、条件、循环、移动等组成的一个机械过程，对于<strong>“读写、条件、循环、移动”</strong>这几个词语还眼熟吗？没错，在图灵机组成中出现过，图灵机就是这样的一个假象的机器，第一次给“机械过程、一系列有限的步骤”一个确定的数学定义。</p>
-<p>图灵机的定义其实很简单。包含 4 个部分：</p>
-<ol>
-<li>一个无限长的存储带</li>
-<li>一个读写头，读写头可以在存储带上左右移动</li>
-<li>内部状态存储器</li>
-<li>控制程序指令</li>
-</ol>
-<p>从上一篇文章介绍的虫子的举例中，我们知道通过不同的指令，就可以实现不同的虫子移动。实际上，通过精心设计不同的指令，我们可以用图灵机打印斐波那契数列，圆周率等，实际上我们现在用电脑，手机进行文字、语音、视频交互，看图片，看电影等等这些所有的功能都是用图灵机的方式实现的。</p>
-<hr>
-<h1 id="二、什么是智能（Think）？"><a href="#二、什么是智能（Think）？" class="headerlink" title="二、什么是智能（Think）？"></a>二、什么是智能（Think）？</h1><p>图灵在 1950 年写过一篇论文《计算机器与智能》，有兴趣的同学可以看下，英文版论文，链接是：<a href="https://www.csee.umbc.edu/courses/471/papers/turing.pdf">https://www.csee.umbc.edu/courses/471/papers/turing.pdf</a> 图灵的这篇论文写的太棒了，我们对人工智能的异议、担心、误解图灵都已经想到了，后续笔者有时间会对该篇论文进行一次解读。所以，对于这篇论文，建议大家都去看下，笔者搜索到一版中文翻译版，有兴趣去看看：<a href="https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292">https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292</a></p>
-<p>在开篇的 “The Imitation Game”中，图灵让我们思考：<strong>“机器能否拥有智能？（Can machines think？）</strong>”这个问题。有趣的是，作为计算理论和人工智能领域的天才，图灵成功定义了什么是计算机器（即图灵机），但却不能定义什么是智能（Think）,没有办法用机器或算法来准确定义。因此，图灵设计了一个后人称为图灵测试的模拟游戏。图灵测试的核心想法是要求计算机在没有直接物理接触的情况下接受人类的询问，并尽可能把自己伪装成人类。这个游戏有点类似杀人游戏，这个**”模拟游戏”**大概是这样的：</p>
-<blockquote>
-<p>游戏参与者包括一个男人，一个女人，以及一个任意性别的询问者。 询问者与另两个人待在不同的房间里，并通过打字的方式与他们交流，以确保询问者不能通过声音和笔迹区分二者。</p>
-<p>两位被询问者分别用 X 和 Y 表示，询问者用 C 表示，询问者 C 事先只知道 X 和 Y 中 有且仅有一位女性，而询问的目标是正确分辨 X 和 Y 中哪一位是女性。另一方面，两位被询问者 X 和 Y 的目标都是试图让询问者认为自己是女性。也就是说，男性被询问者需要把自己伪装成女性，而女性被询问者需要努力自证。</p>
-<p>现在我们问：如果我们把“模仿游戏”中的男性被询问者换成计算机，结果会怎样？相比人类男性，计算机能否使询问者更容易产生误判？”</p>
-</blockquote>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1bb628716cf805b9.webp"></p>
-<p>智能行为与人类行为的关系</p>
-<p>图灵测试其实对人工智能的一种充分的等价性。 如上图所示，“所有智能行为”对应的集合和“所有人类行为”对应的集合既有交集又互有不同。在全部智能行为中有一些是人类靠自身无法做到的（比如计算出国际象棋中白棋是否必胜），但人类也是有智能的，因此只要完成两个集合的交集部分—就应该被认作是“拥有智能”的。另一方面，人类行为并不总是和智能相关。图灵测试要求机器全面模拟“所有人类行为”，其中既包括了两个集合的交集，也包括了人类的“非智能”行为。</p>
-<p>因此图灵测试是 “拥有智能”的一个有效的充分条件，也就是说，由于没有办法严格定义智能，图灵把智能测试的范围扩大了，即不一定要全部通过图灵测试才算是真正的人工智能。</p>
-<p>在图灵看来，人的智能（不包含人的所有，比如皮肤，宫保鸡丁和鱼香肉丝哪个更好吃？）是可以用图灵机来模拟的，因为人的智能是某种模式，即一系列机械步骤形成的。</p>
-<h1 id="三、现在人工智能-AI-的实现技术有哪些？"><a href="#三、现在人工智能-AI-的实现技术有哪些？" class="headerlink" title="三、现在人工智能 AI 的实现技术有哪些？"></a>三、现在人工智能 AI 的实现技术有哪些？</h1><p>近几年，人工智能 AI 是被提及的概念。阿尔法狗，苹果的 siri，google assistant，微软小冰，百度大脑，无人驾驶，AI 等等，都被冠以人工智能的概念，不说好像不好意思一样。那么 AI 的实现技术有哪些呢？</p>
-<h2 id="1，传统的机器学习"><a href="#1，传统的机器学习" class="headerlink" title="1，传统的机器学习"></a>1，传统的机器学习</h2><p>传统的机器学习是一种归纳法，主要思想是通过一些特征样本，试图从样本中发现一些规律，提取特征值，然后把这些特征放到各种机器学习模型中，实现对新的数据和行为进行智能识别和预测。</p>
-<p>这种实现方式的的理论基础其实就是统计学，也是人类观察世界，认识世界的一种方式。不过缺点是：<strong>需要人工整理好大量的、尽量覆盖全的样本，是无疑是一个巨大的工作。</strong></p>
-<h2 id="2，深度学习"><a href="#2，深度学习" class="headerlink" title="2，深度学习"></a>2，深度学习</h2><p>传统的机器学习是要输入特征样本，而深度学习是试图从海量的数据中让机器自动提取特征，深度学习也是一种机器学习，这种方式需要输入海量的大数据，让机器从中找到弱关联关系，这种方式比传统机器学习方式减少大量人工整理样本的工作，识别准确率也提高了很多，让人工智能在语音识别、自然语言处理、图片识别等领域达到了可用的程度，是革命的进步。</p>
-<p>深度学习实现方式源于多层神经网络，把特征表示和学习合二为一，特点是放弃了可解释性，寻找关联性。简单白话一下深度学习的工作原理：一个神经元就是一个分类器，神经元模型就是不停的分类，形成规模效率和网络效率，最终高质量的特征值就奇妙的产生了。不过缺点是：<strong>神经元的参数调整依然高度依赖人的经验。</strong></p>
-<h2 id="3，其他更好的人工智能技术？"><a href="#3，其他更好的人工智能技术？" class="headerlink" title="3，其他更好的人工智能技术？"></a>3，其他更好的人工智能技术？</h2><p>现在很多网站要求输入验证码来验证登录，这里的目的是防止机器人模拟登录，比如 12306 要求你找出某一类物品，现在机器还不能很好的通过模式识别出来，但是人类可以。反过来来讲，如果让机器收集人类的这些验证码的识别结果，是否让机器学会人类的识别模式？目前已经很多公司开始了以人工的人工智能方法。当然还有更多更好的方法在不断探索中。</p>
-<h1 id="四、人工智能-AI-能取代人吗？"><a href="#四、人工智能-AI-能取代人吗？" class="headerlink" title="四、人工智能 AI 能取代人吗？"></a>四、人工智能 AI 能取代人吗？</h1><p>2016 年阿尔法狗战胜围棋世界冠军，攻破了人类智力的引以为傲的最后一道防线，一年后，阿尔法狗升级版 master 战胜了阿尔法狗第一版，并通过和自己不断对弈，以人们不可想象的速度快速的进步，最后以全胜的绝对优势打败了世界排名第一的柯洁，甚至让柯洁产生了无力感，至此人类围棋棋手已经不可能战胜以阿尔法狗为代表人工智能机器。</p>
-]]></content>
-      <categories>
-        <category>图灵</category>
-        <category>玄学</category>
-      </categories>
-      <tags>
-        <tag>人工智能</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>带你深入理解图灵机-图灵机,图灵完备</title>
     <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%9B%BE%E7%81%B5%E6%9C%BA,%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87/</url>
     <content><![CDATA[<p>上一篇介绍了天才图灵所做的时代背景，我们了解那个时代对于数学逻辑，可计算理论的发展。站在更大的时间和空间维度来看，我们看问题的角度会有更高的视角。</p>
@@ -1607,21 +1561,49 @@
       </tags>
   </entry>
   <entry>
-    <title>排序算法</title>
-    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
-<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
-<p>冒泡排序</p>
-<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
-<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
-<p>让我们实现下冒泡排序</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>带你深入理解图灵机-什么是人工智能AI？</title>
+    <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI%EF%BC%9F/</url>
+    <content><![CDATA[<h1 id="一、什么是机器？"><a href="#一、什么是机器？" class="headerlink" title="一、什么是机器？"></a>一、什么是机器？</h1><p>为了方便大家回忆和理解，我们简单做下回顾希尔伯特提出的第十数学问题：</p>
+<blockquote>
+<p>随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解？</p>
+</blockquote>
+<p>对于这个问题，大家普遍认为，这样的一套步骤是不存在的，也就是说我们没有一种判断一个数学命题是否为真的通用方法。其实这里最关键的问题是：<strong>什么叫做“一系列有限的步骤”</strong>？</p>
+<p>在没有计算机的时代，人们对“一系列有限的步骤”的体会是模糊。现在大家都很清楚了，其实就是算法，是有读写、条件、循环、移动等组成的一个机械过程，对于<strong>“读写、条件、循环、移动”</strong>这几个词语还眼熟吗？没错，在图灵机组成中出现过，图灵机就是这样的一个假象的机器，第一次给“机械过程、一系列有限的步骤”一个确定的数学定义。</p>
+<p>图灵机的定义其实很简单。包含 4 个部分：</p>
+<ol>
+<li>一个无限长的存储带</li>
+<li>一个读写头，读写头可以在存储带上左右移动</li>
+<li>内部状态存储器</li>
+<li>控制程序指令</li>
+</ol>
+<p>从上一篇文章介绍的虫子的举例中，我们知道通过不同的指令，就可以实现不同的虫子移动。实际上，通过精心设计不同的指令，我们可以用图灵机打印斐波那契数列，圆周率等，实际上我们现在用电脑，手机进行文字、语音、视频交互，看图片，看电影等等这些所有的功能都是用图灵机的方式实现的。</p>
+<hr>
+<h1 id="二、什么是智能（Think）？"><a href="#二、什么是智能（Think）？" class="headerlink" title="二、什么是智能（Think）？"></a>二、什么是智能（Think）？</h1><p>图灵在 1950 年写过一篇论文《计算机器与智能》，有兴趣的同学可以看下，英文版论文，链接是：<a href="https://www.csee.umbc.edu/courses/471/papers/turing.pdf">https://www.csee.umbc.edu/courses/471/papers/turing.pdf</a> 图灵的这篇论文写的太棒了，我们对人工智能的异议、担心、误解图灵都已经想到了，后续笔者有时间会对该篇论文进行一次解读。所以，对于这篇论文，建议大家都去看下，笔者搜索到一版中文翻译版，有兴趣去看看：<a href="https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292">https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292</a></p>
+<p>在开篇的 “The Imitation Game”中，图灵让我们思考：<strong>“机器能否拥有智能？（Can machines think？）</strong>”这个问题。有趣的是，作为计算理论和人工智能领域的天才，图灵成功定义了什么是计算机器（即图灵机），但却不能定义什么是智能（Think）,没有办法用机器或算法来准确定义。因此，图灵设计了一个后人称为图灵测试的模拟游戏。图灵测试的核心想法是要求计算机在没有直接物理接触的情况下接受人类的询问，并尽可能把自己伪装成人类。这个游戏有点类似杀人游戏，这个**”模拟游戏”**大概是这样的：</p>
+<blockquote>
+<p>游戏参与者包括一个男人，一个女人，以及一个任意性别的询问者。 询问者与另两个人待在不同的房间里，并通过打字的方式与他们交流，以确保询问者不能通过声音和笔迹区分二者。</p>
+<p>两位被询问者分别用 X 和 Y 表示，询问者用 C 表示，询问者 C 事先只知道 X 和 Y 中 有且仅有一位女性，而询问的目标是正确分辨 X 和 Y 中哪一位是女性。另一方面，两位被询问者 X 和 Y 的目标都是试图让询问者认为自己是女性。也就是说，男性被询问者需要把自己伪装成女性，而女性被询问者需要努力自证。</p>
+<p>现在我们问：如果我们把“模仿游戏”中的男性被询问者换成计算机，结果会怎样？相比人类男性，计算机能否使询问者更容易产生误判？”</p>
+</blockquote>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1bb628716cf805b9.webp"></p>
+<p>智能行为与人类行为的关系</p>
+<p>图灵测试其实对人工智能的一种充分的等价性。 如上图所示，“所有智能行为”对应的集合和“所有人类行为”对应的集合既有交集又互有不同。在全部智能行为中有一些是人类靠自身无法做到的（比如计算出国际象棋中白棋是否必胜），但人类也是有智能的，因此只要完成两个集合的交集部分—就应该被认作是“拥有智能”的。另一方面，人类行为并不总是和智能相关。图灵测试要求机器全面模拟“所有人类行为”，其中既包括了两个集合的交集，也包括了人类的“非智能”行为。</p>
+<p>因此图灵测试是 “拥有智能”的一个有效的充分条件，也就是说，由于没有办法严格定义智能，图灵把智能测试的范围扩大了，即不一定要全部通过图灵测试才算是真正的人工智能。</p>
+<p>在图灵看来，人的智能（不包含人的所有，比如皮肤，宫保鸡丁和鱼香肉丝哪个更好吃？）是可以用图灵机来模拟的，因为人的智能是某种模式，即一系列机械步骤形成的。</p>
+<h1 id="三、现在人工智能-AI-的实现技术有哪些？"><a href="#三、现在人工智能-AI-的实现技术有哪些？" class="headerlink" title="三、现在人工智能 AI 的实现技术有哪些？"></a>三、现在人工智能 AI 的实现技术有哪些？</h1><p>近几年，人工智能 AI 是被提及的概念。阿尔法狗，苹果的 siri，google assistant，微软小冰，百度大脑，无人驾驶，AI 等等，都被冠以人工智能的概念，不说好像不好意思一样。那么 AI 的实现技术有哪些呢？</p>
+<h2 id="1，传统的机器学习"><a href="#1，传统的机器学习" class="headerlink" title="1，传统的机器学习"></a>1，传统的机器学习</h2><p>传统的机器学习是一种归纳法，主要思想是通过一些特征样本，试图从样本中发现一些规律，提取特征值，然后把这些特征放到各种机器学习模型中，实现对新的数据和行为进行智能识别和预测。</p>
+<p>这种实现方式的的理论基础其实就是统计学，也是人类观察世界，认识世界的一种方式。不过缺点是：<strong>需要人工整理好大量的、尽量覆盖全的样本，是无疑是一个巨大的工作。</strong></p>
+<h2 id="2，深度学习"><a href="#2，深度学习" class="headerlink" title="2，深度学习"></a>2，深度学习</h2><p>传统的机器学习是要输入特征样本，而深度学习是试图从海量的数据中让机器自动提取特征，深度学习也是一种机器学习，这种方式需要输入海量的大数据，让机器从中找到弱关联关系，这种方式比传统机器学习方式减少大量人工整理样本的工作，识别准确率也提高了很多，让人工智能在语音识别、自然语言处理、图片识别等领域达到了可用的程度，是革命的进步。</p>
+<p>深度学习实现方式源于多层神经网络，把特征表示和学习合二为一，特点是放弃了可解释性，寻找关联性。简单白话一下深度学习的工作原理：一个神经元就是一个分类器，神经元模型就是不停的分类，形成规模效率和网络效率，最终高质量的特征值就奇妙的产生了。不过缺点是：<strong>神经元的参数调整依然高度依赖人的经验。</strong></p>
+<h2 id="3，其他更好的人工智能技术？"><a href="#3，其他更好的人工智能技术？" class="headerlink" title="3，其他更好的人工智能技术？"></a>3，其他更好的人工智能技术？</h2><p>现在很多网站要求输入验证码来验证登录，这里的目的是防止机器人模拟登录，比如 12306 要求你找出某一类物品，现在机器还不能很好的通过模式识别出来，但是人类可以。反过来来讲，如果让机器收集人类的这些验证码的识别结果，是否让机器学会人类的识别模式？目前已经很多公司开始了以人工的人工智能方法。当然还有更多更好的方法在不断探索中。</p>
+<h1 id="四、人工智能-AI-能取代人吗？"><a href="#四、人工智能-AI-能取代人吗？" class="headerlink" title="四、人工智能 AI 能取代人吗？"></a>四、人工智能 AI 能取代人吗？</h1><p>2016 年阿尔法狗战胜围棋世界冠军，攻破了人类智力的引以为傲的最后一道防线，一年后，阿尔法狗升级版 master 战胜了阿尔法狗第一版，并通过和自己不断对弈，以人们不可想象的速度快速的进步，最后以全胜的绝对优势打败了世界排名第一的柯洁，甚至让柯洁产生了无力感，至此人类围棋棋手已经不可能战胜以阿尔法狗为代表人工智能机器。</p>
 ]]></content>
       <categories>
-        <category>算法</category>
+        <category>图灵</category>
+        <category>玄学</category>
       </categories>
       <tags>
-        <tag>算法</tag>
+        <tag>人工智能</tag>
       </tags>
   </entry>
   <entry>
@@ -1701,6 +1683,24 @@
       </tags>
   </entry>
   <entry>
+    <title>排序算法</title>
+    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
+<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
+<p>冒泡排序</p>
+<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
+<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
+<p>让我们实现下冒泡排序</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数据结构总结</title>
     <url>/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript 中的数组和其他编程语言中的数组还有些不同，JavaScript 中的数组中可以存储不同类型的元素，JavaScript 中的数组长度是动态变化的</p>
@@ -1747,136 +1747,76 @@
 ]]></content>
   </entry>
   <entry>
-    <title>浅析前端页面渲染机制</title>
-    <url>/2021/04/07/%E6%B5%85%E6%9E%90%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h3 id="浏览器基础结构"><a href="#浏览器基础结构" class="headerlink" title="浏览器基础结构"></a>浏览器基础结构</h3><p>浏览器基础结构主要包括如下 7 部分：</p>
-<ol>
-<li>用户界面（User Interface）:用户所看到及与之交互的功能组件，如地址栏，返回，前进按钮等；</li>
-<li>浏览器引擎（Browser engine）:负责控制和管理下一级的渲染引擎；</li>
-<li>渲染引擎（Rendering engine）:负责解析用户请求的内容（如 HTML 或 XML，渲染引擎会解析 HTML 或 XML，以及相关 CSS，然后返回解析后的内容）；</li>
-<li>网络（Networking）:负责处理网络相关的事务，如 HTTP 请求等；</li>
-<li>UI 后端（UI backend）:负责绘制提示框等浏览器组件，其底层使用的是操作系统的用户接口；</li>
-<li>JavaScript 解释器（JavaScript interpreter）:负责解析和执行 JavaScript 代码；</li>
-<li>数据存储（Data storage）:负责持久存储诸如 cookie 和缓存等应用数据。</li>
-</ol>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/20180613160847632.png"></p>
-<h3 id="浏览器内核"><a href="#浏览器内核" class="headerlink" title="浏览器内核"></a>浏览器内核</h3><p>各大主要浏览器使用内核也是有差别的，大致可以分为以下几类：</p>
+    <title>浏览器工作流程-CSS解析</title>
+    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/</url>
+    <content><![CDATA[<p>在上一节课中，我已经讲了浏览器的 DOM 构建过程，但是这个构建的 DOM，实际上信息是不全的，它只有节点和属性，不包含任何的样式信息。</p>
+<p>我们这一节课就来讲讲：浏览器是如何把 CSS 规则应用到节点上，并给这棵朴素的 DOM 树添加上 CSS 属性的。</p>
+<h3 id="整体过程"><a href="#整体过程" class="headerlink" title="整体过程"></a>整体过程</h3><p>首先我们还是要感性地理解一下这个过程。</p>
+<p>首先 CSS 选择器这个名称，可能会给你带来一定的误解，觉得好像 CSS 规则是 DOM 树构建好了以后，再进行选择并给它添加样式的。实际上，这个过程并不是这样的。</p>
+<p>我们回忆一下我们在浏览器第一节课讲的内容，浏览器会尽量流式处理整个过程。我们上一节课构建 DOM 的过程是：从父到子，从先到后，一个一个节点构造，并且挂载到 DOM 树上的，那么这个过程中，我们是否能同步把 CSS 属性计算出来呢？</p>
+<p>答案是肯定的。</p>
+<p>在这个过程中，我们依次拿到上一步构造好的元素，去检查它匹配到了哪些规则，再根据规则的优先级，做覆盖和调整。所以，从这个角度看，所谓的选择器，应该被理解成“匹配器”才更合适。</p>
+<p>我在 CSS 语法部分，已经总结了选择器的各种符号，这里再把它列出来，我们回顾一下。</p>
 <ul>
-<li>Trident 内核：IE</li>
-<li>Webkit 内核：Chrome,Safari</li>
-<li>Gecko 内核：FireFox</li>
+<li><code>空格</code>: 后代，选中它的子节点和所有子节点的后代节点。</li>
+<li><code>&gt;</code>: 子代，选中它的子节点。</li>
+<li><code>+</code>：直接后继选择器，选中它的下一个相邻节点。</li>
+<li><code>~</code>：后继，选中它之后所有的相邻节点。</li>
+<li><code>||</code>：列，选中表格中的一列。</li>
 </ul>
-<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>当用户访问页面时，浏览器需要获取用户请求内容，这个过程主要涉及浏览器网络模块：</p>
-<ol>
-<li>用户在地址栏输入域名，如 baidu.com，DNS（Domain Name System，域名解析系统）服务器根据输入的域名查找对应 IP，然后向该 IP 地址发起请求；</li>
-<li>浏览器获得并解析服务器的返回内容(HTTP response)；</li>
-<li>浏览器加载 HTML 文件及文件内包含的外部引用文件及图片，多媒体等资源。</li>
-</ol>
-<h3 id="DNS-预解析（DNS-prefetch）"><a href="#DNS-预解析（DNS-prefetch）" class="headerlink" title="DNS 预解析（DNS prefetch）"></a>DNS 预解析（DNS prefetch）</h3><p>浏览器 DNS 解析大多时候较快，且会缓存常用域名的解析值，但是如果网站涉及多域名，在对每一个域名访问时都需要先解析出 IP 地址，而我们希望在跳转或者请求其他域名资源时尽量快，则可以开启域名预解析，浏览器会在空闲时提前解析声明需要预解析的域名，如：</p>
-<p>图图图图</p>
-<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><p>我们通常说 JavaScript 执行是单线程的，但是浏览器网络部分通常是有几个平行线程同时开启，但是也会有 限制，一般为 2-6 个。</p>
-<h3 id="渲染引擎及关键渲染路径（Critical-Rendering-Path）"><a href="#渲染引擎及关键渲染路径（Critical-Rendering-Path）" class="headerlink" title="渲染引擎及关键渲染路径（Critical Rendering Path）"></a>渲染引擎及关键渲染路径（Critical Rendering Path）</h3><p>渲染引擎所做的事是将请求内容展现给我们，默认支持 HTML,XML 和图片类型，对于其他诸如 PDF 等类型的内容则需要安装相应插件，但浏览器的展示工作流程基本是一样的。</p>
-<p>通过网络模块加载到 HTML 文件后渲染引擎渲染流程如下，这也通常被称作关键渲染路径（Critical Rendering Path）：</p>
-<p>1.构建 DOM 树(DOM tree)：从上到下解析 HTML 文档生成 DOM 节点树（DOM tree），也叫内容树（content tree）；</p>
-<p>2.构建 CSSOM(CSS Object Model)树：加载解析样式生成 CSSOM 树；</p>
-<p>3.执行 JavaScript：加载并执行 JavaScript 代码（包括内联代码或外联 JavaScript 文件）；</p>
-<p>4.构建渲染树(render tree)：根据 DOM 树和 CSSOM 树,生成渲染树(render tree)；</p>
-<p>渲染树：按顺序展示在屏幕上的一系列矩形，这些矩形带有字体，颜色和尺寸等视觉属性。</p>
-<p>5.布局（layout）：根据渲染树将节点树的每一个节点布局在屏幕上的正确位置；</p>
-<p>6.绘制（painting）：遍历渲染树绘制所有节点，为每一个节点适用对应的样式，这一过程是通过 UI 后端模块完成；</p>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/20180614100553238.png"></p>
-<p>为了更友好的用户体验，浏览器会尽可能快的展现内容，而不会等到文档所有内容到达才开始解析和构建/布局渲染树，而是每次处理一部分，并展现在屏幕上，这也是为什么我们经常可以看到页面加载的时候内容是从上到下一点一点展现的。</p>
-<h3 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h3><p>不同于网络部分的多线程渲染引擎是单线程工作的，意味着渲染流程是一步一步渐进完成的。</p>
-<h3 id="解析文档-parser-HTML"><a href="#解析文档-parser-HTML" class="headerlink" title="解析文档(parser HTML)"></a>解析文档(parser HTML)</h3><p>在详细介绍浏览器渲染文档之前，先应该理解浏览器如何解析文档：解析文档的顺序，对于 CSS 和 JavaScript 如何处理等。</p>
-<h4 id="解析顺序"><a href="#解析顺序" class="headerlink" title="解析顺序"></a>解析顺序</h4><p>浏览器按从上到下的顺序扫描解析文档；</p>
-<h4 id="解析样式和脚本"><a href="#解析样式和脚本" class="headerlink" title="解析样式和脚本"></a>解析样式和脚本</h4><ul>
-<li><p>脚本： 或许是由于通常会在 JavaScript 脚本中改变文档 DOM 结构，于是浏览器以同步方式解析，加载和执行脚本，浏览器在解析文档时，当解析到<code>&lt;script&gt;</code>标签时，会解析其中的脚本（对于外链的 JavaScript 文件，需要先加载该文件内容，再进行解析），然后立即执行，这整个过程都会阻塞文档解析，直到脚本执行完才会继续解析文档。就是说由于脚本是同步加载和执行的，它会阻塞文档解析，这也解释了为什么现在通常建议将<code>&lt;script&gt;</code>标签放在<code>&lt;/body&gt;</code>标签前面，而不是放在<code>&lt;head&gt;</code>标签里。现在 HTML5 提供 defer 和 async 两个属性支持延迟和异步加载 JavaScript 文件</p>
-</li>
-<li><p>改进： 针对上文说的脚本阻塞文档解析，主流浏览器如 Chrome 和 FireFox 等都有一些优化，比如在执行脚本时，开启另一个线程解析剩余的文档以找出并加载其他的待下载外部资源（不改变主线程的 DOM 树，仅优化加载外部资源）。</p>
-</li>
-<li><p>样式： 不同于脚本，浏览器对样式的处理并不会阻塞文档解析，大概是因为样式表并不会改变 DOM 结构。</p>
-</li>
-<li><p>样式表与脚本： 你可能想问样式是否会阻塞脚本文件的加载执行呢？正常情况是不会的，但是存在一个问题是通常我们会在脚本中请求样式信息，但是在文档解析时，如果样式尚未加载或解析，将会得到错误信息，对于这一问题，FireFox 浏览器和 Webkit 浏览器处理策略不同： 当存在有样式文件未被加载和解析时，FireFox 浏览器会阻塞所有脚本；而 Webkit 浏览器只会阻塞操作了改文件内声明的样式属性的脚本。</p>
-</li>
-</ul>
-<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>DOM，即文档对象模型（Document Object Model）,DOM 树，即文档内所有节点构成的一个树形结构。</p>
-<p>假设浏览器获取返回的如下 HTML 文档：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;./theme.css&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./config.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>关键渲染路径<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;title&quot;</span>&gt;</span>关键渲染路径<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>关键渲染路径介绍<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">footer</span>&gt;</span>@copyright2017<span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>关于选择器的知识，我会在 CSS 的部分继续讲解。这里我们主要介绍浏览器是如何实现这些规则的。</p>
+<p>不知道你有没有发现，这里的选择器有个特点，那就是选择器的出现顺序，必定跟构建 DOM 树的顺序一致。这是一个 CSS 设计的原则，即保证选择器在 DOM 树构建到当前节点时，已经可以准确判断是否匹配，不需要后续节点信息。</p>
+<p>也就是说，未来也不可能会出现“父元素选择器”这种东西，因为父元素选择器要求根据当前节点的子节点，来判断当前节点是否被选中，而父节点会先于子节点构建。</p>
+<p>理解了 CSS 构建的大概过程，我们下面来看看具体的操作。</p>
+<p>首先，我们必须把 CSS 规则做一下处理。作为一门语言，CSS 需要先经过词法分析和语法分析，变成计算机能够理解的结构。</p>
+<p>这部分具体的做法属于编译原理的内容，这里就不做赘述了。我们这里假设 CSS 已经被解析成了一棵可用的抽象语法树。</p>
+<p>我们在之前的 CSS 课程中已经介绍过 compound-selector 的概念，一个 compound-selector 是检查一个元素的规则，而一个复合型选择器，则是由数个 compound-selector 通过前面讲的符号连接起来的。</p>
+<h3 id="后代选择器-“空格”"><a href="#后代选择器-“空格”" class="headerlink" title="后代选择器 “空格”"></a>后代选择器 “空格”</h3><p>我们先来分析一下后代选择器，我们来一起看一个例子：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span> <span class="selector-class">.cls</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>首先浏览器从上到下依次解析文档构建 DOM 树，如下：</p>
-<p>图图图图</p>
-<h3 id="构建-CSSOM-树"><a href="#构建-CSSOM-树" class="headerlink" title="构建 CSSOM 树"></a>构建 CSSOM 树</h3><p>CSSOM，即 CSS 对象模型（CSS Object Model），CSSOM 树，与 DOM 树结构相似，只是另外为每一个节点关联了样式信息。</p>
-<p>theme.css 样式内容如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">html</span>,</span><br><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#fcfcfc</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.title</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#aaa</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以把一个 CSS 选择器按照 compound-selector 来拆成数段，每当满足一段条件的时候，就前进一段。</p>
+<p>比如，在上面的例子中，当我们找到了匹配 a#b 的元素时，我们才会开始检查它所有的子代是否匹配 .cls。</p>
+<p>除了前进一段的情况，我们还需要处理后退的情况，比如，我们这样一段代码：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>3<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>构建 CSSOM 树如图：</p>
-<p>图图图图</p>
-<h3 id="执行-JavaScript"><a href="#执行-JavaScript" class="headerlink" title="执行 JavaScript"></a>执行 JavaScript</h3><p>上文已经阐述了文档解析时对脚本的处理，我们得知脚本加载，解析和执行会阻塞文档解析，而在特殊情况下样式的加载和解析也会阻塞脚本，所以现在推荐的实践是<code>&lt;script&gt;</code>标签放在<code>&lt;/body&gt;</code>标签前面。</p>
-<h3 id="构建渲染树-render-tree"><a href="#构建渲染树-render-tree" class="headerlink" title="构建渲染树(render tree)"></a>构建渲染树(render tree)</h3><p>DOM 树和 CSSOM 树都构建完了，接着浏览器会构建渲染树：</p>
-<blockquote>
-<p>渲染树，代表一个文档的视觉展示，浏览器通过它将文档内容绘制在浏览器窗口，展示给用户，它由按顺序展示在屏幕上的一系列矩形对象组成，这些矩形对象都带有字体，颜色和尺寸，位置等视觉样式属性。对于这些矩对象，FireFox 称之为框架（frame）,Webkit 浏览器称之为渲染对象（render object, renderer），后文统称为渲染对象。</p>
-</blockquote>
-<p><strong>这里把渲染树节点称为矩形对象，是因为，每一个渲染对象都代表着其对应 DOM 节点的 CSS 盒子,该盒子包含了尺寸，位置等几何信息，同时它指向一个样式对象包含其他视觉样式信息。</strong></p>
-<h4 id="渲染树与-DOM-树"><a href="#渲染树与-DOM-树" class="headerlink" title="渲染树与 DOM 树"></a>渲染树与 DOM 树</h4><p>每一个渲染对象都对应着 DOM 节点，但是非视觉（隐藏，不占位）DOM 元素不会插入渲染树，如<code>&lt;head&gt;</code>元素或声明 <code>display: none</code>的元素，渲染对象与 DOM 节点不是简单的一对一的关系，一个 DOM 可以对应一个渲染对象，但一个 DOM 元素也可能对应多个渲染对象，因为有很多元素不止包含一个 CSS 盒子，如当文本被折行时，会产生多个行盒，这些行会生成多个渲染对象；又如行内元素同时包含块元素和行内元素，则会创建一个匿名块级盒包含内部行内元素，此时一个 DOM 对应多个矩形对象（渲染对象）。</p>
-<p>渲染树及其对应 DOM 树如图：</p>
-<p>图图图图</p>
-<ul>
-<li>图中渲染树 viewport 即视口，是文档的初始包含块，scroll 代表滚动区域，详见 CSS 之视觉格式化模型(Visual Formatting Model)</li>
-<li>渲染树并不会包含显式或隐式地 display：none;的标签元素。</li>
-</ul>
-<h3 id="布局（Layout）或回流（reflow，relayout）"><a href="#布局（Layout）或回流（reflow，relayout）" class="headerlink" title="布局（Layout）或回流（reflow，relayout）"></a>布局（Layout）或回流（reflow，relayout）</h3><p>创建渲染树后，下一步就是布局（Layout）,或者叫回流（reflow,relayout），这个过程就是通过渲染树中渲染对象的信息，计算出每一个渲染对象的位置和尺寸，将其安置在浏览器窗口的正确位置，而有些时候我们会在文档布局完成后对 DOM 进行修改，这时候可能需要重新进行布局，也可称其为回流，本质上还是一个布局的过程，每一个渲染对象都有一个布局或者回流方法，实现其布局或回流。</p>
-<h4 id="流（flow）"><a href="#流（flow）" class="headerlink" title="流（flow）"></a>流（flow）</h4><p>HTML 采用的是基于流的方式定位布局，其按照从左到右，从上到下的顺序进行排列，详见 CSS 定位机制。</p>
-<p>全局布局与局部布局对渲染树的布局可以分为全局和局部的，全局即对整个渲染树进行重新布局，如当我们改变了窗口尺寸或方向或者是修改了根元素的尺寸或者字体大小等；而局部布局可以是对渲染树的某部分或某一个渲染对象进行重新布局。</p>
-<h4 id="脏位系统（dirty-bit-system）"><a href="#脏位系统（dirty-bit-system）" class="headerlink" title="脏位系统（dirty bit system）"></a>脏位系统（dirty bit system）</h4><p>大多数 web 应用对 DOM 的操作都是比较频繁，这意味着经常需要对 DOM 进行布局和回流，而如果仅仅是一些小改变，就触发整个渲染树的回流，这显然是不好的，为了避免这种情况，浏览器使用了脏位系统，只有一个渲染对象改变了或者某渲染对象及其子渲染对象脏位值为”dirty”时，说明需要回流。</p>
-<p>表示需要布局的脏位值有两种：</p>
-<p>“dirty”–自身改变，需要回流 “children are dirty”–子节点改变，需要回流</p>
-<h4 id="布局过程"><a href="#布局过程" class="headerlink" title="布局过程"></a>布局过程</h4><p>布局是一个从上到下，从外到内进行的递归过程，从根渲染对象，即对应着 HTML 文档根元素<html>，然后下一级渲染对象，如对应着<body>元素，如此层层递归，依次计算每一个渲染对象的几何信息（位置和尺寸）。</p>
-<p><strong>几何信息-位置和尺寸，即相对于窗口的坐标和尺寸，如根渲染对象，其坐标为（0， 0），尺寸即是视口 尺寸（浏览器窗口的可视区域）。</strong></p>
-<p>每一个渲染对象的布局流程基本如：</p>
-<ol>
-<li>计算此渲染对象的宽度（width）；</li>
-<li>遍历此渲染对象的所有子级，依次：<ol>
-<li>设置子级渲染对象的坐标</li>
-<li>判断是否需要触发子渲染对象的布局或回流方法，计算子渲染对象的高度（height）</li>
-</ol>
-</li>
-<li>设置此渲染对象的高度：根据子渲染对象的累积高，margin 和 padding 的高度设置其高度；</li>
-<li>设置此渲染对象脏位值为 false。强制回流在渲染树布局完成后，再次操作文档，改变文档的内容或结构，或者元素定位时，会触发回流，即需要重新布局，如请求某 DOM 的”offsetHeight”样式信息等诸多情况：</li>
-</ol>
-<p>DOM 操作，如增加，删除，修改或移动；变更内容；激活伪类；访问或改变某些 CSS 属性（包括修改样式表或元素类名或使用 JavaScript 操作等方式）；浏览器窗口变化（滚动或尺寸变化）</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;padding&quot;</span>); <span class="comment">// reflow</span></span><br><span class="line">$(<span class="string">&quot;body&quot;</span>)[<span class="number">0</span>].offsetHeight; <span class="comment">// relow</span></span><br></pre></td></tr></table></figure>
+<p>当遇到 时，必须使得规则 a#b .cls 回退一步，这样第三个 span 才不会被选中。后代选择器的作用范围是父节点的所有子节点，因此规则是在匹配到本标签的结束标签时回退。</p>
+<h3 id="后继选择器“-”"><a href="#后继选择器“-”" class="headerlink" title="后继选择器“ ~ ”"></a>后继选择器“ ~ ”</h3><p>接下来我们看下后继选择器，跟后代选择器不同的地方是，后继选择器只作用于一层，我们来看一个例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.cls</span>~* &#123;</span></span><br><span class="line"><span class="css">        <span class="selector-tag">border</span><span class="selector-pseudo">:solid</span> 1<span class="selector-tag">px</span> <span class="selector-tag">green</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        3</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>4<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>5<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>有过 CSS3 动画开发经验的同学可能会有经历，如下入场动画：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.slide-left</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">-moz-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">-o-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里 .cls 选中了 span 2 然后 span 3 是它的后继，但是 span 3 的子节点 span 4 并不应该被选中，而 span 5 也是它的后继，因此应该被选中。</p>
+<p>按照 DOM 树的构造顺序，4 在 3 和 5 中间，我们就没有办法像前面讲的后代选择器一样通过激活或者关闭规则来实现匹配。</p>
+<p>但是这里有个非常方便的思路，就是给选择器的激活，带上一个条件：父元素。</p>
+<p>注意，这里后继选择器，当前半段的 .cls 匹配成功时，后续 * 所匹配的所有元素的父元素都已经确定了（后继节点和当前节点父元素相同是充分必要条件）。在我们的例子中，那个 div 就是后继节点的父元素。</p>
+<h3 id="子代选择器“-gt-”"><a href="#子代选择器“-gt-”" class="headerlink" title="子代选择器“ &gt;”"></a>子代选择器“ &gt;”</h3><p>我们继续看，子代选择器是如何实现的。</p>
+<p>实际上，有了前面讲的父元素这个约束思路，我们很容易实现子代选择器。区别仅仅是拿当前节点作为父元素，还是拿当前节点的父元素作为父元素。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">div</span>&gt;<span class="selector-class">.cls</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="selector-tag">border</span><span class="selector-pseudo">:solid</span> 1<span class="selector-tag">px</span> <span class="selector-tag">green</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        3</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>4<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>5<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>然后执行如下脚本：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> $slide = $(<span class="string">&quot;.slide-left&quot;</span>);</span><br><span class="line">$slide</span><br><span class="line">  .css(&#123;</span><br><span class="line">    <span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;100px&quot;</span>,</span><br><span class="line">  &#125;)</span><br><span class="line">  .addClass(<span class="string">&quot;slide-left&quot;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">  <span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;10px&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们看这段代码，当 DOM 树构造到 div 时，匹配了 CSS 规则的第一段，因为是子代选择器，我们激活后面的 .cls 选择条件，并且指定父元素必须是当前 div。于是后续的构建 DOM 树构建过程中，span 2 就被选中了。</p>
+<h3 id="直接后继选择器“-”"><a href="#直接后继选择器“-”" class="headerlink" title="直接后继选择器“ +”"></a>直接后继选择器“ +”</h3><p>直接后继选择器的实现是上述中最为简单的了，因为它只对唯一一个元素生效，所以不需要像前面几种一样反复激活和关闭规则。</p>
+<p>一个最简单的思路是，我们可以把它当作检查元素自身的选择器来处理。即我们把 #id+.cls 都当做检查某一个元素的选择器。</p>
+<p>另外的一种思路是：给后继选择器加上一个 flag，使它匹配一次后失效。你可以尝试一下，告诉我结果。</p>
+<h3 id="列选择器“-”"><a href="#列选择器“-”" class="headerlink" title="列选择器“ || ”"></a>列选择器“ || ”</h3><p>列选择器比较特别，它是专门针对表格的选择器，跟表格的模型建立相关，我们这里不详细讲了。</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>我们不要忘记，CSS 选择器还支持逗号分隔，表示“或”的关系。这里最简单的实现是把逗号视为两条规则的一种简易写法。</p>
+<p>比如：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span>,</span><br><span class="line"><span class="selector-class">.cls</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>我们会发现并没有效果，为什么呢？因为对 margin-left 的修改并没有触发回流，元素 margin-left 值的改变被缓存，如果我们在中间强制触发回流：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> $slide = $(<span class="string">&#x27;.slide-left&#x27;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">	<span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;100px&quot;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">console</span>.log($slide.css(<span class="string">&#x27;padding&#x27;</span>);</span><br><span class="line">$slide.addClass(<span class="string">&#x27;slide-left&#x27;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">	<span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;10px&quot;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们当作两条规则来处理：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>再看就达到了预期效果。</p>
-<h3 id="绘制（painting）"><a href="#绘制（painting）" class="headerlink" title="绘制（painting）"></a>绘制（painting）</h3><p>最后是绘制(paint)阶段或重绘（repaint）阶段，浏览器 UI 组件将遍历渲染树并调用渲染对象的绘制（paint）方法，将内容展现在屏幕上，也有可能在之后对 DOM 进行修改，需要重新绘制渲染对象，也就是重绘，绘制和重绘的关系可以参考布局和回流的关系。</p>
-<h4 id="全局与局部绘制"><a href="#全局与局部绘制" class="headerlink" title="全局与局部绘制"></a>全局与局部绘制</h4><p>与布局相似，绘制也分为全局和局部绘制，即对整个渲染树或某些渲染对象进行绘制。</p>
-<h4 id="触发重绘"><a href="#触发重绘" class="headerlink" title="触发重绘"></a>触发重绘</h4><p>我们已经知道很多操作可能会触发回流，那么什么时候可能触发重绘呢，通常，当改变元素的视觉样式，如 background-color,visibility，margin，padding 或字体颜色时会触发全局或局部重绘，如：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;color&quot;</span>, <span class="string">&quot;red&quot;</span>); <span class="comment">// repaint</span></span><br><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;margin&quot;</span>, <span class="string">&quot;2px&quot;</span>); <span class="comment">// reflow, repaint</span></span><br></pre></td></tr></table></figure>
+<p>还有一个情况，就是选择器可能有重合，这样，我们可以使用树形结构来进行一些合并，来提高效率：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#a</span> <span class="selector-class">.cls</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#a</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#a</span> &gt; <span class="selector-tag">span</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="页面渲染优化"><a href="#页面渲染优化" class="headerlink" title="页面渲染优化"></a>页面渲染优化</h3><p>浏览器对上文介绍的关键渲染路径进行了很多优化，针对每一次变化产生尽量少的操作，还有优化判断重新绘制或布局的方式等等。</p>
-<p>在改变文档根元素的字体颜色等视觉性信息时，会触发整个文档的重绘，而改变某元素的字体颜色则只触发特定元素的重绘；改变元素的位置信息会同时触发此元素（可能还包括其兄弟元素或子级元素）的布局和重绘。某些重大改变，如更改文档根元素<code>&lt;html&gt;</code>的字体尺寸，则会触发整个文档的重新布局和重绘，据此及上文所述，推荐以下优化和实践：</p>
-<ol>
-<li>HTML 文档结构层次尽量少，最好不深于六层；</li>
-<li>脚本尽量后放，放在<code>&lt;/body&gt;</code>前即可；</li>
-<li>少量首屏样式内联放在<code>&lt;head&gt;</code>标签内；</li>
-<li>样式结构层次尽量简单；</li>
-<li>在脚本中尽量减少 DOM 操作，尽量缓存访问 DOM 的样式信息，避免过度触发回流；</li>
-<li>减少通过 JavaScript 代码修改元素样式，尽量使用修改 class 名方式操作样式或动画；</li>
-<li>动画尽量使用在绝对定位或固定定位的元素上；</li>
-<li>隐藏在屏幕外，或在页面滚动时，尽量停止动画；</li>
-<li>尽量缓存 DOM 查找，查找器尽量简洁；</li>
-<li>涉及多域名的网站，可以开启域名预解析</li>
-</ol>
-<h3 id="浏览器渲染事件日志"><a href="#浏览器渲染事件日志" class="headerlink" title="浏览器渲染事件日志"></a>浏览器渲染事件日志</h3><p>1.发起请求； 2.解析 HTML； 3.解析样式； 4.执行 JavaScript； 5.布局； 6.绘制</p>
+<p>这里实际上可以把选择器构造成一棵树：</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一节我们讲解了 CSS 计算的过程。CSS 计算是把 CSS 规则应用到 DOM 树上，为 DOM 结构添加显示相关属性的过程。在这一节中，我们主要介绍了选择器的几种复合结构应该如何实现。</p>
+<p>在这一步骤之后，我们得到了一棵带有 CSS 属性的树，为我们后续打下了基础。</p>
+<p>最后留一个问题，你认为 CSS 语法解析成什么结构，最适合我们进行 CSS 计算。</p>
 ]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器工作流程</tag>
+      </tags>
   </entry>
   <entry>
     <title>浏览器DOM API</title>
@@ -2056,76 +1996,136 @@
       </tags>
   </entry>
   <entry>
-    <title>浏览器工作流程-CSS解析</title>
-    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-CSS%E8%A7%A3%E6%9E%90/</url>
-    <content><![CDATA[<p>在上一节课中，我已经讲了浏览器的 DOM 构建过程，但是这个构建的 DOM，实际上信息是不全的，它只有节点和属性，不包含任何的样式信息。</p>
-<p>我们这一节课就来讲讲：浏览器是如何把 CSS 规则应用到节点上，并给这棵朴素的 DOM 树添加上 CSS 属性的。</p>
-<h3 id="整体过程"><a href="#整体过程" class="headerlink" title="整体过程"></a>整体过程</h3><p>首先我们还是要感性地理解一下这个过程。</p>
-<p>首先 CSS 选择器这个名称，可能会给你带来一定的误解，觉得好像 CSS 规则是 DOM 树构建好了以后，再进行选择并给它添加样式的。实际上，这个过程并不是这样的。</p>
-<p>我们回忆一下我们在浏览器第一节课讲的内容，浏览器会尽量流式处理整个过程。我们上一节课构建 DOM 的过程是：从父到子，从先到后，一个一个节点构造，并且挂载到 DOM 树上的，那么这个过程中，我们是否能同步把 CSS 属性计算出来呢？</p>
-<p>答案是肯定的。</p>
-<p>在这个过程中，我们依次拿到上一步构造好的元素，去检查它匹配到了哪些规则，再根据规则的优先级，做覆盖和调整。所以，从这个角度看，所谓的选择器，应该被理解成“匹配器”才更合适。</p>
-<p>我在 CSS 语法部分，已经总结了选择器的各种符号，这里再把它列出来，我们回顾一下。</p>
+    <title>浅析前端页面渲染机制</title>
+    <url>/2021/04/07/%E6%B5%85%E6%9E%90%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h3 id="浏览器基础结构"><a href="#浏览器基础结构" class="headerlink" title="浏览器基础结构"></a>浏览器基础结构</h3><p>浏览器基础结构主要包括如下 7 部分：</p>
+<ol>
+<li>用户界面（User Interface）:用户所看到及与之交互的功能组件，如地址栏，返回，前进按钮等；</li>
+<li>浏览器引擎（Browser engine）:负责控制和管理下一级的渲染引擎；</li>
+<li>渲染引擎（Rendering engine）:负责解析用户请求的内容（如 HTML 或 XML，渲染引擎会解析 HTML 或 XML，以及相关 CSS，然后返回解析后的内容）；</li>
+<li>网络（Networking）:负责处理网络相关的事务，如 HTTP 请求等；</li>
+<li>UI 后端（UI backend）:负责绘制提示框等浏览器组件，其底层使用的是操作系统的用户接口；</li>
+<li>JavaScript 解释器（JavaScript interpreter）:负责解析和执行 JavaScript 代码；</li>
+<li>数据存储（Data storage）:负责持久存储诸如 cookie 和缓存等应用数据。</li>
+</ol>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/20180613160847632.png"></p>
+<h3 id="浏览器内核"><a href="#浏览器内核" class="headerlink" title="浏览器内核"></a>浏览器内核</h3><p>各大主要浏览器使用内核也是有差别的，大致可以分为以下几类：</p>
 <ul>
-<li><code>空格</code>: 后代，选中它的子节点和所有子节点的后代节点。</li>
-<li><code>&gt;</code>: 子代，选中它的子节点。</li>
-<li><code>+</code>：直接后继选择器，选中它的下一个相邻节点。</li>
-<li><code>~</code>：后继，选中它之后所有的相邻节点。</li>
-<li><code>||</code>：列，选中表格中的一列。</li>
+<li>Trident 内核：IE</li>
+<li>Webkit 内核：Chrome,Safari</li>
+<li>Gecko 内核：FireFox</li>
 </ul>
-<p>关于选择器的知识，我会在 CSS 的部分继续讲解。这里我们主要介绍浏览器是如何实现这些规则的。</p>
-<p>不知道你有没有发现，这里的选择器有个特点，那就是选择器的出现顺序，必定跟构建 DOM 树的顺序一致。这是一个 CSS 设计的原则，即保证选择器在 DOM 树构建到当前节点时，已经可以准确判断是否匹配，不需要后续节点信息。</p>
-<p>也就是说，未来也不可能会出现“父元素选择器”这种东西，因为父元素选择器要求根据当前节点的子节点，来判断当前节点是否被选中，而父节点会先于子节点构建。</p>
-<p>理解了 CSS 构建的大概过程，我们下面来看看具体的操作。</p>
-<p>首先，我们必须把 CSS 规则做一下处理。作为一门语言，CSS 需要先经过词法分析和语法分析，变成计算机能够理解的结构。</p>
-<p>这部分具体的做法属于编译原理的内容，这里就不做赘述了。我们这里假设 CSS 已经被解析成了一棵可用的抽象语法树。</p>
-<p>我们在之前的 CSS 课程中已经介绍过 compound-selector 的概念，一个 compound-selector 是检查一个元素的规则，而一个复合型选择器，则是由数个 compound-selector 通过前面讲的符号连接起来的。</p>
-<h3 id="后代选择器-“空格”"><a href="#后代选择器-“空格”" class="headerlink" title="后代选择器 “空格”"></a>后代选择器 “空格”</h3><p>我们先来分析一下后代选择器，我们来一起看一个例子：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span> <span class="selector-class">.cls</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>当用户访问页面时，浏览器需要获取用户请求内容，这个过程主要涉及浏览器网络模块：</p>
+<ol>
+<li>用户在地址栏输入域名，如 baidu.com，DNS（Domain Name System，域名解析系统）服务器根据输入的域名查找对应 IP，然后向该 IP 地址发起请求；</li>
+<li>浏览器获得并解析服务器的返回内容(HTTP response)；</li>
+<li>浏览器加载 HTML 文件及文件内包含的外部引用文件及图片，多媒体等资源。</li>
+</ol>
+<h3 id="DNS-预解析（DNS-prefetch）"><a href="#DNS-预解析（DNS-prefetch）" class="headerlink" title="DNS 预解析（DNS prefetch）"></a>DNS 预解析（DNS prefetch）</h3><p>浏览器 DNS 解析大多时候较快，且会缓存常用域名的解析值，但是如果网站涉及多域名，在对每一个域名访问时都需要先解析出 IP 地址，而我们希望在跳转或者请求其他域名资源时尽量快，则可以开启域名预解析，浏览器会在空闲时提前解析声明需要预解析的域名，如：</p>
+<p>图图图图</p>
+<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><p>我们通常说 JavaScript 执行是单线程的，但是浏览器网络部分通常是有几个平行线程同时开启，但是也会有 限制，一般为 2-6 个。</p>
+<h3 id="渲染引擎及关键渲染路径（Critical-Rendering-Path）"><a href="#渲染引擎及关键渲染路径（Critical-Rendering-Path）" class="headerlink" title="渲染引擎及关键渲染路径（Critical Rendering Path）"></a>渲染引擎及关键渲染路径（Critical Rendering Path）</h3><p>渲染引擎所做的事是将请求内容展现给我们，默认支持 HTML,XML 和图片类型，对于其他诸如 PDF 等类型的内容则需要安装相应插件，但浏览器的展示工作流程基本是一样的。</p>
+<p>通过网络模块加载到 HTML 文件后渲染引擎渲染流程如下，这也通常被称作关键渲染路径（Critical Rendering Path）：</p>
+<p>1.构建 DOM 树(DOM tree)：从上到下解析 HTML 文档生成 DOM 节点树（DOM tree），也叫内容树（content tree）；</p>
+<p>2.构建 CSSOM(CSS Object Model)树：加载解析样式生成 CSSOM 树；</p>
+<p>3.执行 JavaScript：加载并执行 JavaScript 代码（包括内联代码或外联 JavaScript 文件）；</p>
+<p>4.构建渲染树(render tree)：根据 DOM 树和 CSSOM 树,生成渲染树(render tree)；</p>
+<p>渲染树：按顺序展示在屏幕上的一系列矩形，这些矩形带有字体，颜色和尺寸等视觉属性。</p>
+<p>5.布局（layout）：根据渲染树将节点树的每一个节点布局在屏幕上的正确位置；</p>
+<p>6.绘制（painting）：遍历渲染树绘制所有节点，为每一个节点适用对应的样式，这一过程是通过 UI 后端模块完成；</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/20180614100553238.png"></p>
+<p>为了更友好的用户体验，浏览器会尽可能快的展现内容，而不会等到文档所有内容到达才开始解析和构建/布局渲染树，而是每次处理一部分，并展现在屏幕上，这也是为什么我们经常可以看到页面加载的时候内容是从上到下一点一点展现的。</p>
+<h3 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h3><p>不同于网络部分的多线程渲染引擎是单线程工作的，意味着渲染流程是一步一步渐进完成的。</p>
+<h3 id="解析文档-parser-HTML"><a href="#解析文档-parser-HTML" class="headerlink" title="解析文档(parser HTML)"></a>解析文档(parser HTML)</h3><p>在详细介绍浏览器渲染文档之前，先应该理解浏览器如何解析文档：解析文档的顺序，对于 CSS 和 JavaScript 如何处理等。</p>
+<h4 id="解析顺序"><a href="#解析顺序" class="headerlink" title="解析顺序"></a>解析顺序</h4><p>浏览器按从上到下的顺序扫描解析文档；</p>
+<h4 id="解析样式和脚本"><a href="#解析样式和脚本" class="headerlink" title="解析样式和脚本"></a>解析样式和脚本</h4><ul>
+<li><p>脚本： 或许是由于通常会在 JavaScript 脚本中改变文档 DOM 结构，于是浏览器以同步方式解析，加载和执行脚本，浏览器在解析文档时，当解析到<code>&lt;script&gt;</code>标签时，会解析其中的脚本（对于外链的 JavaScript 文件，需要先加载该文件内容，再进行解析），然后立即执行，这整个过程都会阻塞文档解析，直到脚本执行完才会继续解析文档。就是说由于脚本是同步加载和执行的，它会阻塞文档解析，这也解释了为什么现在通常建议将<code>&lt;script&gt;</code>标签放在<code>&lt;/body&gt;</code>标签前面，而不是放在<code>&lt;head&gt;</code>标签里。现在 HTML5 提供 defer 和 async 两个属性支持延迟和异步加载 JavaScript 文件</p>
+</li>
+<li><p>改进： 针对上文说的脚本阻塞文档解析，主流浏览器如 Chrome 和 FireFox 等都有一些优化，比如在执行脚本时，开启另一个线程解析剩余的文档以找出并加载其他的待下载外部资源（不改变主线程的 DOM 树，仅优化加载外部资源）。</p>
+</li>
+<li><p>样式： 不同于脚本，浏览器对样式的处理并不会阻塞文档解析，大概是因为样式表并不会改变 DOM 结构。</p>
+</li>
+<li><p>样式表与脚本： 你可能想问样式是否会阻塞脚本文件的加载执行呢？正常情况是不会的，但是存在一个问题是通常我们会在脚本中请求样式信息，但是在文档解析时，如果样式尚未加载或解析，将会得到错误信息，对于这一问题，FireFox 浏览器和 Webkit 浏览器处理策略不同： 当存在有样式文件未被加载和解析时，FireFox 浏览器会阻塞所有脚本；而 Webkit 浏览器只会阻塞操作了改文件内声明的样式属性的脚本。</p>
+</li>
+</ul>
+<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>DOM，即文档对象模型（Document Object Model）,DOM 树，即文档内所有节点构成的一个树形结构。</p>
+<p>假设浏览器获取返回的如下 HTML 文档：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;./theme.css&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./config.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>关键渲染路径<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;title&quot;</span>&gt;</span>关键渲染路径<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>关键渲染路径介绍<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">footer</span>&gt;</span>@copyright2017<span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>可以把一个 CSS 选择器按照 compound-selector 来拆成数段，每当满足一段条件的时候，就前进一段。</p>
-<p>比如，在上面的例子中，当我们找到了匹配 a#b 的元素时，我们才会开始检查它所有的子代是否匹配 .cls。</p>
-<p>除了前进一段的情况，我们还需要处理后退的情况，比如，我们这样一段代码：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">b</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>3<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>首先浏览器从上到下依次解析文档构建 DOM 树，如下：</p>
+<p>图图图图</p>
+<h3 id="构建-CSSOM-树"><a href="#构建-CSSOM-树" class="headerlink" title="构建 CSSOM 树"></a>构建 CSSOM 树</h3><p>CSSOM，即 CSS 对象模型（CSS Object Model），CSSOM 树，与 DOM 树结构相似，只是另外为每一个节点关联了样式信息。</p>
+<p>theme.css 样式内容如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">html</span>,</span><br><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#fcfcfc</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.title</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#aaa</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>当遇到 时，必须使得规则 a#b .cls 回退一步，这样第三个 span 才不会被选中。后代选择器的作用范围是父节点的所有子节点，因此规则是在匹配到本标签的结束标签时回退。</p>
-<h3 id="后继选择器“-”"><a href="#后继选择器“-”" class="headerlink" title="后继选择器“ ~ ”"></a>后继选择器“ ~ ”</h3><p>接下来我们看下后继选择器，跟后代选择器不同的地方是，后继选择器只作用于一层，我们来看一个例子：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.cls</span>~* &#123;</span></span><br><span class="line"><span class="css">        <span class="selector-tag">border</span><span class="selector-pseudo">:solid</span> 1<span class="selector-tag">px</span> <span class="selector-tag">green</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        3</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>4<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>5<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>构建 CSSOM 树如图：</p>
+<p>图图图图</p>
+<h3 id="执行-JavaScript"><a href="#执行-JavaScript" class="headerlink" title="执行 JavaScript"></a>执行 JavaScript</h3><p>上文已经阐述了文档解析时对脚本的处理，我们得知脚本加载，解析和执行会阻塞文档解析，而在特殊情况下样式的加载和解析也会阻塞脚本，所以现在推荐的实践是<code>&lt;script&gt;</code>标签放在<code>&lt;/body&gt;</code>标签前面。</p>
+<h3 id="构建渲染树-render-tree"><a href="#构建渲染树-render-tree" class="headerlink" title="构建渲染树(render tree)"></a>构建渲染树(render tree)</h3><p>DOM 树和 CSSOM 树都构建完了，接着浏览器会构建渲染树：</p>
+<blockquote>
+<p>渲染树，代表一个文档的视觉展示，浏览器通过它将文档内容绘制在浏览器窗口，展示给用户，它由按顺序展示在屏幕上的一系列矩形对象组成，这些矩形对象都带有字体，颜色和尺寸，位置等视觉样式属性。对于这些矩对象，FireFox 称之为框架（frame）,Webkit 浏览器称之为渲染对象（render object, renderer），后文统称为渲染对象。</p>
+</blockquote>
+<p><strong>这里把渲染树节点称为矩形对象，是因为，每一个渲染对象都代表着其对应 DOM 节点的 CSS 盒子,该盒子包含了尺寸，位置等几何信息，同时它指向一个样式对象包含其他视觉样式信息。</strong></p>
+<h4 id="渲染树与-DOM-树"><a href="#渲染树与-DOM-树" class="headerlink" title="渲染树与 DOM 树"></a>渲染树与 DOM 树</h4><p>每一个渲染对象都对应着 DOM 节点，但是非视觉（隐藏，不占位）DOM 元素不会插入渲染树，如<code>&lt;head&gt;</code>元素或声明 <code>display: none</code>的元素，渲染对象与 DOM 节点不是简单的一对一的关系，一个 DOM 可以对应一个渲染对象，但一个 DOM 元素也可能对应多个渲染对象，因为有很多元素不止包含一个 CSS 盒子，如当文本被折行时，会产生多个行盒，这些行会生成多个渲染对象；又如行内元素同时包含块元素和行内元素，则会创建一个匿名块级盒包含内部行内元素，此时一个 DOM 对应多个矩形对象（渲染对象）。</p>
+<p>渲染树及其对应 DOM 树如图：</p>
+<p>图图图图</p>
+<ul>
+<li>图中渲染树 viewport 即视口，是文档的初始包含块，scroll 代表滚动区域，详见 CSS 之视觉格式化模型(Visual Formatting Model)</li>
+<li>渲染树并不会包含显式或隐式地 display：none;的标签元素。</li>
+</ul>
+<h3 id="布局（Layout）或回流（reflow，relayout）"><a href="#布局（Layout）或回流（reflow，relayout）" class="headerlink" title="布局（Layout）或回流（reflow，relayout）"></a>布局（Layout）或回流（reflow，relayout）</h3><p>创建渲染树后，下一步就是布局（Layout）,或者叫回流（reflow,relayout），这个过程就是通过渲染树中渲染对象的信息，计算出每一个渲染对象的位置和尺寸，将其安置在浏览器窗口的正确位置，而有些时候我们会在文档布局完成后对 DOM 进行修改，这时候可能需要重新进行布局，也可称其为回流，本质上还是一个布局的过程，每一个渲染对象都有一个布局或者回流方法，实现其布局或回流。</p>
+<h4 id="流（flow）"><a href="#流（flow）" class="headerlink" title="流（flow）"></a>流（flow）</h4><p>HTML 采用的是基于流的方式定位布局，其按照从左到右，从上到下的顺序进行排列，详见 CSS 定位机制。</p>
+<p>全局布局与局部布局对渲染树的布局可以分为全局和局部的，全局即对整个渲染树进行重新布局，如当我们改变了窗口尺寸或方向或者是修改了根元素的尺寸或者字体大小等；而局部布局可以是对渲染树的某部分或某一个渲染对象进行重新布局。</p>
+<h4 id="脏位系统（dirty-bit-system）"><a href="#脏位系统（dirty-bit-system）" class="headerlink" title="脏位系统（dirty bit system）"></a>脏位系统（dirty bit system）</h4><p>大多数 web 应用对 DOM 的操作都是比较频繁，这意味着经常需要对 DOM 进行布局和回流，而如果仅仅是一些小改变，就触发整个渲染树的回流，这显然是不好的，为了避免这种情况，浏览器使用了脏位系统，只有一个渲染对象改变了或者某渲染对象及其子渲染对象脏位值为”dirty”时，说明需要回流。</p>
+<p>表示需要布局的脏位值有两种：</p>
+<p>“dirty”–自身改变，需要回流 “children are dirty”–子节点改变，需要回流</p>
+<h4 id="布局过程"><a href="#布局过程" class="headerlink" title="布局过程"></a>布局过程</h4><p>布局是一个从上到下，从外到内进行的递归过程，从根渲染对象，即对应着 HTML 文档根元素<html>，然后下一级渲染对象，如对应着<body>元素，如此层层递归，依次计算每一个渲染对象的几何信息（位置和尺寸）。</p>
+<p><strong>几何信息-位置和尺寸，即相对于窗口的坐标和尺寸，如根渲染对象，其坐标为（0， 0），尺寸即是视口 尺寸（浏览器窗口的可视区域）。</strong></p>
+<p>每一个渲染对象的布局流程基本如：</p>
+<ol>
+<li>计算此渲染对象的宽度（width）；</li>
+<li>遍历此渲染对象的所有子级，依次：<ol>
+<li>设置子级渲染对象的坐标</li>
+<li>判断是否需要触发子渲染对象的布局或回流方法，计算子渲染对象的高度（height）</li>
+</ol>
+</li>
+<li>设置此渲染对象的高度：根据子渲染对象的累积高，margin 和 padding 的高度设置其高度；</li>
+<li>设置此渲染对象脏位值为 false。强制回流在渲染树布局完成后，再次操作文档，改变文档的内容或结构，或者元素定位时，会触发回流，即需要重新布局，如请求某 DOM 的”offsetHeight”样式信息等诸多情况：</li>
+</ol>
+<p>DOM 操作，如增加，删除，修改或移动；变更内容；激活伪类；访问或改变某些 CSS 属性（包括修改样式表或元素类名或使用 JavaScript 操作等方式）；浏览器窗口变化（滚动或尺寸变化）</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;padding&quot;</span>); <span class="comment">// reflow</span></span><br><span class="line">$(<span class="string">&quot;body&quot;</span>)[<span class="number">0</span>].offsetHeight; <span class="comment">// relow</span></span><br></pre></td></tr></table></figure>
 
-<p>这里 .cls 选中了 span 2 然后 span 3 是它的后继，但是 span 3 的子节点 span 4 并不应该被选中，而 span 5 也是它的后继，因此应该被选中。</p>
-<p>按照 DOM 树的构造顺序，4 在 3 和 5 中间，我们就没有办法像前面讲的后代选择器一样通过激活或者关闭规则来实现匹配。</p>
-<p>但是这里有个非常方便的思路，就是给选择器的激活，带上一个条件：父元素。</p>
-<p>注意，这里后继选择器，当前半段的 .cls 匹配成功时，后续 * 所匹配的所有元素的父元素都已经确定了（后继节点和当前节点父元素相同是充分必要条件）。在我们的例子中，那个 div 就是后继节点的父元素。</p>
-<h3 id="子代选择器“-gt-”"><a href="#子代选择器“-gt-”" class="headerlink" title="子代选择器“ &gt;”"></a>子代选择器“ &gt;”</h3><p>我们继续看，子代选择器是如何实现的。</p>
-<p>实际上，有了前面讲的父元素这个约束思路，我们很容易实现子代选择器。区别仅仅是拿当前节点作为父元素，还是拿当前节点的父元素作为父元素。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">div</span>&gt;<span class="selector-class">.cls</span> &#123;</span></span><br><span class="line"><span class="css">        <span class="selector-tag">border</span><span class="selector-pseudo">:solid</span> 1<span class="selector-tag">px</span> <span class="selector-tag">green</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>1<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">cls</span>&gt;</span>2<span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        3</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>4<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>5<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>有过 CSS3 动画开发经验的同学可能会有经历，如下入场动画：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.slide-left</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">-moz-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">-o-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>我们看这段代码，当 DOM 树构造到 div 时，匹配了 CSS 规则的第一段，因为是子代选择器，我们激活后面的 .cls 选择条件，并且指定父元素必须是当前 div。于是后续的构建 DOM 树构建过程中，span 2 就被选中了。</p>
-<h3 id="直接后继选择器“-”"><a href="#直接后继选择器“-”" class="headerlink" title="直接后继选择器“ +”"></a>直接后继选择器“ +”</h3><p>直接后继选择器的实现是上述中最为简单的了，因为它只对唯一一个元素生效，所以不需要像前面几种一样反复激活和关闭规则。</p>
-<p>一个最简单的思路是，我们可以把它当作检查元素自身的选择器来处理。即我们把 #id+.cls 都当做检查某一个元素的选择器。</p>
-<p>另外的一种思路是：给后继选择器加上一个 flag，使它匹配一次后失效。你可以尝试一下，告诉我结果。</p>
-<h3 id="列选择器“-”"><a href="#列选择器“-”" class="headerlink" title="列选择器“ || ”"></a>列选择器“ || ”</h3><p>列选择器比较特别，它是专门针对表格的选择器，跟表格的模型建立相关，我们这里不详细讲了。</p>
-<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>我们不要忘记，CSS 选择器还支持逗号分隔，表示“或”的关系。这里最简单的实现是把逗号视为两条规则的一种简易写法。</p>
-<p>比如：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span>,</span><br><span class="line"><span class="selector-class">.cls</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后执行如下脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> $slide = $(<span class="string">&quot;.slide-left&quot;</span>);</span><br><span class="line">$slide</span><br><span class="line">  .css(&#123;</span><br><span class="line">    <span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;100px&quot;</span>,</span><br><span class="line">  &#125;)</span><br><span class="line">  .addClass(<span class="string">&quot;slide-left&quot;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">  <span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;10px&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>我们当作两条规则来处理：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">a</span><span class="selector-id">#b</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们会发现并没有效果，为什么呢？因为对 margin-left 的修改并没有触发回流，元素 margin-left 值的改变被缓存，如果我们在中间强制触发回流：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> $slide = $(<span class="string">&#x27;.slide-left&#x27;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">	<span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;100px&quot;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">console</span>.log($slide.css(<span class="string">&#x27;padding&#x27;</span>);</span><br><span class="line">$slide.addClass(<span class="string">&#x27;slide-left&#x27;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">	<span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;10px&quot;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>还有一个情况，就是选择器可能有重合，这样，我们可以使用树形结构来进行一些合并，来提高效率：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#a</span> <span class="selector-class">.cls</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#a</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#a</span> &gt; <span class="selector-tag">span</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再看就达到了预期效果。</p>
+<h3 id="绘制（painting）"><a href="#绘制（painting）" class="headerlink" title="绘制（painting）"></a>绘制（painting）</h3><p>最后是绘制(paint)阶段或重绘（repaint）阶段，浏览器 UI 组件将遍历渲染树并调用渲染对象的绘制（paint）方法，将内容展现在屏幕上，也有可能在之后对 DOM 进行修改，需要重新绘制渲染对象，也就是重绘，绘制和重绘的关系可以参考布局和回流的关系。</p>
+<h4 id="全局与局部绘制"><a href="#全局与局部绘制" class="headerlink" title="全局与局部绘制"></a>全局与局部绘制</h4><p>与布局相似，绘制也分为全局和局部绘制，即对整个渲染树或某些渲染对象进行绘制。</p>
+<h4 id="触发重绘"><a href="#触发重绘" class="headerlink" title="触发重绘"></a>触发重绘</h4><p>我们已经知道很多操作可能会触发回流，那么什么时候可能触发重绘呢，通常，当改变元素的视觉样式，如 background-color,visibility，margin，padding 或字体颜色时会触发全局或局部重绘，如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;color&quot;</span>, <span class="string">&quot;red&quot;</span>); <span class="comment">// repaint</span></span><br><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;margin&quot;</span>, <span class="string">&quot;2px&quot;</span>); <span class="comment">// reflow, repaint</span></span><br></pre></td></tr></table></figure>
 
-<p>这里实际上可以把选择器构造成一棵树：</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这一节我们讲解了 CSS 计算的过程。CSS 计算是把 CSS 规则应用到 DOM 树上，为 DOM 结构添加显示相关属性的过程。在这一节中，我们主要介绍了选择器的几种复合结构应该如何实现。</p>
-<p>在这一步骤之后，我们得到了一棵带有 CSS 属性的树，为我们后续打下了基础。</p>
-<p>最后留一个问题，你认为 CSS 语法解析成什么结构，最适合我们进行 CSS 计算。</p>
+<h3 id="页面渲染优化"><a href="#页面渲染优化" class="headerlink" title="页面渲染优化"></a>页面渲染优化</h3><p>浏览器对上文介绍的关键渲染路径进行了很多优化，针对每一次变化产生尽量少的操作，还有优化判断重新绘制或布局的方式等等。</p>
+<p>在改变文档根元素的字体颜色等视觉性信息时，会触发整个文档的重绘，而改变某元素的字体颜色则只触发特定元素的重绘；改变元素的位置信息会同时触发此元素（可能还包括其兄弟元素或子级元素）的布局和重绘。某些重大改变，如更改文档根元素<code>&lt;html&gt;</code>的字体尺寸，则会触发整个文档的重新布局和重绘，据此及上文所述，推荐以下优化和实践：</p>
+<ol>
+<li>HTML 文档结构层次尽量少，最好不深于六层；</li>
+<li>脚本尽量后放，放在<code>&lt;/body&gt;</code>前即可；</li>
+<li>少量首屏样式内联放在<code>&lt;head&gt;</code>标签内；</li>
+<li>样式结构层次尽量简单；</li>
+<li>在脚本中尽量减少 DOM 操作，尽量缓存访问 DOM 的样式信息，避免过度触发回流；</li>
+<li>减少通过 JavaScript 代码修改元素样式，尽量使用修改 class 名方式操作样式或动画；</li>
+<li>动画尽量使用在绝对定位或固定定位的元素上；</li>
+<li>隐藏在屏幕外，或在页面滚动时，尽量停止动画；</li>
+<li>尽量缓存 DOM 查找，查找器尽量简洁；</li>
+<li>涉及多域名的网站，可以开启域名预解析</li>
+</ol>
+<h3 id="浏览器渲染事件日志"><a href="#浏览器渲染事件日志" class="headerlink" title="浏览器渲染事件日志"></a>浏览器渲染事件日志</h3><p>1.发起请求； 2.解析 HTML； 3.解析样式； 4.执行 JavaScript； 5.布局； 6.绘制</p>
 ]]></content>
-      <categories>
-        <category>浏览器</category>
-      </categories>
-      <tags>
-        <tag>浏览器工作流程</tag>
-      </tags>
   </entry>
   <entry>
     <title>浏览器工作流程-排版</title>
@@ -2295,6 +2295,66 @@
       </tags>
   </entry>
   <entry>
+    <title>浏览器工作流程-渲染</title>
+    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/</url>
+    <content><![CDATA[<p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
+<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
+<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
+<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
+<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
+<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
+<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
+<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
+<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
+<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
+<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
+<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
+<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
+<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
+<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
+<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
+<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
+<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
+<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
+<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
+<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
+<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
+<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
+<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
+<p>我们来举个例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
+<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
+<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
+<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
+<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
+<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
+<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
+<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
+<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
+<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
+<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
+<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
+<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
+<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
+<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
+<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
+<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
+]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器工作流程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>浏览器工作流程-网络部分</title>
     <url>/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E7%BD%91%E7%BB%9C%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<p>对于前端开发来说，我们平时与浏览器打交道的时间是最多的，可浏览器对前端同学来说更像是一个神秘的黑盒，我们仅仅知道它能做什么，而不知道他是如何做到的</p>
@@ -2417,66 +2477,6 @@
 <h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节内容中，我们一起学习了浏览器的第一步工作，也就是“浏览器首先使用 HTTP 协议或 HTTPS 协议，向服务端请求页面”的这一过程。</p>
 <p>在这个过程中，掌握 HTTP 协议是重中之重。我从一个小实验开始，带你体验了一次完整的 HTTP 请求过程。我们一起先分析了 HTTP 协议的结构。接下来，我分别介绍了 HTTP 方法、HTTP 状态码和状态文本、HTTP Head 和 HTTP Request Body 几个重点需要注意的部分。</p>
 <p>最后，我还介绍了 HTTPS 和 HTTP 2 这两个补充版本，以便你可以更好地熟悉并理解新的特性。</p>
-]]></content>
-      <categories>
-        <category>浏览器</category>
-      </categories>
-      <tags>
-        <tag>浏览器工作流程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>浏览器工作流程-渲染</title>
-    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/</url>
-    <content><![CDATA[<p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
-<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
-<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
-<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
-<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
-<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
-<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
-<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
-<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
-<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
-<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
-<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
-<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
-<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
-<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
-<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
-<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
-<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
-<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
-<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
-<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
-<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
-<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
-<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
-<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
-<p>我们来举个例子：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
-<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
-<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
-<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
-<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
-<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
-<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
-<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
-<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
-<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
-<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
-<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
-<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
-<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
-<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
-<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
-<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
 ]]></content>
       <categories>
         <category>浏览器</category>
