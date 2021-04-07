@@ -88,30 +88,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Completion Record</title>
-    <url>/2020/11/21/Completion%20Record/</url>
-    <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于 x 变量具体的值，</p>
-<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
-<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
-<p>比如上面的<code>if</code>语句，它的 Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
-<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
-<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
-
-<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生 break，continue，return，or throw，type 是一个非常关键的信息，</p>
-<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record 里面一个重要的信息</p>
-<p>target：这个非常少见 target 是一个 label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i, j);</span><br><span class="line">    <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">      <span class="keyword">break</span> outPoint;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上就是 JavaScript 中的 Completion Record 了，我们单看 Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
-]]></content>
-  </entry>
-  <entry>
     <title>Generator函数的语法</title>
     <url>/2020/10/13/Generator%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。本章详细介绍 Generator 函数的语法和 API，它的异步编程应用请看《Generator 函数的异步应用》一章。</p>
@@ -174,6 +150,30 @@
       <tags>
         <tag>es6</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Completion Record</title>
+    <url>/2020/11/21/Completion%20Record/</url>
+    <content><![CDATA[<p>JavaScript 用语句来完成流程控制</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (x === <span class="number">1</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这是一条简单的 <code>if</code> 语句，它的完成状态可能是不一样的，<code>return</code> 有可能会执行也有可能不会执行取决于 x 变量具体的值，</p>
+<p>所以 JavaScript 引擎在解析<code>if</code>语句的时候就需要知道它完成之后的结果到底是怎样的。于是在 JavaScript 语言中就需要一种数据结构来存储语句的完成结果，这就是我们所谓的 Completion Record 类型了，它不在其中基本类型中，我们在 JavaScript 中无论如何都是无法获取到这个数据，它没有办法赋值给变量也没有办法作为参数，但是它确确实实存在于 JavaScript 的运行时，</p>
+<p>每写一条一句就会产生 Completion Record 这样的东西，</p>
+<p>比如上面的<code>if</code>语句，它的 Completion Record 可能包含了这些信息：是否返回了？返回值是啥？等等…..</p>
+<p>接下来我们就来看看一个具体的 Completion Record 是怎样组成的</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[[type]]: normal, break，continue，return，or throw</span><br><span class="line">[[value]]: 基本类型值</span><br><span class="line">[[target]]：label</span><br></pre></td></tr></table></figure>
+
+<p>type 部分是它的类型，正常的语句它都是 normal，有些语句可能会产生 break，continue，return，or throw，type 是一个非常关键的信息，</p>
+<p>值得注意的是，比如说我们的<code>if</code>语句或者说我们<code>for</code>循环，它里面都有可能产生 <code>return</code>，<code>break</code>，<code>continue</code>，这些穿透力比较强的 type 可能会改变父语句的 type</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 函数被直接返回了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>value：有些语句，尤其是表达式语句，他一定是有一个返回值的，正因为它有返回值，所以它才能发挥一定的作用，另外 return，throw，它都会带着一个值，这个值也是控制中的一个关键，这个值可能会被抛给其他的语句或者是赋值给一些变量去执行，所以 value 也是 Completion Record 里面一个重要的信息</p>
+<p>target：这个非常少见 target 是一个 label，这个东西其实就是我们在语句前面加上一个标识符和冒号，然后这样的话这个语句就变成了一个带 label 的语句。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// label 可以和break，continue 配合使用达到一些如跳出指定循环的效果</span></span><br><span class="line">outPoint: <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i, j);</span><br><span class="line">    <span class="keyword">if</span> (i === <span class="number">55</span> &amp;&amp; j === <span class="number">5</span>) &#123;</span><br><span class="line">      <span class="keyword">break</span> outPoint;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是 JavaScript 中的 Completion Record 了，我们单看 Completion Record，其实他就是一个语句完成状态的这样的一个记录</p>
+]]></content>
   </entry>
   <entry>
     <title>HTML从字符流到抽象语法树</title>
@@ -1607,6 +1607,24 @@
       </tags>
   </entry>
   <entry>
+    <title>排序算法</title>
+    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
+<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
+<p>冒泡排序</p>
+<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
+<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
+<p>让我们实现下冒泡排序</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>带你深入理解图灵机-天才所在的时代</title>
     <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/</url>
     <content><![CDATA[<p>这几年由于区块链的大热，以太坊独特的 solidity 语言实现智能合约功能，<strong>图灵完备</strong>这个词走进大家的视线。</p>
@@ -1680,24 +1698,6 @@
       </categories>
       <tags>
         <tag>人物</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>排序算法</title>
-    <url>/2020/11/03/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>假设我们有一个没有任何排列顺序的电话号码簿，当需要添加联络人和电话的时候，你只能将其写在下一个空位上，假定你的联系人列表有很多人，某天，你要找到每个人的联系方式，但是由于联系人列表没有按照任何顺序来组织，你只能逐个查找，知道找到那个你想的联系人为止，这个方法太吓人了，</p>
-<p>还有许多诸如此类的问题，因此我们需要组织信息集，比如哪些存储在数据结构里的信息，排序和搜索算法广泛的运用在待解决的日常问题中，</p>
-<p>冒泡排序</p>
-<p>人们开始排序算法的时候，通常会先学习冒泡排序，因为它是所有排序算法中最简单最容易理解的，然而从运行时角度来看，冒泡排序是最差的一个，接下来你会知晓原因</p>
-<p>冒泡排序比较所有相邻的两个项，如果第一个比第二个大，则交换它们，元素项向上移动至正确的顺序，就好像气泡升至表面一样，冒泡排序因此得名</p>
-<p>让我们实现下冒泡排序</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">array,compareFn = </span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2295,66 +2295,6 @@
       </tags>
   </entry>
   <entry>
-    <title>浏览器工作流程-渲染</title>
-    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/</url>
-    <content><![CDATA[<p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
-<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
-<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
-<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
-<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
-<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
-<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
-<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
-<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
-<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
-<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
-<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
-<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
-<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
-<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
-<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
-<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
-<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
-<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
-<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
-<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
-<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
-<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
-<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
-<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
-<p>我们来举个例子：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
-<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
-<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
-<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
-<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
-<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
-<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
-<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
-<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
-<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
-<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
-<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
-<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
-<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
-<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
-<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
-<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
-]]></content>
-      <categories>
-        <category>浏览器</category>
-      </categories>
-      <tags>
-        <tag>浏览器工作流程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>浏览器工作流程-网络部分</title>
     <url>/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E7%BD%91%E7%BB%9C%E9%83%A8%E5%88%86/</url>
     <content><![CDATA[<p>对于前端开发来说，我们平时与浏览器打交道的时间是最多的，可浏览器对前端同学来说更像是一个神秘的黑盒，我们仅仅知道它能做什么，而不知道他是如何做到的</p>
@@ -2477,6 +2417,66 @@
 <h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节内容中，我们一起学习了浏览器的第一步工作，也就是“浏览器首先使用 HTTP 协议或 HTTPS 协议，向服务端请求页面”的这一过程。</p>
 <p>在这个过程中，掌握 HTTP 协议是重中之重。我从一个小实验开始，带你体验了一次完整的 HTTP 请求过程。我们一起先分析了 HTTP 协议的结构。接下来，我分别介绍了 HTTP 方法、HTTP 状态码和状态文本、HTTP Head 和 HTTP Request Body 几个重点需要注意的部分。</p>
 <p>最后，我还介绍了 HTTPS 和 HTTP 2 这两个补充版本，以便你可以更好地熟悉并理解新的特性。</p>
+]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器工作流程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浏览器工作流程-渲染</title>
+    <url>/2020/11/09/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B-%E6%B8%B2%E6%9F%93/</url>
+    <content><![CDATA[<p>在之前的几篇文章中，我们已经经历了把 URL 变成字符流，把字符流变成词（token）流，把词（token）流构造成 DOM 树，把不含样式信息的 DOM 树应用 CSS 规则，变成包含样式信息的 DOM 树，并且根据样式信息，计算了每个元素的位置和大小。</p>
+<p>那么，我们最后的步骤，就是根据这些样式信息和大小信息，为每个元素在内存中渲染它的图形，并且把它绘制到对应的位置。</p>
+<h3 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h3><p>首先我们来谈谈渲染这个词，渲染也是个外来词，它是英文词 render 的翻译，render 这个词在英文里面，有“导致”“变成”的意思，也有“粉刷墙壁”的意思。</p>
+<p>在计算机图形学领域里，英文 render 这个词是一个简写，它是特指把模型变成位图的过程。我们把 render 翻译成“渲染”，是个非常有意思的翻译，中文里“渲染”这个词是一种绘画技法，是指沾清水把墨涂开的意思。</p>
+<p>所以，render 翻译成“渲染”，我认为是非常高明的，对 render 这个过程，用国画的渲染手法来概括，是颇有神似的。</p>
+<p>我们现在的一些框架，也会把“从数据变成 HTML 代码的过程”称为 render，其实我觉得这是非常具有误导性的，我个人是非常不喜欢这种命名方式，当然了，所谓“文无第一”，在自然语言的范围里，我们很难彻底否定这种用法的合理性。</p>
+<p>不过，在本篇文章中，我们可以约定一下，本文中出现的“渲染”一词，统一指的是它在图形学的意义，也就是把模型变成位图的过程。</p>
+<p>这里的位图就是在内存里建立一张二维表格，把一张图片的每个像素对应的颜色保存进去（位图信息也是 DOM 树中占据浏览器内存最多的信息，我们在做内存占用优化时，主要就是考虑这一部分）。</p>
+<p>浏览器中渲染这个过程，就是把每一个元素对应的盒变成位图。这里的元素包括 HTML 元素和伪元素，一个元素可能对应多个盒（比如 inline 元素，可能会分成多行）。每一个盒对应着一张位图。</p>
+<p>这个渲染过程是非常复杂的，但是总体来说，可以分成两个大类：图形和文字。</p>
+<p>盒的背景、边框、SVG 元素、阴影等特性，都是需要绘制的图形类。这就像我们实现 HTTP 协议必须要基于 TCP 库一样，这一部分，我们</p>
+<p>一般的操作系统会提供一个底层库，比如在 Android 中，有大名鼎鼎的 Skia，而 Windows 平台则有 GDI，一般的浏览器会做一个兼容层来处理掉平台差异。</p>
+<p>这些盒的特性如何绘制，每一个都有对应的标准规定，而每一个的实现都可以作为一个独立的课题来研究，当年圆角 + 虚线边框，可是难倒了各个浏览器的工程师。考虑到这些知识互相都比较独立，对前端工程师来说也不是特别重要的细节，我们这里就不</p>
+<p>盒中的文字，也需要用底层库来支持，叫做字体库。字体库提供读取字体文件的基本能力，它能根据字符的码点抽取出字形。</p>
+<p>字形分为像素字形和矢量字形两种。通常的字体，会在 6px 8px 等小尺寸提供像素字形，比较大的尺寸则提供矢量字形。矢量字形本身就需要经过渲染才能继续渲染到元素的位图上去。目前最常用的字体库是 Freetype，这是一个 C++ 编写的开源的字体库。</p>
+<p>在最普遍的情况下，渲染过程生成的位图尺寸跟它在上一步排版时占据的尺寸相同。</p>
+<p>但是理想和现实是有差距的，很多属性会影响渲染位图的大小，比如阴影，它可能非常巨大，或者渲染到非常遥远的位置，所以为了优化，浏览器实际的实现中会把阴影作为一个独立的盒来处理。</p>
+<p>注意，我们这里讲的渲染过程，是不会把子元素绘制到渲染的位图上的，这样，当父子元素的相对位置发生变化时，可以保证渲染的结果能够最大程度被缓存，减少重新渲染。</p>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>合成是英文术语 compositing 的翻译，这个过程实际上是一个性能考量，它并非实现浏览器的必要一环。</p>
+<p>我们上一小节中讲到，渲染过程不会把子元素渲染到位图上面，合成的过程，就是为一些元素创建一个“合成后的位图”（我们把它称为合成层），把一部分子元素渲染到合成的位图上面。</p>
+<p>看到这句话，我想你一定会问问题，到底是为哪些元素创建合成后的位图，把哪些子元素渲染到合成的位图上面呢？</p>
+<p>这就是我们要讲的合成的策略。我们前面讲了，合成是一个性能考量，那么合成的目标就是提高性能，根据这个目标，我们建立的原则就是最大限度减少绘制次数原则。</p>
+<p>我们举一个极端的例子。如果我们把所有元素都进行合成，比如我们为根元素 HTML 创建一个合成后的位图，把所有子元素都进行合成，那么会发生什么呢？</p>
+<p>那就是，一旦我们用 JavaScript 或者别的什么方式，改变了任何一个 CSS 属性，这份合成后的位图就失效了，我们需要重新绘制所有的元素。那么如果我们所有的元素都不合成，会怎样呢？结果就是，相当于每次我们都必须要重新绘制所有的元素，这也不是对性能友好的选择。</p>
+<p>那么好的合成策略是什么呢，好的合成策略是“猜测”可能变化的元素，把它排除到合成之外。</p>
+<p>我们来举个例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;a&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;b&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;c&quot;</span> <span class="attr">style</span>=<span class="string">&quot;transform:translate(0,0)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>假设我们的合成策略能够把 a、b 两个 div 合成，而不把 c 合成，那么，当我执行以下代码时：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&quot;c&quot;</span>).style.transform = <span class="string">&quot;translate(100px, 0)&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们绘制的时候，就可以只需要绘制 a 和 b 合成好的位图和 c，从而减少了绘制次数。这里需要注意的是，在实际场景中，我们的 b 可能有很多复杂的子元素，所以当合成命中时，性能提升收益非常之高。</p>
+<p>目前，主流浏览器一般根据 position、transform 等属性来决定合成策略，来“猜测”这些元素未来可能发生变化。</p>
+<p>但是，这样的猜测准确性有限，所以新的 CSS 标准中，规定了 will-change 属性，可以由业务代码来提示浏览器的合成策略，灵活运用这样的特性，可以大大提升合成策略的效果。</p>
+<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>绘制是把“位图最终绘制到屏幕上，变成肉眼可见的图像”的过程，不过，一般来说，浏览器并不需要用代码来处理这个过程，浏览器只需要把最终要显示的位图交给操作系统即可。</p>
+<p>一般最终位图位于显存中，也有一些情况下，浏览器只需要把内存中的一张位图提交给操作系统或者驱动就可以了，这取决于浏览器运行的环境。不过无论如何，我们把任何位图合成到这个“最终位图”的操作称为绘制。</p>
+<p>这个过程听上去非常简单，这是因为在前面两个小节中，我们已经得到了每个元素的位图，并且对它们部分进行了合成，那么绘制过程，实际上就是按照 z-index 把它们依次绘制到屏幕上。</p>
+<p>然而如果在实际中这样做，会带来极其糟糕的性能。</p>
+<p>有一个一度非常流行于前端群体的说法，讲做 CSS 性能优化，应该尽量避免“重排”和“重绘”，前者讲的是我们上一课的排版行为，后者模糊地指向了我们本课程三小节讲的三个步骤，而实际上，这个说法大体不能算错，却不够准确。</p>
+<p>因为，实际上，“绘制”发生的频率比我们想象中要高得多。我们考虑一个情况：鼠标划过浏览器显示区域。这个过程中，鼠标的每次移动，都造成了重新绘制，如果我们不重新绘制，就会产生大量的鼠标残影。</p>
+<p>这个时候，限制绘制的面积就很重要了。如果鼠标某次位置恰巧遮盖了某个较小的元素，我们完全可以重新绘制这个元素来完成我们的目标，当然，简单想想就知道，这种事情不可能总是发生的。</p>
+<p>计算机图形学中，我们使用的方案就是“脏矩形”算法，也就是把屏幕均匀地分成若干矩形区域。</p>
+<p>当鼠标移动、元素移动或者其它导致需要重绘的场景发生时，我们只重新绘制它所影响到的几个矩形区域就够了。比矩形区域更小的影响最多只会涉及 4 个矩形，大型元素则覆盖多个矩形。</p>
+<p>设置合适的矩形区域大小，可以很好地控制绘制时的消耗。设置过大的矩形会造成绘制面积增大，而设置过小的矩形则会造成计算复杂。</p>
+<p>我们重新绘制脏矩形区域时，把所有与矩形区域有交集的合成层（位图）的交集部分绘制即可。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>在这一节课程中，我们讲解了浏览器中的位图操作部分，这包括了渲染、合成和绘制三个部分。渲染过程把元素变成位图，合成把一部分位图变成合成层，最终的绘制过程把合成层显示到屏幕上。</p>
+<p>当绘制完成时，就完成了浏览器的最终任务，把一个 URL 最后变成了一个可以看的网页图像。当然了，我们对每一个部分的讲解，都省略了大量的细节，比如我们今天讲到的绘制，就有意地无视了滚动区域。</p>
+<p>尽管如此，对浏览器工作原理的感性认识，仍然可以帮助我们理解很多前端技术的设计和应用技巧，浏览器的工作原理和性能部分非常强相关，我们在实践部分的性能优化部分，会再次跟你做一些探讨。</p>
+<p>实际上，如果你认真阅读浏览器系列的课程，是可以用 JavaScript 实现一个玩具浏览器的，我非常希望学习课程的同学中能有人这样做，一旦你做到了，收益会非常大。这就是我今天留给你的课外作业，你可以尝试一下。</p>
 ]]></content>
       <categories>
         <category>浏览器</category>
