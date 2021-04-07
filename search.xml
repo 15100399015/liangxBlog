@@ -324,30 +324,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MVC概念详解</title>
-    <url>/2020/11/24/MVC%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/</url>
-    <content><![CDATA[<p>模型－视图－控制器（Modal View Controler，MVC）是 Xerox PARC 在八十年代为编程语言 Smalltalk－80 发明的一种软件设计模式，至今已被广泛使用。最近几年被推荐为 Sun 公司 J2EE 平台的设计模式，并且受到越来越多的使用 ColdFusion 和 PHP 的开发者的欢迎。模型－视图－控制器模式是一个有用的工具箱，它有很多好处，但也有一些缺点。</p>
-<p>MVC 本来是存在于 Desktop 程序中的，M 是指数据模型，V 是指用户界面，C 则是控制器。使用 MVC 的目的是将 M 和 V 的实现代码分离，从而使同一个程序可以使用不同的表现形式。比如一批统计数据你可以分别用柱状图、饼图来表示。C 存在的目的则是确保 M 和 V 的同步，一旦 M 改变，V 应该同步更新。</p>
-<h3 id="MVC-如何工作"><a href="#MVC-如何工作" class="headerlink" title="MVC 如何工作"></a>MVC 如何工作</h3><p>MVC 是一个设计模式，它强制性的使应用程序的输入、处理和输出分开。使用 MVC 应用程序被分成三个核心部件：模型、视图、控制器。它们各自处理自己的任务。</p>
-<p>1、视图视图是用户看到并与之交互的界面。对老式的 Web 应用程序来说，视图就是由 HTML 元素组成的界面，在新式的 Web 应用程序中，HTML 依旧在视图中扮演着重要的角色，但一些新的技术已层出不穷，它们包括 Macromedia Flash 和象 XHTML，XML/XSL，WML 等一些标识语言和 Web services. 在 web 前端中视图是及其主要的环节。</p>
-<p>如何处理应用程序的界面变得越来越有挑战性。MVC 一个大的好处是它能为你的应用程序处理很多不同的视图。在视图中其实没有真正的处理发生，不管这些数据是联机存储的还是一个雇员列表，作为视图来讲，它只是作为一种输出数据并允许用户操纵的方式。</p>
-<p>2、模型模型表示企业数据和业务规则。在 MVC 的三个部件中，模型拥有最多的处理任务。例如它可能用象 EJBs 和 ColdFusion Components 这样的构件对象来处理数据库。被模型返回的数据是中立的，就是说模型与数据格式无关，这样一个模型能为多个视图提供数据。由于应用于模型的代码只需写一次就可以被多个视图重用，所以减少了代码的重复性。</p>
-<p>3、控制器控制器接受用户的输入并调用模型和视图去完成用户的需求。所以当单击 Web 页面中的超链接和发送 HTML 表单时，控制器本身不输出任何东西和做任何处理。它只是接收请求并决定调用哪个模型构件去处理请求，然后用确定用哪个视图来显示模型处理返回的数据。</p>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1380592864-5a15420675842_articlex.jpg"></p>
-<p>现在我们总结 MVC 的处理过程，首先控制器接收用户的请求，并决定应该调用哪个模型来进行处理，然后模型用业务逻辑来处理用户的请求并返回数据，最后控制器用相应的视图格式化模型返回的数据，并通过表示层呈现给用户。</p>
-<h3 id="为什么要使用-MVC"><a href="#为什么要使用-MVC" class="headerlink" title="为什么要使用 MVC"></a>为什么要使用 MVC</h3><p>大部分 Web 应用程序都是用像 ASP，PHP，或者 CFML 这样的过程化语言来创建的。它们将像数据库查询语句这样的数据层代码和像 HTML 这样的表示层代码混在一起。经验比较丰富的开发者会将数据从表示层分离开来，但这通常不是很容易做到的，它需要精心的计划和不断的尝试。MVC 从根本上强制性的将它们分开。尽管构造 MVC 应用程序需要一些额外的工作，但是它给我们带来的好处是无庸质疑的。</p>
-<p>首先，最重要的一点是多个视图能共享一个模型，正如我所提及的，现在需要用越来越多的方式来访问你的应用程序。对此，其中一个解决之道是使用 MVC，无论你的用户想要 Flash 界面或是 WAP 界面；用一个模型就能处理它们。由于你已经将数据和业务规则从表示层分开，所以你可以最大化的重用你的代码了。</p>
-<p>由于模型返回的数据没有进行格式化，所以同样的构件能被不同界面使用。例如，很多数据可能用 HTML 来表示，但是它们也有可能要用 Macromedia Flash 和 WAP 来表示。模型也有状态管理和数据持久性处理的功能，例如，基于会话的购物车和电子商务过程也能被 Flash 网站或者无线联网的应用程序所重用。</p>
-<p>因为模型是自包含的，并且与控制器和视图相分离，所以很容易改变你的应用程序的数据层和业务规则。如果你想把你的数据库从 MySQL 移植到 Oracle，或者改变你的基于 RDBMS 数据源到 LDAP，只需改变你的模型即可。一旦你正确的实现了模型，不管你的数据来自数据库或是 LDAP 服务器，视图将会正确的显示它们。由于运用 MVC 的应用程序的三个部件是相互对立，改变其中一个不会影响其它两个，所以依据这种设计思想你能构造良好的松偶合的构件。</p>
-<p>对我来说，控制器的也提供了一个好处，就是可以使用控制器来联接不同的模型和视图去完成用户的需求，这样控制器可以为构造应用程序提供强有力的手段。给定一些可重用的模型和视图，控制器可以根据用户的需求选择模型进行处理，然后选择视图将处理结果显示给用户。</p>
-<h3 id="MVC-的缺点"><a href="#MVC-的缺点" class="headerlink" title="MVC 的缺点"></a>MVC 的缺点</h3><p>MVC 的缺点是由于它没有明确的定义，所以完全理解 MVC 并不是很容易。使用 MVC 需要精心的计划，由于它的内部原理比较复杂，所以需要花费一些时间去思考。</p>
-<p>你将不得不花费相当可观的时间去考虑如何将 MVC 运用到你的应用程序，同时由于模型和视图要严格的分离，这样也给调试应用程序到来了一定的困难。每个构件在使用之前都需要经过彻底的测试。一旦你的构件经过了测试，你就可以毫无顾忌的重用它们了。</p>
-<p>根据我个人经验，由于我们将一个应用程序分成了三个部件，所以使用 MVC 同时也意味着你将要管理比以前更多的文件，这一点是显而易见的。这样好像我们的工作量增加了，但是请记住这比起它所能带给我们的好处是不值一提。</p>
-<p>MVC 并不适合小型甚至中等规模的应用程序，花费大量时间将 MVC 应用到规模并不是很大的应用程序通常会得不偿失。</p>
-<h3 id="MVC-是一条创建软件的好途径"><a href="#MVC-是一条创建软件的好途径" class="headerlink" title="MVC 是一条创建软件的好途径"></a>MVC 是一条创建软件的好途径</h3><p>MVC 设计模式是一个很好创建软件的途径，它所提倡的一些原则，像内容和显示互相分离可能比较好理解。但是如果你要隔离模型、视图和控制器的构件，你可能需要重新思考你的应用程序，尤其是应用程序的构架方面。如果你肯接受 MVC，并且有能力应付它所带来的额外的工作和复杂性，MVC 将会使你的软件在健壮性，代码重用和结构方面上一个新的台阶。</p>
-]]></content>
-  </entry>
-  <entry>
     <title>Navigator对象和Screen对象</title>
     <url>/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/</url>
     <content><![CDATA[<h1 id="Navigator-对象，Screen-对象。"><a href="#Navigator-对象，Screen-对象。" class="headerlink" title="Navigator 对象，Screen 对象。"></a>Navigator 对象，Screen 对象。</h1><p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。</p>
@@ -542,6 +518,30 @@
 
 <p>另一种更简单的写法，是利用 ES2017 才引入标准的<code>Object.getOwnPropertyDescriptors</code>方法。</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">copyObject</span>(<span class="params">orig</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.getPrototypeOf(orig), <span class="built_in">Object</span>.getOwnPropertyDescriptors(orig));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>MVC概念详解</title>
+    <url>/2020/11/24/MVC%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[<p>模型－视图－控制器（Modal View Controler，MVC）是 Xerox PARC 在八十年代为编程语言 Smalltalk－80 发明的一种软件设计模式，至今已被广泛使用。最近几年被推荐为 Sun 公司 J2EE 平台的设计模式，并且受到越来越多的使用 ColdFusion 和 PHP 的开发者的欢迎。模型－视图－控制器模式是一个有用的工具箱，它有很多好处，但也有一些缺点。</p>
+<p>MVC 本来是存在于 Desktop 程序中的，M 是指数据模型，V 是指用户界面，C 则是控制器。使用 MVC 的目的是将 M 和 V 的实现代码分离，从而使同一个程序可以使用不同的表现形式。比如一批统计数据你可以分别用柱状图、饼图来表示。C 存在的目的则是确保 M 和 V 的同步，一旦 M 改变，V 应该同步更新。</p>
+<h3 id="MVC-如何工作"><a href="#MVC-如何工作" class="headerlink" title="MVC 如何工作"></a>MVC 如何工作</h3><p>MVC 是一个设计模式，它强制性的使应用程序的输入、处理和输出分开。使用 MVC 应用程序被分成三个核心部件：模型、视图、控制器。它们各自处理自己的任务。</p>
+<p>1、视图视图是用户看到并与之交互的界面。对老式的 Web 应用程序来说，视图就是由 HTML 元素组成的界面，在新式的 Web 应用程序中，HTML 依旧在视图中扮演着重要的角色，但一些新的技术已层出不穷，它们包括 Macromedia Flash 和象 XHTML，XML/XSL，WML 等一些标识语言和 Web services. 在 web 前端中视图是及其主要的环节。</p>
+<p>如何处理应用程序的界面变得越来越有挑战性。MVC 一个大的好处是它能为你的应用程序处理很多不同的视图。在视图中其实没有真正的处理发生，不管这些数据是联机存储的还是一个雇员列表，作为视图来讲，它只是作为一种输出数据并允许用户操纵的方式。</p>
+<p>2、模型模型表示企业数据和业务规则。在 MVC 的三个部件中，模型拥有最多的处理任务。例如它可能用象 EJBs 和 ColdFusion Components 这样的构件对象来处理数据库。被模型返回的数据是中立的，就是说模型与数据格式无关，这样一个模型能为多个视图提供数据。由于应用于模型的代码只需写一次就可以被多个视图重用，所以减少了代码的重复性。</p>
+<p>3、控制器控制器接受用户的输入并调用模型和视图去完成用户的需求。所以当单击 Web 页面中的超链接和发送 HTML 表单时，控制器本身不输出任何东西和做任何处理。它只是接收请求并决定调用哪个模型构件去处理请求，然后用确定用哪个视图来显示模型处理返回的数据。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1380592864-5a15420675842_articlex.jpg"></p>
+<p>现在我们总结 MVC 的处理过程，首先控制器接收用户的请求，并决定应该调用哪个模型来进行处理，然后模型用业务逻辑来处理用户的请求并返回数据，最后控制器用相应的视图格式化模型返回的数据，并通过表示层呈现给用户。</p>
+<h3 id="为什么要使用-MVC"><a href="#为什么要使用-MVC" class="headerlink" title="为什么要使用 MVC"></a>为什么要使用 MVC</h3><p>大部分 Web 应用程序都是用像 ASP，PHP，或者 CFML 这样的过程化语言来创建的。它们将像数据库查询语句这样的数据层代码和像 HTML 这样的表示层代码混在一起。经验比较丰富的开发者会将数据从表示层分离开来，但这通常不是很容易做到的，它需要精心的计划和不断的尝试。MVC 从根本上强制性的将它们分开。尽管构造 MVC 应用程序需要一些额外的工作，但是它给我们带来的好处是无庸质疑的。</p>
+<p>首先，最重要的一点是多个视图能共享一个模型，正如我所提及的，现在需要用越来越多的方式来访问你的应用程序。对此，其中一个解决之道是使用 MVC，无论你的用户想要 Flash 界面或是 WAP 界面；用一个模型就能处理它们。由于你已经将数据和业务规则从表示层分开，所以你可以最大化的重用你的代码了。</p>
+<p>由于模型返回的数据没有进行格式化，所以同样的构件能被不同界面使用。例如，很多数据可能用 HTML 来表示，但是它们也有可能要用 Macromedia Flash 和 WAP 来表示。模型也有状态管理和数据持久性处理的功能，例如，基于会话的购物车和电子商务过程也能被 Flash 网站或者无线联网的应用程序所重用。</p>
+<p>因为模型是自包含的，并且与控制器和视图相分离，所以很容易改变你的应用程序的数据层和业务规则。如果你想把你的数据库从 MySQL 移植到 Oracle，或者改变你的基于 RDBMS 数据源到 LDAP，只需改变你的模型即可。一旦你正确的实现了模型，不管你的数据来自数据库或是 LDAP 服务器，视图将会正确的显示它们。由于运用 MVC 的应用程序的三个部件是相互对立，改变其中一个不会影响其它两个，所以依据这种设计思想你能构造良好的松偶合的构件。</p>
+<p>对我来说，控制器的也提供了一个好处，就是可以使用控制器来联接不同的模型和视图去完成用户的需求，这样控制器可以为构造应用程序提供强有力的手段。给定一些可重用的模型和视图，控制器可以根据用户的需求选择模型进行处理，然后选择视图将处理结果显示给用户。</p>
+<h3 id="MVC-的缺点"><a href="#MVC-的缺点" class="headerlink" title="MVC 的缺点"></a>MVC 的缺点</h3><p>MVC 的缺点是由于它没有明确的定义，所以完全理解 MVC 并不是很容易。使用 MVC 需要精心的计划，由于它的内部原理比较复杂，所以需要花费一些时间去思考。</p>
+<p>你将不得不花费相当可观的时间去考虑如何将 MVC 运用到你的应用程序，同时由于模型和视图要严格的分离，这样也给调试应用程序到来了一定的困难。每个构件在使用之前都需要经过彻底的测试。一旦你的构件经过了测试，你就可以毫无顾忌的重用它们了。</p>
+<p>根据我个人经验，由于我们将一个应用程序分成了三个部件，所以使用 MVC 同时也意味着你将要管理比以前更多的文件，这一点是显而易见的。这样好像我们的工作量增加了，但是请记住这比起它所能带给我们的好处是不值一提。</p>
+<p>MVC 并不适合小型甚至中等规模的应用程序，花费大量时间将 MVC 应用到规模并不是很大的应用程序通常会得不偿失。</p>
+<h3 id="MVC-是一条创建软件的好途径"><a href="#MVC-是一条创建软件的好途径" class="headerlink" title="MVC 是一条创建软件的好途径"></a>MVC 是一条创建软件的好途径</h3><p>MVC 设计模式是一个很好创建软件的途径，它所提倡的一些原则，像内容和显示互相分离可能比较好理解。但是如果你要隔离模型、视图和控制器的构件，你可能需要重新思考你的应用程序，尤其是应用程序的构架方面。如果你肯接受 MVC，并且有能力应付它所带来的额外的工作和复杂性，MVC 将会使你的软件在健壮性，代码重用和结构方面上一个新的台阶。</p>
 ]]></content>
   </entry>
   <entry>
@@ -817,6 +817,20 @@
       </tags>
   </entry>
   <entry>
+    <title>一般命令式编程语言</title>
+    <url>/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/</url>
+    <content><![CDATA[<p>一般的命令式语言的一种设计方式</p>
+<p>一般来说我们的命令式语言它可能有一些细微的结构上的不一致，但是总体上来讲，它的结构都分成 5 个层级</p>
+<ol>
+<li>Atom（原子级）：原子级是一个语言的最小组成单位，它通常包含一些关键字包含着一些直接量包含着一些变量名这样的一些基本单位，典型的就是我们的变量名，字符串直接量，数字直接量</li>
+<li>Expression（表达式）：原子级的结构通过运算符相连接，然后加上一些辅助的符号，那么它就会构成一个表达式的结构，表达式它通常是一个可以级联的结构，比如说我们的 JavaScript 有四则运算，按位与，移位运算，比较运算，或，非，等</li>
+<li>Statement（语句）：表达式加上一些特定的标识符和一些特定的关键字和一些特定的符号形成一种结构我们把它叫做语句，大家比较熟悉的可能有 if（条件语句），while，for（循环语句），一个有语句的语言其实已经是一个可以达成图灵完备并且去执行的语言了，</li>
+<li>Structure（结构化）：一般的语言还会有结构化的层级比如我们 JavaScript 里就会有 Function，Class 这样的一些设计，它可以我们组织代码，把代码分成不同的块，分成不同的可复用的结构，同样他也会使用关键字来形成结构化的结构</li>
+<li>组织代码，有点语言有，有的不在语言里面在一些辅助性的设施里面，</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>TypeScript 中的高级类型</title>
     <url>/2020/09/13/ts%E9%AB%98%E7%BA%A7%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<h3 id="交叉类型"><a href="#交叉类型" class="headerlink" title="交叉类型"></a>交叉类型</h3><p>交叉类型是将多个类型合并为一个类型，这让我们可以把现有的多种类型叠加到一起作为一种类型，它包含了所需的所有类型的特性，例如<code>Person &amp; Serializable &amp; Loggable </code>同时是 <code>Person</code> 和 <code>Serializable</code> 和 <code>Loggable</code>。 就是说这个类型的对象同时拥有了这三种类型的成员。</p>
@@ -863,20 +877,6 @@
       <tags>
         <tag>TypeScript</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>一般命令式编程语言</title>
-    <url>/2020/11/16/%E4%B8%80%E8%88%AC%E5%91%BD%E4%BB%A4%E5%BC%8F%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/</url>
-    <content><![CDATA[<p>一般的命令式语言的一种设计方式</p>
-<p>一般来说我们的命令式语言它可能有一些细微的结构上的不一致，但是总体上来讲，它的结构都分成 5 个层级</p>
-<ol>
-<li>Atom（原子级）：原子级是一个语言的最小组成单位，它通常包含一些关键字包含着一些直接量包含着一些变量名这样的一些基本单位，典型的就是我们的变量名，字符串直接量，数字直接量</li>
-<li>Expression（表达式）：原子级的结构通过运算符相连接，然后加上一些辅助的符号，那么它就会构成一个表达式的结构，表达式它通常是一个可以级联的结构，比如说我们的 JavaScript 有四则运算，按位与，移位运算，比较运算，或，非，等</li>
-<li>Statement（语句）：表达式加上一些特定的标识符和一些特定的关键字和一些特定的符号形成一种结构我们把它叫做语句，大家比较熟悉的可能有 if（条件语句），while，for（循环语句），一个有语句的语言其实已经是一个可以达成图灵完备并且去执行的语言了，</li>
-<li>Structure（结构化）：一般的语言还会有结构化的层级比如我们 JavaScript 里就会有 Function，Class 这样的一些设计，它可以我们组织代码，把代码分成不同的块，分成不同的可复用的结构，同样他也会使用关键字来形成结构化的结构</li>
-<li>组织代码，有点语言有，有的不在语言里面在一些辅助性的设施里面，</li>
-</ol>
-]]></content>
   </entry>
   <entry>
     <title>人类将成为人工智能的宠物？</title>
@@ -1191,21 +1191,6 @@
       </tags>
   </entry>
   <entry>
-    <title>命令模式</title>
-    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
-<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
-<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
-<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
-]]></content>
-      <categories>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>回溯法</title>
     <url>/2020/11/05/%E5%9B%9E%E6%BA%AF%E6%B3%95/</url>
     <content><![CDATA[<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现以不满足条件时，就 “回溯” 返回，尝试别的路径。</p>
@@ -1226,6 +1211,21 @@
       <tags>
         <tag>算法</tag>
         <tag>五大常用经典算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>命令模式</title>
+    <url>/2020/09/22/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<p>假设有一个快餐店，而我是快餐店的点餐服务员，那么我一天的工作应该是这样的，当某位客人点餐或者打来订餐电话后，我会把它的需求都写在清单上，然后提交给厨房，客人不同关心是那些厨师帮他炒菜，我们餐厅还可以满足可客人的需要的定时服务，比如客人可能当前正在回家的路上，要求一个小时后才开始炒他的菜，只要订单还在，厨师就不会忘记，客人也可以很方便的打电话来撤销订单，另外如果有太多的客人点单，厨师可以按照订单的顺序排队炒菜</p>
+<p>这些记录着订餐信息的清单，便是命令模式中的命令对象</p>
+<h2 id="命令模式的用途"><a href="#命令模式的用途" class="headerlink" title="命令模式的用途"></a>命令模式的用途</h2><p>命令模式是最简单的优雅模式之一，命令模式中的命令（command）指的是一个执行某些特定事情的指令</p>
+<p>命令模式最常见的应用场景是：有时候需要向某些对象发送请求，但是并不知道请求的接收者是谁，也不知道被请求的操作是什么，此时希望有一种松耦合的方式来设计程序的，使得请求送者和请求接收者能够消除彼此间的耦合关系</p>
+]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
@@ -1374,52 +1374,6 @@
       </categories>
       <tags>
         <tag>语言</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>带你深入理解图灵机-什么是人工智能AI？</title>
-    <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI%EF%BC%9F/</url>
-    <content><![CDATA[<h1 id="一、什么是机器？"><a href="#一、什么是机器？" class="headerlink" title="一、什么是机器？"></a>一、什么是机器？</h1><p>为了方便大家回忆和理解，我们简单做下回顾希尔伯特提出的第十数学问题：</p>
-<blockquote>
-<p>随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解？</p>
-</blockquote>
-<p>对于这个问题，大家普遍认为，这样的一套步骤是不存在的，也就是说我们没有一种判断一个数学命题是否为真的通用方法。其实这里最关键的问题是：<strong>什么叫做“一系列有限的步骤”</strong>？</p>
-<p>在没有计算机的时代，人们对“一系列有限的步骤”的体会是模糊。现在大家都很清楚了，其实就是算法，是有读写、条件、循环、移动等组成的一个机械过程，对于<strong>“读写、条件、循环、移动”</strong>这几个词语还眼熟吗？没错，在图灵机组成中出现过，图灵机就是这样的一个假象的机器，第一次给“机械过程、一系列有限的步骤”一个确定的数学定义。</p>
-<p>图灵机的定义其实很简单。包含 4 个部分：</p>
-<ol>
-<li>一个无限长的存储带</li>
-<li>一个读写头，读写头可以在存储带上左右移动</li>
-<li>内部状态存储器</li>
-<li>控制程序指令</li>
-</ol>
-<p>从上一篇文章介绍的虫子的举例中，我们知道通过不同的指令，就可以实现不同的虫子移动。实际上，通过精心设计不同的指令，我们可以用图灵机打印斐波那契数列，圆周率等，实际上我们现在用电脑，手机进行文字、语音、视频交互，看图片，看电影等等这些所有的功能都是用图灵机的方式实现的。</p>
-<hr>
-<h1 id="二、什么是智能（Think）？"><a href="#二、什么是智能（Think）？" class="headerlink" title="二、什么是智能（Think）？"></a>二、什么是智能（Think）？</h1><p>图灵在 1950 年写过一篇论文《计算机器与智能》，有兴趣的同学可以看下，英文版论文，链接是：<a href="https://www.csee.umbc.edu/courses/471/papers/turing.pdf">https://www.csee.umbc.edu/courses/471/papers/turing.pdf</a> 图灵的这篇论文写的太棒了，我们对人工智能的异议、担心、误解图灵都已经想到了，后续笔者有时间会对该篇论文进行一次解读。所以，对于这篇论文，建议大家都去看下，笔者搜索到一版中文翻译版，有兴趣去看看：<a href="https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292">https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292</a></p>
-<p>在开篇的 “The Imitation Game”中，图灵让我们思考：<strong>“机器能否拥有智能？（Can machines think？）</strong>”这个问题。有趣的是，作为计算理论和人工智能领域的天才，图灵成功定义了什么是计算机器（即图灵机），但却不能定义什么是智能（Think）,没有办法用机器或算法来准确定义。因此，图灵设计了一个后人称为图灵测试的模拟游戏。图灵测试的核心想法是要求计算机在没有直接物理接触的情况下接受人类的询问，并尽可能把自己伪装成人类。这个游戏有点类似杀人游戏，这个**”模拟游戏”**大概是这样的：</p>
-<blockquote>
-<p>游戏参与者包括一个男人，一个女人，以及一个任意性别的询问者。 询问者与另两个人待在不同的房间里，并通过打字的方式与他们交流，以确保询问者不能通过声音和笔迹区分二者。</p>
-<p>两位被询问者分别用 X 和 Y 表示，询问者用 C 表示，询问者 C 事先只知道 X 和 Y 中 有且仅有一位女性，而询问的目标是正确分辨 X 和 Y 中哪一位是女性。另一方面，两位被询问者 X 和 Y 的目标都是试图让询问者认为自己是女性。也就是说，男性被询问者需要把自己伪装成女性，而女性被询问者需要努力自证。</p>
-<p>现在我们问：如果我们把“模仿游戏”中的男性被询问者换成计算机，结果会怎样？相比人类男性，计算机能否使询问者更容易产生误判？”</p>
-</blockquote>
-<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1bb628716cf805b9.webp"></p>
-<p>智能行为与人类行为的关系</p>
-<p>图灵测试其实对人工智能的一种充分的等价性。 如上图所示，“所有智能行为”对应的集合和“所有人类行为”对应的集合既有交集又互有不同。在全部智能行为中有一些是人类靠自身无法做到的（比如计算出国际象棋中白棋是否必胜），但人类也是有智能的，因此只要完成两个集合的交集部分—就应该被认作是“拥有智能”的。另一方面，人类行为并不总是和智能相关。图灵测试要求机器全面模拟“所有人类行为”，其中既包括了两个集合的交集，也包括了人类的“非智能”行为。</p>
-<p>因此图灵测试是 “拥有智能”的一个有效的充分条件，也就是说，由于没有办法严格定义智能，图灵把智能测试的范围扩大了，即不一定要全部通过图灵测试才算是真正的人工智能。</p>
-<p>在图灵看来，人的智能（不包含人的所有，比如皮肤，宫保鸡丁和鱼香肉丝哪个更好吃？）是可以用图灵机来模拟的，因为人的智能是某种模式，即一系列机械步骤形成的。</p>
-<h1 id="三、现在人工智能-AI-的实现技术有哪些？"><a href="#三、现在人工智能-AI-的实现技术有哪些？" class="headerlink" title="三、现在人工智能 AI 的实现技术有哪些？"></a>三、现在人工智能 AI 的实现技术有哪些？</h1><p>近几年，人工智能 AI 是被提及的概念。阿尔法狗，苹果的 siri，google assistant，微软小冰，百度大脑，无人驾驶，AI 等等，都被冠以人工智能的概念，不说好像不好意思一样。那么 AI 的实现技术有哪些呢？</p>
-<h2 id="1，传统的机器学习"><a href="#1，传统的机器学习" class="headerlink" title="1，传统的机器学习"></a>1，传统的机器学习</h2><p>传统的机器学习是一种归纳法，主要思想是通过一些特征样本，试图从样本中发现一些规律，提取特征值，然后把这些特征放到各种机器学习模型中，实现对新的数据和行为进行智能识别和预测。</p>
-<p>这种实现方式的的理论基础其实就是统计学，也是人类观察世界，认识世界的一种方式。不过缺点是：<strong>需要人工整理好大量的、尽量覆盖全的样本，是无疑是一个巨大的工作。</strong></p>
-<h2 id="2，深度学习"><a href="#2，深度学习" class="headerlink" title="2，深度学习"></a>2，深度学习</h2><p>传统的机器学习是要输入特征样本，而深度学习是试图从海量的数据中让机器自动提取特征，深度学习也是一种机器学习，这种方式需要输入海量的大数据，让机器从中找到弱关联关系，这种方式比传统机器学习方式减少大量人工整理样本的工作，识别准确率也提高了很多，让人工智能在语音识别、自然语言处理、图片识别等领域达到了可用的程度，是革命的进步。</p>
-<p>深度学习实现方式源于多层神经网络，把特征表示和学习合二为一，特点是放弃了可解释性，寻找关联性。简单白话一下深度学习的工作原理：一个神经元就是一个分类器，神经元模型就是不停的分类，形成规模效率和网络效率，最终高质量的特征值就奇妙的产生了。不过缺点是：<strong>神经元的参数调整依然高度依赖人的经验。</strong></p>
-<h2 id="3，其他更好的人工智能技术？"><a href="#3，其他更好的人工智能技术？" class="headerlink" title="3，其他更好的人工智能技术？"></a>3，其他更好的人工智能技术？</h2><p>现在很多网站要求输入验证码来验证登录，这里的目的是防止机器人模拟登录，比如 12306 要求你找出某一类物品，现在机器还不能很好的通过模式识别出来，但是人类可以。反过来来讲，如果让机器收集人类的这些验证码的识别结果，是否让机器学会人类的识别模式？目前已经很多公司开始了以人工的人工智能方法。当然还有更多更好的方法在不断探索中。</p>
-<h1 id="四、人工智能-AI-能取代人吗？"><a href="#四、人工智能-AI-能取代人吗？" class="headerlink" title="四、人工智能 AI 能取代人吗？"></a>四、人工智能 AI 能取代人吗？</h1><p>2016 年阿尔法狗战胜围棋世界冠军，攻破了人类智力的引以为傲的最后一道防线，一年后，阿尔法狗升级版 master 战胜了阿尔法狗第一版，并通过和自己不断对弈，以人们不可想象的速度快速的进步，最后以全胜的绝对优势打败了世界排名第一的柯洁，甚至让柯洁产生了无力感，至此人类围棋棋手已经不可能战胜以阿尔法狗为代表人工智能机器。</p>
-]]></content>
-      <categories>
-        <category>图灵</category>
-        <category>玄学</category>
-      </categories>
-      <tags>
-        <tag>人工智能</tag>
       </tags>
   </entry>
   <entry>
@@ -1607,6 +1561,52 @@
       </tags>
   </entry>
   <entry>
+    <title>带你深入理解图灵机-什么是人工智能AI？</title>
+    <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BDAI%EF%BC%9F/</url>
+    <content><![CDATA[<h1 id="一、什么是机器？"><a href="#一、什么是机器？" class="headerlink" title="一、什么是机器？"></a>一、什么是机器？</h1><p>为了方便大家回忆和理解，我们简单做下回顾希尔伯特提出的第十数学问题：</p>
+<blockquote>
+<p>随便给一个不确定的方程，是否通过有限的步骤运算，判断这个方程是否存在整数解？</p>
+</blockquote>
+<p>对于这个问题，大家普遍认为，这样的一套步骤是不存在的，也就是说我们没有一种判断一个数学命题是否为真的通用方法。其实这里最关键的问题是：<strong>什么叫做“一系列有限的步骤”</strong>？</p>
+<p>在没有计算机的时代，人们对“一系列有限的步骤”的体会是模糊。现在大家都很清楚了，其实就是算法，是有读写、条件、循环、移动等组成的一个机械过程，对于<strong>“读写、条件、循环、移动”</strong>这几个词语还眼熟吗？没错，在图灵机组成中出现过，图灵机就是这样的一个假象的机器，第一次给“机械过程、一系列有限的步骤”一个确定的数学定义。</p>
+<p>图灵机的定义其实很简单。包含 4 个部分：</p>
+<ol>
+<li>一个无限长的存储带</li>
+<li>一个读写头，读写头可以在存储带上左右移动</li>
+<li>内部状态存储器</li>
+<li>控制程序指令</li>
+</ol>
+<p>从上一篇文章介绍的虫子的举例中，我们知道通过不同的指令，就可以实现不同的虫子移动。实际上，通过精心设计不同的指令，我们可以用图灵机打印斐波那契数列，圆周率等，实际上我们现在用电脑，手机进行文字、语音、视频交互，看图片，看电影等等这些所有的功能都是用图灵机的方式实现的。</p>
+<hr>
+<h1 id="二、什么是智能（Think）？"><a href="#二、什么是智能（Think）？" class="headerlink" title="二、什么是智能（Think）？"></a>二、什么是智能（Think）？</h1><p>图灵在 1950 年写过一篇论文《计算机器与智能》，有兴趣的同学可以看下，英文版论文，链接是：<a href="https://www.csee.umbc.edu/courses/471/papers/turing.pdf">https://www.csee.umbc.edu/courses/471/papers/turing.pdf</a> 图灵的这篇论文写的太棒了，我们对人工智能的异议、担心、误解图灵都已经想到了，后续笔者有时间会对该篇论文进行一次解读。所以，对于这篇论文，建议大家都去看下，笔者搜索到一版中文翻译版，有兴趣去看看：<a href="https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292">https://wenku.baidu.com/view/1e464d1a376baf1ffc4fada8.html?rec_flag=default&amp;sxts=1530772880292</a></p>
+<p>在开篇的 “The Imitation Game”中，图灵让我们思考：<strong>“机器能否拥有智能？（Can machines think？）</strong>”这个问题。有趣的是，作为计算理论和人工智能领域的天才，图灵成功定义了什么是计算机器（即图灵机），但却不能定义什么是智能（Think）,没有办法用机器或算法来准确定义。因此，图灵设计了一个后人称为图灵测试的模拟游戏。图灵测试的核心想法是要求计算机在没有直接物理接触的情况下接受人类的询问，并尽可能把自己伪装成人类。这个游戏有点类似杀人游戏，这个**”模拟游戏”**大概是这样的：</p>
+<blockquote>
+<p>游戏参与者包括一个男人，一个女人，以及一个任意性别的询问者。 询问者与另两个人待在不同的房间里，并通过打字的方式与他们交流，以确保询问者不能通过声音和笔迹区分二者。</p>
+<p>两位被询问者分别用 X 和 Y 表示，询问者用 C 表示，询问者 C 事先只知道 X 和 Y 中 有且仅有一位女性，而询问的目标是正确分辨 X 和 Y 中哪一位是女性。另一方面，两位被询问者 X 和 Y 的目标都是试图让询问者认为自己是女性。也就是说，男性被询问者需要把自己伪装成女性，而女性被询问者需要努力自证。</p>
+<p>现在我们问：如果我们把“模仿游戏”中的男性被询问者换成计算机，结果会怎样？相比人类男性，计算机能否使询问者更容易产生误判？”</p>
+</blockquote>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/1bb628716cf805b9.webp"></p>
+<p>智能行为与人类行为的关系</p>
+<p>图灵测试其实对人工智能的一种充分的等价性。 如上图所示，“所有智能行为”对应的集合和“所有人类行为”对应的集合既有交集又互有不同。在全部智能行为中有一些是人类靠自身无法做到的（比如计算出国际象棋中白棋是否必胜），但人类也是有智能的，因此只要完成两个集合的交集部分—就应该被认作是“拥有智能”的。另一方面，人类行为并不总是和智能相关。图灵测试要求机器全面模拟“所有人类行为”，其中既包括了两个集合的交集，也包括了人类的“非智能”行为。</p>
+<p>因此图灵测试是 “拥有智能”的一个有效的充分条件，也就是说，由于没有办法严格定义智能，图灵把智能测试的范围扩大了，即不一定要全部通过图灵测试才算是真正的人工智能。</p>
+<p>在图灵看来，人的智能（不包含人的所有，比如皮肤，宫保鸡丁和鱼香肉丝哪个更好吃？）是可以用图灵机来模拟的，因为人的智能是某种模式，即一系列机械步骤形成的。</p>
+<h1 id="三、现在人工智能-AI-的实现技术有哪些？"><a href="#三、现在人工智能-AI-的实现技术有哪些？" class="headerlink" title="三、现在人工智能 AI 的实现技术有哪些？"></a>三、现在人工智能 AI 的实现技术有哪些？</h1><p>近几年，人工智能 AI 是被提及的概念。阿尔法狗，苹果的 siri，google assistant，微软小冰，百度大脑，无人驾驶，AI 等等，都被冠以人工智能的概念，不说好像不好意思一样。那么 AI 的实现技术有哪些呢？</p>
+<h2 id="1，传统的机器学习"><a href="#1，传统的机器学习" class="headerlink" title="1，传统的机器学习"></a>1，传统的机器学习</h2><p>传统的机器学习是一种归纳法，主要思想是通过一些特征样本，试图从样本中发现一些规律，提取特征值，然后把这些特征放到各种机器学习模型中，实现对新的数据和行为进行智能识别和预测。</p>
+<p>这种实现方式的的理论基础其实就是统计学，也是人类观察世界，认识世界的一种方式。不过缺点是：<strong>需要人工整理好大量的、尽量覆盖全的样本，是无疑是一个巨大的工作。</strong></p>
+<h2 id="2，深度学习"><a href="#2，深度学习" class="headerlink" title="2，深度学习"></a>2，深度学习</h2><p>传统的机器学习是要输入特征样本，而深度学习是试图从海量的数据中让机器自动提取特征，深度学习也是一种机器学习，这种方式需要输入海量的大数据，让机器从中找到弱关联关系，这种方式比传统机器学习方式减少大量人工整理样本的工作，识别准确率也提高了很多，让人工智能在语音识别、自然语言处理、图片识别等领域达到了可用的程度，是革命的进步。</p>
+<p>深度学习实现方式源于多层神经网络，把特征表示和学习合二为一，特点是放弃了可解释性，寻找关联性。简单白话一下深度学习的工作原理：一个神经元就是一个分类器，神经元模型就是不停的分类，形成规模效率和网络效率，最终高质量的特征值就奇妙的产生了。不过缺点是：<strong>神经元的参数调整依然高度依赖人的经验。</strong></p>
+<h2 id="3，其他更好的人工智能技术？"><a href="#3，其他更好的人工智能技术？" class="headerlink" title="3，其他更好的人工智能技术？"></a>3，其他更好的人工智能技术？</h2><p>现在很多网站要求输入验证码来验证登录，这里的目的是防止机器人模拟登录，比如 12306 要求你找出某一类物品，现在机器还不能很好的通过模式识别出来，但是人类可以。反过来来讲，如果让机器收集人类的这些验证码的识别结果，是否让机器学会人类的识别模式？目前已经很多公司开始了以人工的人工智能方法。当然还有更多更好的方法在不断探索中。</p>
+<h1 id="四、人工智能-AI-能取代人吗？"><a href="#四、人工智能-AI-能取代人吗？" class="headerlink" title="四、人工智能 AI 能取代人吗？"></a>四、人工智能 AI 能取代人吗？</h1><p>2016 年阿尔法狗战胜围棋世界冠军，攻破了人类智力的引以为傲的最后一道防线，一年后，阿尔法狗升级版 master 战胜了阿尔法狗第一版，并通过和自己不断对弈，以人们不可想象的速度快速的进步，最后以全胜的绝对优势打败了世界排名第一的柯洁，甚至让柯洁产生了无力感，至此人类围棋棋手已经不可能战胜以阿尔法狗为代表人工智能机器。</p>
+]]></content>
+      <categories>
+        <category>图灵</category>
+        <category>玄学</category>
+      </categories>
+      <tags>
+        <tag>人工智能</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>带你深入理解图灵机-天才所在的时代</title>
     <url>/2020/11/09/%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9B%BE%E7%81%B5%E6%9C%BA-%E5%A4%A9%E6%89%8D%E6%89%80%E5%9C%A8%E7%9A%84%E6%97%B6%E4%BB%A3/</url>
     <content><![CDATA[<p>这几年由于区块链的大热，以太坊独特的 solidity 语言实现智能合约功能，<strong>图灵完备</strong>这个词走进大家的视线。</p>
@@ -1721,30 +1721,6 @@
       </tags>
   </entry>
   <entry>
-    <title>有限状态机是什么</title>
-    <url>/2020/11/17/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA%E6%98%AF%E4%BB%80%E4%B9%88/</url>
-    <content><![CDATA[<h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
-<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
-<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
-<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
-<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
-<p>它有三个特征：</p>
-<ul>
-<li>状态总数（state）是有限的。</li>
-<li>任一时刻，只处在一种状态之中。</li>
-<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
-</ul>
-<p>有限状态机一般都有以下特点：</p>
-<ul>
-<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
-<li>事物拥有的状态总数是有限的；</li>
-<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
-<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
-<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
-</ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h3 id="编码演示"><a href="#编码演示" class="headerlink" title="编码演示"></a>编码演示</h3>]]></content>
-  </entry>
-  <entry>
     <title>泛用语言分类方法</title>
     <url>/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<p>从这节课开始我们进入到重学 JavaScript 的内容，在所有的重学系列的课程中，我们都是回假设大家已经对，JavaScript，Css，html 有了一定的了解，而我们重学的过程其实是在帮助我们在这些过去的知识里面建立一个新的秩序，也就是建立知识体系的过程，重学 JavaScript 部分，将会带着大家以 JavaScript 的语法为线索，从细到粗的跟大家完成学习一遍 JavaScript 的语言知识，第一节课我们回先讲一点编程语言的基本知识</p>
@@ -1768,6 +1744,138 @@
 <p>一个解析器由一个类似Yacc的解析生成器构成。试图判断源程序是否有效。当然，编译器做的不仅仅是解析源代码，他们通常把它翻译成一些可执行格式。因此，一个解析器通常输出多是或否的回答，一个典型的抽象语法树，这是由编译器后续阶段用于最终生成机器代码，包含直接运行在硬件执行，或一些中间代码需要虚拟机执行。</p>
 <h3 id="乔姆斯基谱系"><a href="#乔姆斯基谱系" class="headerlink" title="乔姆斯基谱系"></a>乔姆斯基谱系</h3><p>乔姆斯基体系是由诺·乔姆斯基于1956年提出的，是刻画形式文法表达能力的一个分类谱系。</p>
 <p>太深奥看不懂，以后再说，，，，</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>浅析前端页面渲染机制</title>
+    <url>/2021/04/07/%E6%B5%85%E6%9E%90%E5%89%8D%E7%AB%AF%E9%A1%B5%E9%9D%A2%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h3 id="浏览器基础结构"><a href="#浏览器基础结构" class="headerlink" title="浏览器基础结构"></a>浏览器基础结构</h3><p>浏览器基础结构主要包括如下 7 部分：</p>
+<ol>
+<li>用户界面（User Interface）:用户所看到及与之交互的功能组件，如地址栏，返回，前进按钮等；</li>
+<li>浏览器引擎（Browser engine）:负责控制和管理下一级的渲染引擎；</li>
+<li>渲染引擎（Rendering engine）:负责解析用户请求的内容（如 HTML 或 XML，渲染引擎会解析 HTML 或 XML，以及相关 CSS，然后返回解析后的内容）；</li>
+<li>网络（Networking）:负责处理网络相关的事务，如 HTTP 请求等；</li>
+<li>UI 后端（UI backend）:负责绘制提示框等浏览器组件，其底层使用的是操作系统的用户接口；</li>
+<li>JavaScript 解释器（JavaScript interpreter）:负责解析和执行 JavaScript 代码；</li>
+<li>数据存储（Data storage）:负责持久存储诸如 cookie 和缓存等应用数据。</li>
+</ol>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/20180613160847632.png"></p>
+<h3 id="浏览器内核"><a href="#浏览器内核" class="headerlink" title="浏览器内核"></a>浏览器内核</h3><p>各大主要浏览器使用内核也是有差别的，大致可以分为以下几类：</p>
+<ul>
+<li>Trident 内核：IE</li>
+<li>Webkit 内核：Chrome,Safari</li>
+<li>Gecko 内核：FireFox</li>
+</ul>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>当用户访问页面时，浏览器需要获取用户请求内容，这个过程主要涉及浏览器网络模块：</p>
+<ol>
+<li>用户在地址栏输入域名，如 baidu.com，DNS（Domain Name System，域名解析系统）服务器根据输入的域名查找对应 IP，然后向该 IP 地址发起请求；</li>
+<li>浏览器获得并解析服务器的返回内容(HTTP response)；</li>
+<li>浏览器加载 HTML 文件及文件内包含的外部引用文件及图片，多媒体等资源。</li>
+</ol>
+<h3 id="DNS-预解析（DNS-prefetch）"><a href="#DNS-预解析（DNS-prefetch）" class="headerlink" title="DNS 预解析（DNS prefetch）"></a>DNS 预解析（DNS prefetch）</h3><p>浏览器 DNS 解析大多时候较快，且会缓存常用域名的解析值，但是如果网站涉及多域名，在对每一个域名访问时都需要先解析出 IP 地址，而我们希望在跳转或者请求其他域名资源时尽量快，则可以开启域名预解析，浏览器会在空闲时提前解析声明需要预解析的域名，如：</p>
+<p>图图图图</p>
+<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><p>我们通常说 JavaScript 执行是单线程的，但是浏览器网络部分通常是有几个平行线程同时开启，但是也会有 限制，一般为 2-6 个。</p>
+<h3 id="渲染引擎及关键渲染路径（Critical-Rendering-Path）"><a href="#渲染引擎及关键渲染路径（Critical-Rendering-Path）" class="headerlink" title="渲染引擎及关键渲染路径（Critical Rendering Path）"></a>渲染引擎及关键渲染路径（Critical Rendering Path）</h3><p>渲染引擎所做的事是将请求内容展现给我们，默认支持 HTML,XML 和图片类型，对于其他诸如 PDF 等类型的内容则需要安装相应插件，但浏览器的展示工作流程基本是一样的。</p>
+<p>通过网络模块加载到 HTML 文件后渲染引擎渲染流程如下，这也通常被称作关键渲染路径（Critical Rendering Path）：</p>
+<p>1.构建 DOM 树(DOM tree)：从上到下解析 HTML 文档生成 DOM 节点树（DOM tree），也叫内容树（content tree）；</p>
+<p>2.构建 CSSOM(CSS Object Model)树：加载解析样式生成 CSSOM 树；</p>
+<p>3.执行 JavaScript：加载并执行 JavaScript 代码（包括内联代码或外联 JavaScript 文件）；</p>
+<p>4.构建渲染树(render tree)：根据 DOM 树和 CSSOM 树,生成渲染树(render tree)；</p>
+<p>渲染树：按顺序展示在屏幕上的一系列矩形，这些矩形带有字体，颜色和尺寸等视觉属性。</p>
+<p>5.布局（layout）：根据渲染树将节点树的每一个节点布局在屏幕上的正确位置；</p>
+<p>6.绘制（painting）：遍历渲染树绘制所有节点，为每一个节点适用对应的样式，这一过程是通过 UI 后端模块完成；</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/20180614100553238.png"></p>
+<p>为了更友好的用户体验，浏览器会尽可能快的展现内容，而不会等到文档所有内容到达才开始解析和构建/布局渲染树，而是每次处理一部分，并展现在屏幕上，这也是为什么我们经常可以看到页面加载的时候内容是从上到下一点一点展现的。</p>
+<h3 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h3><p>不同于网络部分的多线程渲染引擎是单线程工作的，意味着渲染流程是一步一步渐进完成的。</p>
+<h3 id="解析文档-parser-HTML"><a href="#解析文档-parser-HTML" class="headerlink" title="解析文档(parser HTML)"></a>解析文档(parser HTML)</h3><p>在详细介绍浏览器渲染文档之前，先应该理解浏览器如何解析文档：解析文档的顺序，对于 CSS 和 JavaScript 如何处理等。</p>
+<h4 id="解析顺序"><a href="#解析顺序" class="headerlink" title="解析顺序"></a>解析顺序</h4><p>浏览器按从上到下的顺序扫描解析文档；</p>
+<h4 id="解析样式和脚本"><a href="#解析样式和脚本" class="headerlink" title="解析样式和脚本"></a>解析样式和脚本</h4><ul>
+<li><p>脚本： 或许是由于通常会在 JavaScript 脚本中改变文档 DOM 结构，于是浏览器以同步方式解析，加载和执行脚本，浏览器在解析文档时，当解析到<code>&lt;script&gt;</code>标签时，会解析其中的脚本（对于外链的 JavaScript 文件，需要先加载该文件内容，再进行解析），然后立即执行，这整个过程都会阻塞文档解析，直到脚本执行完才会继续解析文档。就是说由于脚本是同步加载和执行的，它会阻塞文档解析，这也解释了为什么现在通常建议将<code>&lt;script&gt;</code>标签放在<code>&lt;/body&gt;</code>标签前面，而不是放在<code>&lt;head&gt;</code>标签里。现在 HTML5 提供 defer 和 async 两个属性支持延迟和异步加载 JavaScript 文件</p>
+</li>
+<li><p>改进： 针对上文说的脚本阻塞文档解析，主流浏览器如 Chrome 和 FireFox 等都有一些优化，比如在执行脚本时，开启另一个线程解析剩余的文档以找出并加载其他的待下载外部资源（不改变主线程的 DOM 树，仅优化加载外部资源）。</p>
+</li>
+<li><p>样式： 不同于脚本，浏览器对样式的处理并不会阻塞文档解析，大概是因为样式表并不会改变 DOM 结构。</p>
+</li>
+<li><p>样式表与脚本： 你可能想问样式是否会阻塞脚本文件的加载执行呢？正常情况是不会的，但是存在一个问题是通常我们会在脚本中请求样式信息，但是在文档解析时，如果样式尚未加载或解析，将会得到错误信息，对于这一问题，FireFox 浏览器和 Webkit 浏览器处理策略不同： 当存在有样式文件未被加载和解析时，FireFox 浏览器会阻塞所有脚本；而 Webkit 浏览器只会阻塞操作了改文件内声明的样式属性的脚本。</p>
+</li>
+</ul>
+<h3 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h3><p>DOM，即文档对象模型（Document Object Model）,DOM 树，即文档内所有节点构成的一个树形结构。</p>
+<p>假设浏览器获取返回的如下 HTML 文档：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;./theme.css&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./config.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>关键渲染路径<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">&quot;title&quot;</span>&gt;</span>关键渲染路径<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>关键渲染路径介绍<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">footer</span>&gt;</span>@copyright2017<span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>首先浏览器从上到下依次解析文档构建 DOM 树，如下：</p>
+<p>图图图图</p>
+<h3 id="构建-CSSOM-树"><a href="#构建-CSSOM-树" class="headerlink" title="构建 CSSOM 树"></a>构建 CSSOM 树</h3><p>CSSOM，即 CSS 对象模型（CSS Object Model），CSSOM 树，与 DOM 树结构相似，只是另外为每一个节点关联了样式信息。</p>
+<p>theme.css 样式内容如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">html</span>,</span><br><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#fcfcfc</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.title</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.footer</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#aaa</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构建 CSSOM 树如图：</p>
+<p>图图图图</p>
+<h3 id="执行-JavaScript"><a href="#执行-JavaScript" class="headerlink" title="执行 JavaScript"></a>执行 JavaScript</h3><p>上文已经阐述了文档解析时对脚本的处理，我们得知脚本加载，解析和执行会阻塞文档解析，而在特殊情况下样式的加载和解析也会阻塞脚本，所以现在推荐的实践是<code>&lt;script&gt;</code>标签放在<code>&lt;/body&gt;</code>标签前面。</p>
+<h3 id="构建渲染树-render-tree"><a href="#构建渲染树-render-tree" class="headerlink" title="构建渲染树(render tree)"></a>构建渲染树(render tree)</h3><p>DOM 树和 CSSOM 树都构建完了，接着浏览器会构建渲染树：</p>
+<blockquote>
+<p>渲染树，代表一个文档的视觉展示，浏览器通过它将文档内容绘制在浏览器窗口，展示给用户，它由按顺序展示在屏幕上的一系列矩形对象组成，这些矩形对象都带有字体，颜色和尺寸，位置等视觉样式属性。对于这些矩对象，FireFox 称之为框架（frame）,Webkit 浏览器称之为渲染对象（render object, renderer），后文统称为渲染对象。</p>
+</blockquote>
+<p><strong>这里把渲染树节点称为矩形对象，是因为，每一个渲染对象都代表着其对应 DOM 节点的 CSS 盒子,该盒子包含了尺寸，位置等几何信息，同时它指向一个样式对象包含其他视觉样式信息。</strong></p>
+<h4 id="渲染树与-DOM-树"><a href="#渲染树与-DOM-树" class="headerlink" title="渲染树与 DOM 树"></a>渲染树与 DOM 树</h4><p>每一个渲染对象都对应着 DOM 节点，但是非视觉（隐藏，不占位）DOM 元素不会插入渲染树，如<code>&lt;head&gt;</code>元素或声明 <code>display: none</code>的元素，渲染对象与 DOM 节点不是简单的一对一的关系，一个 DOM 可以对应一个渲染对象，但一个 DOM 元素也可能对应多个渲染对象，因为有很多元素不止包含一个 CSS 盒子，如当文本被折行时，会产生多个行盒，这些行会生成多个渲染对象；又如行内元素同时包含块元素和行内元素，则会创建一个匿名块级盒包含内部行内元素，此时一个 DOM 对应多个矩形对象（渲染对象）。</p>
+<p>渲染树及其对应 DOM 树如图：</p>
+<p>图图图图</p>
+<ul>
+<li>图中渲染树 viewport 即视口，是文档的初始包含块，scroll 代表滚动区域，详见 CSS 之视觉格式化模型(Visual Formatting Model)</li>
+<li>渲染树并不会包含显式或隐式地 display：none;的标签元素。</li>
+</ul>
+<h3 id="布局（Layout）或回流（reflow，relayout）"><a href="#布局（Layout）或回流（reflow，relayout）" class="headerlink" title="布局（Layout）或回流（reflow，relayout）"></a>布局（Layout）或回流（reflow，relayout）</h3><p>创建渲染树后，下一步就是布局（Layout）,或者叫回流（reflow,relayout），这个过程就是通过渲染树中渲染对象的信息，计算出每一个渲染对象的位置和尺寸，将其安置在浏览器窗口的正确位置，而有些时候我们会在文档布局完成后对 DOM 进行修改，这时候可能需要重新进行布局，也可称其为回流，本质上还是一个布局的过程，每一个渲染对象都有一个布局或者回流方法，实现其布局或回流。</p>
+<h4 id="流（flow）"><a href="#流（flow）" class="headerlink" title="流（flow）"></a>流（flow）</h4><p>HTML 采用的是基于流的方式定位布局，其按照从左到右，从上到下的顺序进行排列，详见 CSS 定位机制。</p>
+<p>全局布局与局部布局对渲染树的布局可以分为全局和局部的，全局即对整个渲染树进行重新布局，如当我们改变了窗口尺寸或方向或者是修改了根元素的尺寸或者字体大小等；而局部布局可以是对渲染树的某部分或某一个渲染对象进行重新布局。</p>
+<h4 id="脏位系统（dirty-bit-system）"><a href="#脏位系统（dirty-bit-system）" class="headerlink" title="脏位系统（dirty bit system）"></a>脏位系统（dirty bit system）</h4><p>大多数 web 应用对 DOM 的操作都是比较频繁，这意味着经常需要对 DOM 进行布局和回流，而如果仅仅是一些小改变，就触发整个渲染树的回流，这显然是不好的，为了避免这种情况，浏览器使用了脏位系统，只有一个渲染对象改变了或者某渲染对象及其子渲染对象脏位值为”dirty”时，说明需要回流。</p>
+<p>表示需要布局的脏位值有两种：</p>
+<p>“dirty”–自身改变，需要回流 “children are dirty”–子节点改变，需要回流</p>
+<h4 id="布局过程"><a href="#布局过程" class="headerlink" title="布局过程"></a>布局过程</h4><p>布局是一个从上到下，从外到内进行的递归过程，从根渲染对象，即对应着 HTML 文档根元素<html>，然后下一级渲染对象，如对应着<body>元素，如此层层递归，依次计算每一个渲染对象的几何信息（位置和尺寸）。</p>
+<p><strong>几何信息-位置和尺寸，即相对于窗口的坐标和尺寸，如根渲染对象，其坐标为（0， 0），尺寸即是视口 尺寸（浏览器窗口的可视区域）。</strong></p>
+<p>每一个渲染对象的布局流程基本如：</p>
+<ol>
+<li>计算此渲染对象的宽度（width）；</li>
+<li>遍历此渲染对象的所有子级，依次：<ol>
+<li>设置子级渲染对象的坐标</li>
+<li>判断是否需要触发子渲染对象的布局或回流方法，计算子渲染对象的高度（height）</li>
+</ol>
+</li>
+<li>设置此渲染对象的高度：根据子渲染对象的累积高，margin 和 padding 的高度设置其高度；</li>
+<li>设置此渲染对象脏位值为 false。强制回流在渲染树布局完成后，再次操作文档，改变文档的内容或结构，或者元素定位时，会触发回流，即需要重新布局，如请求某 DOM 的”offsetHeight”样式信息等诸多情况：</li>
+</ol>
+<p>DOM 操作，如增加，删除，修改或移动；变更内容；激活伪类；访问或改变某些 CSS 属性（包括修改样式表或元素类名或使用 JavaScript 操作等方式）；浏览器窗口变化（滚动或尺寸变化）</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;padding&quot;</span>); <span class="comment">// reflow</span></span><br><span class="line">$(<span class="string">&quot;body&quot;</span>)[<span class="number">0</span>].offsetHeight; <span class="comment">// relow</span></span><br></pre></td></tr></table></figure>
+
+<p>有过 CSS3 动画开发经验的同学可能会有经历，如下入场动画：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.slide-left</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">-moz-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">-o-transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">  <span class="attribute">transition</span>: margin-left <span class="number">1s</span> ease-out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后执行如下脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> $slide = $(<span class="string">&quot;.slide-left&quot;</span>);</span><br><span class="line">$slide</span><br><span class="line">  .css(&#123;</span><br><span class="line">    <span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;100px&quot;</span>,</span><br><span class="line">  &#125;)</span><br><span class="line">  .addClass(<span class="string">&quot;slide-left&quot;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">  <span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;10px&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我们会发现并没有效果，为什么呢？因为对 margin-left 的修改并没有触发回流，元素 margin-left 值的改变被缓存，如果我们在中间强制触发回流：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> $slide = $(<span class="string">&#x27;.slide-left&#x27;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">	<span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;100px&quot;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">console</span>.log($slide.css(<span class="string">&#x27;padding&#x27;</span>);</span><br><span class="line">$slide.addClass(<span class="string">&#x27;slide-left&#x27;</span>);</span><br><span class="line">$slide.css(&#123;</span><br><span class="line">	<span class="string">&quot;margin-left&quot;</span>: <span class="string">&quot;10px&quot;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>再看就达到了预期效果。</p>
+<h3 id="绘制（painting）"><a href="#绘制（painting）" class="headerlink" title="绘制（painting）"></a>绘制（painting）</h3><p>最后是绘制(paint)阶段或重绘（repaint）阶段，浏览器 UI 组件将遍历渲染树并调用渲染对象的绘制（paint）方法，将内容展现在屏幕上，也有可能在之后对 DOM 进行修改，需要重新绘制渲染对象，也就是重绘，绘制和重绘的关系可以参考布局和回流的关系。</p>
+<h4 id="全局与局部绘制"><a href="#全局与局部绘制" class="headerlink" title="全局与局部绘制"></a>全局与局部绘制</h4><p>与布局相似，绘制也分为全局和局部绘制，即对整个渲染树或某些渲染对象进行绘制。</p>
+<h4 id="触发重绘"><a href="#触发重绘" class="headerlink" title="触发重绘"></a>触发重绘</h4><p>我们已经知道很多操作可能会触发回流，那么什么时候可能触发重绘呢，通常，当改变元素的视觉样式，如 background-color,visibility，margin，padding 或字体颜色时会触发全局或局部重绘，如：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;color&quot;</span>, <span class="string">&quot;red&quot;</span>); <span class="comment">// repaint</span></span><br><span class="line">$(<span class="string">&quot;body&quot;</span>).css(<span class="string">&quot;margin&quot;</span>, <span class="string">&quot;2px&quot;</span>); <span class="comment">// reflow, repaint</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="页面渲染优化"><a href="#页面渲染优化" class="headerlink" title="页面渲染优化"></a>页面渲染优化</h3><p>浏览器对上文介绍的关键渲染路径进行了很多优化，针对每一次变化产生尽量少的操作，还有优化判断重新绘制或布局的方式等等。</p>
+<p>在改变文档根元素的字体颜色等视觉性信息时，会触发整个文档的重绘，而改变某元素的字体颜色则只触发特定元素的重绘；改变元素的位置信息会同时触发此元素（可能还包括其兄弟元素或子级元素）的布局和重绘。某些重大改变，如更改文档根元素<code>&lt;html&gt;</code>的字体尺寸，则会触发整个文档的重新布局和重绘，据此及上文所述，推荐以下优化和实践：</p>
+<ol>
+<li>HTML 文档结构层次尽量少，最好不深于六层；</li>
+<li>脚本尽量后放，放在<code>&lt;/body&gt;</code>前即可；</li>
+<li>少量首屏样式内联放在<code>&lt;head&gt;</code>标签内；</li>
+<li>样式结构层次尽量简单；</li>
+<li>在脚本中尽量减少 DOM 操作，尽量缓存访问 DOM 的样式信息，避免过度触发回流；</li>
+<li>减少通过 JavaScript 代码修改元素样式，尽量使用修改 class 名方式操作样式或动画；</li>
+<li>动画尽量使用在绝对定位或固定定位的元素上；</li>
+<li>隐藏在屏幕外，或在页面滚动时，尽量停止动画；</li>
+<li>尽量缓存 DOM 查找，查找器尽量简洁；</li>
+<li>涉及多域名的网站，可以开启域名预解析</li>
+</ol>
+<h3 id="浏览器渲染事件日志"><a href="#浏览器渲染事件日志" class="headerlink" title="浏览器渲染事件日志"></a>浏览器渲染事件日志</h3><p>1.发起请求； 2.解析 HTML； 3.解析样式； 4.执行 JavaScript； 5.布局； 6.绘制</p>
 ]]></content>
   </entry>
   <entry>
@@ -2379,69 +2487,47 @@
   </entry>
   <entry>
     <title>状态机</title>
-    <url>/2020/11/18/%E7%8A%B6%E6%80%81%E6%9C%BA/</url>
-    <content><![CDATA[<blockquote>
-<p>状态机是什么？状态机应该如何去应用呢？状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
-</blockquote>
-<p>在工作过程中，意外接触了一个词——“状态机”，这是个什么意思，可以为我们做产品提供怎样的用处？</p>
-<p><strong>作为产品，为什么需要学习状态机呢？</strong></p>
-<p>在刚进入公司的时候，根据公司产品做流程图的时候，发现自己经常会漏了这样或那样的状态，导致整体流程会有问题。后来知道了状态机这样的东西，发现用这幅图就可以很清晰的表达整个状态的流转。当然这个不是做好一款产品的必备品，但是却可以让你更加轻松的同技术等人员交流。</p>
-<p>一、什么是状态机？</p>
-<p>就是就是状态转移图。</p>
-<p>如果流程围绕某个事物的状态变化进行，显而易见，该轮到状态机图上场了。一个状态机图中只描述一个事物，该事物有多个状态，不同的动作作用到状态上导致状态的转换。</p>
-<p>举个最简单的例子：</p>
-<p>人有三个状态：</p>
+    <url>/2020/11/17/%E7%8A%B6%E6%80%81%E6%9C%BA/</url>
+    <content><![CDATA[<h3 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h3><p>有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机， 是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
+<p>其作用主要是描述对象在它的生命周期内所经历的状态序列，以及如何响应来自外界的各种事件。在计算机科学中， 有限状态机被广泛用于建模应用行为、硬件电路系统设计、软件工程，编译器、网络协议、和计算与语言的研究。</p>
+<p>有限状态机（Finite-state machine）是一个非常有用的模型，可以模拟世界上大部分事物。它是一个数学模型。是一个抽象机器，在任何时候都可以处于有限数量的状态之一。响应某些外部输入， FSM 可以从一个状态转换到另一个状态; 从一种状态到另一种状态的变化称为过渡。 状态机的行为可以在现代社会中的许多设备中观察到，这些设备根据它们呈现的事件序列执行预定的一系列行为。 例如自动售货机，当存放适当的硬币组合时分配产品，当车辆等待时改变顺序的交通灯等。</p>
+<p>在我们前端开发中，我们可以套用有限状态机模型，将业务流程状态化，划分状态和相应的触发事件与动作，利用生命周期事件进行控制与执行</p>
+<h3 id="知识剖析"><a href="#知识剖析" class="headerlink" title="知识剖析"></a>知识剖析</h3><p>我们来看一下阮一峰大神对有限状态机的描述</p>
+<p>它有三个特征：</p>
 <ul>
-<li>健康</li>
-<li>感冒</li>
-<li>康复中</li>
+<li>状态总数（state）是有限的。</li>
+<li>任一时刻，只处在一种状态之中。</li>
+<li>某种条件下，会从一种状态转变（transition）到另一种状态。</li>
 </ul>
-<p>触发的条件有</p>
+<p>有限状态机一般都有以下特点：</p>
 <ul>
-<li>淋雨(t1)</li>
-<li>吃药(t2)</li>
-<li>打针(t3)</li>
-<li>休息(t4)</li>
+<li>可以用状态来描述事物，并且任一时刻，事物总是处于一种状态；</li>
+<li>事物拥有的状态总数是有限的；</li>
+<li>通过触发事物的某些行为，可以导致事物从一种状态过渡到另一种状态；</li>
+<li>事物状态变化是有规则的，A 状态可以变换到 B，B 可以变换到 C，A 却不一定能变换到 C；</li>
+<li>同一种行为，可以将事物从多种状态变成同种状态，但是不能从同种状态变成多种状态。</li>
 </ul>
-<p>所以状态机就是健康-&gt;(t4)-&gt;健康；健康-&gt;(t1)-&gt;感冒；感冒-&gt;(t3)-&gt;健康；感冒-&gt;(t2)-&gt;康复中；康复中-&gt;(t4)-&gt;健康等等。就是这样状态在不同的条件下，跳转到自己或不同状态的图。</p>
-<p>状态机可归纳为 4 个要素，即<strong>现态、条件、动作、次态</strong>。这样的归纳，主要是出于对状态机的内在因果关系的考虑。<strong>“现态”和“条件”是因，“动作”和“次态”是果</strong>。</p>
-<p>详解如下：</p>
-<ol>
+<h3 id="状态机综述"><a href="#状态机综述" class="headerlink" title="状态机综述"></a>状态机综述</h3><p>关于状态机的一个极度确切的描述是：它是一个有向图形，由一组节点和一组相应的转移函数组成。状态机通过响应一系列事件而“运行”。每个事件都在属于“当前” 节点的转移函数的控制范围内，其中函数的范围是节点的一个子集。函数返回“下一个”（也许是同一个）节点。这些节点中至少有一个必须是终态。当到达终态， 状态机停止。</p>
+<p>包含一组状态集（states）、一个起始状态（start state）、一组输入符号集（alphabet）、一个映射输入符号和当前状态到下一状态的转换函数（transition function）的计算模型。当输入符号串，模型随即进入起始状态。它要改变到新的状态，依赖于转换函数。在有限状态机中，会有有许多变量，例如，状态 机有很多与动作（actions）转换(Mealy机)或状态（摩尔机）关联的动作，多重起始状态，基于没有输入符号的转换，或者指定符号和状态（非定有 限状态机）的多个转换，指派给接收状态（识别者）的一个或多个状态，等等。</p>
+<p>传统应用程序的控制流程基本是顺序的：遵循事先设定的逻辑，从头到尾地执行。很少有事件能改变标准执行流程；而且这些事件主要涉及异常情况。“命令行实用程序”是这种传统应用程序的典型例子。</p>
+<p>另一类应用程序由外部发生的事件来驱动——换言之，事件在应用程序之外生成，无法由应用程序或程序员来控制。具体需要执行的代码取决于接收到的事件，或者它相对于其他事件的抵达时间。所以，控制流程既不能是顺序的，也不能是事先设定好的，因为它要依赖于外部事件。事件驱动的GUI应用程序是这种应用程序的典 型例子，它们由命令和选择（也就是用户造成的事件）来驱动。</p>
+<p>Web应用程序由提交的表单和用户请求的网页来驱动，它们也可划归到上述类别。但是，GUI应用程序对于接收到的事件仍有一定程度的控制，因为这些事件要依赖于向用户显示的窗口和控件，而窗口和控件是由程序员控制的。Web应用 程序则不然，因为一旦用户采取不在预料之中的操作（比如使用浏览器的历史记录、手工输入链接以及模拟一次表单提交等等），就很容易打乱设计好的应用程序逻辑。</p>
+<p>显然，必须采取不同的技术来处理这些情况。它能处理任何顺序的事件，并能提供有意义的响应——即使这些事件发生的顺序和预计的不同。有限状态机正是为了满足这方面的要求而设计的。</p>
+<p>有限状态机是一种概念性机器，它能采取某种操作来响应一个外部事件。具体采取的操作不仅能取决于接收到的事件，还能取决于各个事件的相对发生顺序。之所以能做到这一点，是因为机器能跟踪一个内部状态，它会在收到事件后进行更新。为一个事件而响应的行动不仅取决于事件本身，还取决于机器的内部状态。另外，采取 的行动还会决定并更新机器的状态。这样一来，任何逻辑都可建模成一系列事件/状态组合。</p>
+<p>状态机可归纳为4个要素，即现态、条件、动作、次态。这样的归纳，主要是出于对状态机的内在因果关系的考虑。“现态”和“条件”是因，“动作”和“次态”是果。详解如下：</p>
+<ul>
 <li>现态：是指当前所处的状态。</li>
 <li>条件：又称为“事件”，当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。</li>
-<li>动作：条件满足后执行的动作，动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。</li>
+<li>动作：条件满足后执行的动作。动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。</li>
 <li>次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</li>
-</ol>
-<p>在了解关于状态机的文章后，结合自己的平时的学习总结，我发现：<strong>在平时的业务过程中，判断即对应状态机理论中的条件，我们做什么操作改变状态即理论中的动作</strong>，同时状态必须要有始有终，否则会出现状态卡住，无法继续正常推进。</p>
-<p>状态机的开始一般用空心圆表示，代表状态图的起始位置。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/d85d69eb32524248948b04def94de314.jpeg" alt="img"></p>
-<p>结尾一般用实心圆点表示，是一个状态的终止点。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/02677f6905fd4ffdbbf5129eff72cd78.jpeg" alt="img"></p>
-<p>二、那么状态机怎样去应用呢？</p>
-<p>以物理课学的灯泡图为例：就是一个最基本的小型状态机，这个例子人人里的很多大神都已经举过了，这里就简单说下。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/18bd7c123ed34779b7a987181ad226ed.jpeg" alt="img"></p>
-<p>这里就是两个状态：① 打开开关，灯泡亮；② 关闭开关，灯泡灭。</p>
-<p>可以画出以下的状态机图：</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/0e3c08e476844dd99026db2709c03464.jpeg" alt="img"></p>
-<p>如果进度卡住，该怎么办？</p>
-<p>这里有个比较形象的案例就是淘宝的自动确认收货，卖家发货后状态变为待收货，若买家迟迟不点确认收货的话，那么流程就停止在这里，卖家也迟迟收不到货款。</p>
-<p>因此，在这里，淘宝做了一个条件，判断时间是否达到 15 天，如果达到 15 天，做出确认收货的动作，使得状态得到流转。</p>
-<p>以小灯泡为例：假设为了节约，小灯泡开了超过 8 个小时就自动关闭，除非再次做打开开关的操作，画出此时的状态机图如下：</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/258a535c301c4c6ca40a5877f5d2707a.jpeg" alt="img"></p>
-<p>同样的状态判断应用了很多场景，例如：患者购买服务或商品时，订单由待支付-已支付的状态中的通过时间条件来实现状态得到继续流转。</p>
-<p>但是，判断不是状态机必要的，如：正常小灯泡的两种状态，可以不需要经过判断。起始和终止状态可能是相同的，也可能是不同的，即同一种状态可能是起始状态，也可能为终止状态。</p>
-<p>在这里以外卖 app 为例：制作了一个订单的简单的状态机图，以订单的状态变更推动。</p>
-<p><img data-src="http://5b0988e595225.cdn.sohucs.com/images/20180508/5dde037d12804ddabdb50f69a5080fd8.png" alt="img"></p>
-<p>三、总结</p>
-<p>新入门时，对状态机和业务流程图总是傻傻分不清楚，因此对于状态机和流程图进行了了解和归纳。</p>
-<p>总的来说，状态机图和业务流程图有些类似，但是又有不同：</p>
-<ul>
-<li>两者是两种不同的思维方式；</li>
-<li>两者思考的出发点不一样，因而两者所表达的目的也是不同的；</li>
-<li>两者的各个节点都是不同的，流程图为动作，状态机为状态。</li>
 </ul>
-<p>一般情况下，我们使用的均为有限状态机。状态机可以对业务状态进行梳理，一目了然，之后可以根据业务场景不断增加。</p>
-<p>同时，使用状态机和相关人员，尤其是开发，进行表达时，也可以更加清晰，提升沟通效率。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>一段简单的代码，见识下状态机的威力，使用状态机对 HTML 文档进行词法分析</p>
+<p>语言编译的首个步骤，对语言进行分词，最小有意义的单元</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> EOF = <span class="keyword">void</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// html词法分析器， 接受一个语法解析器</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HTMLLexicalParser</span>(<span class="params">syntaxer</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 状态</span></span><br><span class="line">  <span class="keyword">let</span> state = data;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 存储</span></span><br><span class="line">  <span class="keyword">let</span> token = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">let</span> attribute = <span class="literal">null</span>;</span><br><span class="line">  <span class="comment">// 接收输入</span></span><br><span class="line">  <span class="built_in">this</span>.receiveInput = <span class="function"><span class="keyword">function</span> (<span class="params">char</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (state == <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&quot;there is an error&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 更新状态</span></span><br><span class="line">      state = state(char);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">this</span>.reset = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    state = data;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始状态判断</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&lt;&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> tagOpen; <span class="comment">// 标签开始</span></span><br><span class="line">    &#125;</span><br><span class="line">    emitToken(c);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 标签开始状态</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagOpen</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 标签结束</span></span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> endTagOpen;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 是否为任意大小写字母</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[a-zA-Z]/</span>.test(c)) &#123;</span><br><span class="line">      token = <span class="keyword">new</span> StartTagToken();</span><br><span class="line">      token.name = c.toLowerCase();</span><br><span class="line">      <span class="keyword">return</span> tagName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> error(c);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 标签名状态</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">tagName</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> selfClosingTag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      emitToken(token);</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[a-zA-Z]/</span>.test(c)) &#123;</span><br><span class="line">      token.name += c.toLowerCase();</span><br><span class="line">      <span class="keyword">return</span> tagName;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 等待属性名</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">beforeAttributeName</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> selfClosingTag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      emitToken(token);</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[&quot;&#x27;&lt;]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> error(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    attribute = <span class="keyword">new</span> Attribute();</span><br><span class="line">    attribute.name = c.toLowerCase();</span><br><span class="line">    attribute.value = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> attributeName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 属性名</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeName</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> selfClosingTag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;=&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.name += c.toLowerCase();</span><br><span class="line">    <span class="keyword">return</span> attributeName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 等待属性内容</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">beforeAttributeValue</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&#x27;&quot;&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> attributeValueDoubleQuoted;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&#x27;&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> attributeValueSingleQuoted;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/\t \f\n/</span>.test(c)) &#123;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeValue;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueUnquoted;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 属性内容双引号</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeValueDoubleQuoted</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&#x27;&quot;&#x27;</span>) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueDoubleQuoted;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 属性内容单引号</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeValueSingleQuoted</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&#x27;&quot;</span>) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueSingleQuoted;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 属性内容</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attributeValueUnquoted</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[\t \f\n]/</span>.test(c)) &#123;</span><br><span class="line">      token[attribute.name] = attribute.value;</span><br><span class="line">      <span class="keyword">return</span> beforeAttributeName;</span><br><span class="line">    &#125;</span><br><span class="line">    attribute.value += c;</span><br><span class="line">    <span class="keyword">return</span> attributeValueUnquoted;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 自封闭</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">selfClosingTag</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      emitToken(token);</span><br><span class="line">      endToken = <span class="keyword">new</span> EndTagToken();</span><br><span class="line">      endToken.name = token.name;</span><br><span class="line">      emitToken(endToken);</span><br><span class="line">      <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 结束标签打开</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">endTagOpen</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/[a-zA-Z]/</span>.test(c)) &#123;</span><br><span class="line">      token = <span class="keyword">new</span> EndTagToken();</span><br><span class="line">      token.name = c.toLowerCase();</span><br><span class="line">      <span class="keyword">return</span> tagName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (c === <span class="string">&quot;&gt;&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> error(c);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 发出Token</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">emitToken</span>(<span class="params">token</span>) </span>&#123;</span><br><span class="line">    syntaxer.receiveInput(token);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">error</span>(<span class="params">c</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`warn: unexpected char &#x27;<span class="subst">$&#123;c&#125;</span>&#x27;`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StartTagToken</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EndTagToken</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Attribute</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  HTMLLexicalParser,</span><br><span class="line">  StartTagToken,</span><br><span class="line">  EndTagToken,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以执行看一下效果</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; HTMLLexicalParser &#125; = <span class="built_in">require</span>(<span class="string">&quot;./lexer&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// html 文档片段</span></span><br><span class="line"><span class="keyword">const</span> testHTML = <span class="string">`&lt;html maaa=a &gt;</span></span><br><span class="line"><span class="string">    &lt;head&gt;</span></span><br><span class="line"><span class="string">        &lt;title&gt;cool&lt;/title&gt;</span></span><br><span class="line"><span class="string">    &lt;/head&gt;</span></span><br><span class="line"><span class="string">    &lt;body&gt;</span></span><br><span class="line"><span class="string">        &lt;img src=&quot;a&quot; /&gt;</span></span><br><span class="line"><span class="string">    &lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;`</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dummySyntaxer = &#123;</span><br><span class="line">  <span class="comment">// 接受一个字符</span></span><br><span class="line">  receiveInput: <span class="function">(<span class="params">token</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> token === <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;token.replace(<span class="regexp">/\n/</span>, <span class="string">&quot;\\n&quot;</span>).replace(<span class="regexp">/ /</span>, <span class="string">&quot;&lt;whitespace&gt;&quot;</span>)&#125;</span>`</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(token);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> lexer = <span class="keyword">new</span> HTMLLexicalParser(dummySyntaxer);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> c <span class="keyword">of</span> testHTML) &#123;</span><br><span class="line">  lexer.receiveInput(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
   </entry>
   <entry>
@@ -2988,188 +3074,6 @@
       </tags>
   </entry>
   <entry>
-    <title>时间复杂度概念</title>
-    <url>/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<p>先简要介绍一下</p>
-<p>算法复杂度分为时间复杂度和空间复杂度，时间复杂度是指执行这个算法所需要的计算工作量，空间复杂度是指执行这个算法所需的内存空间</p>
-<p>时间和空间都是计算机资源的重要体现，而算法的复杂性就是体现在该算法执行时计算机所需的资源多少</p>
-<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>算法的时间复杂度反映了程序执行时间随输入规模增长而增长的量级，在很大程度上很好的反映出算法的优劣与否</p>
-<p>算法的执行时间需要依据该算法编制的程序在计算机上执行运行所消耗的时间来度量，度量方法有两种，事后统计方法和事前分析估算方法，因为事后统计法更多的依赖计算机的硬件，软件等环境因素，有时容易掩盖算法本身的优劣，因此常常采用事后分析估算法</p>
-<p>一个算法由控制结构（顺序，分支，循环）和原操作（固有数据类型的操作）构成，而算法时间取决于两种的综合效率</p>
-<p>一个算法花费的时间与算法中语句的执行次数成正比，执行次数越多，花费的时间就越多，一个算法中的执行次数称为语句频度或时间频度，记为 T(n);</p>
-<p>在各种算法中，若算法中的语句执行次数为一个常数，则时间复杂度为 O(1), 同时若不同算法的时间频度不一样，但它们的时间复杂度可能时一样的<code>T(n)=n^2+2n+4 </code>与 <code>T（n）=4n^2+n+8</code> 它们的时间频度显然不一样，但他们的时间复杂度确是一样的，均为 O(n^2) 时间复杂度只关注最高数量级，且与之系数也没有关系，</p>
-<p>求解算法的时间复杂度的具体步骤是：</p>
-<ol>
-<li><p>找出算法中的基本语句；</p>
-<p>算法中执行次数最多的那条语句就是基本语句，通常是最内层循环的循环体</p>
-</li>
-<li><p>计算基本语句的执行次数的数量级</p>
-<p>只需计算基本语句执行次数的数量级，这就意味着只要保证基本语句执行次数的函数中的最高次幂正确即可，可以忽略所有低次幂和最高次幂，这样就能够简化算法分析，并且使注意力集中在最重要的一点上，增长率</p>
-</li>
-<li><p>用大 O 记号表示算法的时间性能</p>
-<p>将基本语句执行的数量放入大 O 记号中，如果算法中包含嵌套的循环，则基本语句通常使最内层的循环体，如果算法中包含并列循环，则将并列循环的时间复杂度相加</p>
-</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  a++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">    a++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第一个 for 循环的时间复杂度为 O(n)，第二个 for 循环时间复杂度为 O(n^2)，则整个算法的时间复杂度为 O(n^2+n)。</p>
-<p>O(1)表示基本语句的执行次数是一个常数，一般来说，只要算法中不存在循环语句，时间复杂度就为 O(1)。</p>
-<hr>
-<p>算法（Algorithm）是指用来操作数据、解决程序问题的一组方法。对于同一个问题，使用不同的算法，也许最终得到的结果是一样的，比如排序就有前面的十大经典排序和几种奇葩排序，虽然结果相同，但在过程中消耗的资源和时间却会有很大的区别，比如快速排序与猴子排序：）。</p>
-<p>那么我们应该如何去衡量不同算法之间的优劣呢？</p>
-<p>主要还是从算法所占用的「时间」和「空间」两个维度去考量。</p>
-<ul>
-<li>时间维度：是指执行当前算法所消耗的时间，我们通常用「时间复杂度」来描述。</li>
-<li>空间维度：是指执行当前算法需要占用多少内存空间，我们通常用「空间复杂度」来描述。</li>
-</ul>
-<h2 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><h3 id="大-O-符号表示法"><a href="#大-O-符号表示法" class="headerlink" title="大 O 符号表示法"></a>大 O 符号表示法</h3><p>大 O 表示法：算法的时间复杂度通常用大 O 符号表述，定义为 **T[n] = O(f(n)) **。称函数 T(n)以 f(n)为界或者称 T(n)受限于 f(n)。</p>
-<p>如果一个问题的规模是 n，解这一问题的某一算法所需要的时间为 T(n)。T(n)称为这一算法的“时间复杂度”。</p>
-<blockquote>
-<p>上面公式中用到的 Landau 符号是由德国数论学家保罗·巴赫曼（Paul Bachmann）在其 1892 年的著作《解析数论》首先引入，由另一位德国数论学家艾德蒙·朗道（Edmund Landau）推广。Landau 符号的作用在于用简单的函数来描述复杂函数行为，给出一个上或下（确）界。在计算算法复杂度时一般只用到大 O 符号，Landau 符号体系中的小 o 符号、Θ 符号等等比较不常用。这里的 O，最初是用大写希腊字母，但现在都用大写英语字母 O；小 o 符号也是用小写英语字母 o，Θ 符号则维持大写希腊字母 Θ。</p>
-</blockquote>
-<p>大 O 符号是一种算法「复杂度」的「相对」「表示」方式。</p>
-<p>这个句子里有一些重要而严谨的用词：</p>
-<ul>
-<li>相对(relative)：你只能比较相同的事物。你不能把一个做算数乘法的算法和排序整数列表的算法进行比较。但是，比较 2 个算法所做的算术操作（一个做乘法，一个做加法）将会告诉你一些有意义的东西；</li>
-<li>表示(representation)：大 O(用它最简单的形式)把算法间的比较简化为了一个单一变量。这个变量的选择基于观察或假设。例如，排序算法之间的对比通常是基于比较操作(比较 2 个结点来决定这 2 个结点的相对顺序)。这里面就假设了比较操作的计算开销很大。但是，如果比较操作的计算开销不大，而交换操作的计算开销很大，又会怎么样呢？这就改变了先前的比较方式；</li>
-<li>复杂度(complexity)：如果排序 10,000 个元素花费了我 1 秒，那么排序 1 百万个元素会花多少时间？在这个例子里，复杂度就是相对其他东西的度量结果。</li>
-</ul>
-<h3 id="常见的时间复杂度量级"><a href="#常见的时间复杂度量级" class="headerlink" title="常见的时间复杂度量级"></a>常见的时间复杂度量级</h3><p>我们先从常见的时间复杂度量级进行大 O 的理解：</p>
-<ul>
-<li>常数阶 O(1)</li>
-<li>线性阶 O(n)</li>
-<li>平方阶 O(n²)</li>
-<li>对数阶 O(logn)</li>
-<li>线性对数阶 O(nlogn)</li>
-</ul>
-<p><img data-src="https://mmbiz.qpic.cn/mmbiz_jpg/D67peceibeITdVEicwQ7T05FPwkggMR2IiaRc88PpnacPKl4xapFBz28QSu6HyGU2zpYCiaayiaKia2T2cZzEicYyXAJw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
-<h4 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaC8GtCYhYHhkZgbwSiaBvctaIZ9nZIurQMaQZyeyKKAnEh1fJ6p4vmtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<p>无论代码执行了多少行，其他区域不会影响到操作，这个代码的时间复杂度都是 O(1)</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void swapTwoInts(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">int</span> temp = a;</span><br><span class="line"><span class="symbol">3 </span> a = b;</span><br><span class="line"><span class="symbol">4 </span> b = temp;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawGKfic7qoiaxGt1wmZjDwlJksMAN2nvsMplZNbsa0DxKFKx1Gzo02HaA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<p>在下面这段代码，for 循环里面的代码会执行 n 遍，因此它消耗的时间是随着 n 的变化而变化的，因此可以用 O(n)来表示它的时间复杂度。</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum ( <span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span>  <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt;= n ; i ++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     ret += i;</span><br><span class="line"><span class="symbol">5 </span>  &#125;</span><br><span class="line"><span class="symbol">6 </span>  <span class="keyword">return</span> ret;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>特别一提的是 c * O(n) 中的 c 可能小于 1 ，比如下面这段代码：</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void reverse ( string &amp;s ) &#123;</span><br><span class="line"><span class="symbol">2 </span>   <span class="keyword">int</span> n = s.size();</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n/<span class="number">2</span> ; i++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     <span class="keyword">swap</span> ( s[i] , s[n-<span class="number">1</span>-i]);</span><br><span class="line"><span class="symbol">5 </span>   &#125;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="O-n²"><a href="#O-n²" class="headerlink" title="O(n²)"></a>O(n²)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiagPTZBricA32aLO0SKJwBxg9ADp81gE4micOalibyciahExK3AP5woZzmsw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<p>当存在双重循环的时候，即把 O(n) 的代码再嵌套循环一遍，它的时间复杂度就是 O(n²) 了。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>void selectionSort(<span class="built_in">int</span> arr[],<span class="built_in">int</span> n)&#123;</span><br><span class="line"> <span class="number">2</span>   <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n ; i++)&#123;</span><br><span class="line"> <span class="number">3</span>     <span class="built_in">int</span> minIndex = i;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> j = i + <span class="number">1</span>; j &lt; n ; j++ )</span><br><span class="line"> <span class="number">5</span>       <span class="keyword">if</span> (arr[j] &lt; arr[minIndex])</span><br><span class="line"> <span class="number">6</span>           minIndex = j;</span><br><span class="line"> <span class="number">7</span></span><br><span class="line"> <span class="number">8</span>     swap ( arr[i], arr[minIndex]);</span><br><span class="line"> <span class="number">9</span>   &#125;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里简单的推导一下</p>
-<ul>
-<li>当 i = 0 时，第二重循环需要运行 (n - 1) 次</li>
-<li>当 i = 1 时，第二重循环需要运行 (n - 2) 次</li>
-<li>。。。。。。</li>
-</ul>
-<p>不难得到公式：</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>(n - <span class="number">1</span>) + (n - <span class="number">2</span>) + (n - <span class="number">3</span>) + ... + <span class="number">0</span></span><br><span class="line"><span class="number">2</span>= (<span class="number">0</span> + n - <span class="number">1</span>) * n / <span class="number">2</span></span><br><span class="line"><span class="number">3</span>= O (n ^<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-<p>当然并不是所有的双重循环都是 O(n²)，比如下面这段输出 30n 次 <code>Hello,五分钟学算法：）</code>的代码。</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void printInformation (<span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt;= n ; i++)</span><br><span class="line"><span class="symbol">3 </span>       <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span> ; j &lt;= <span class="number">30</span> ; j ++)</span><br><span class="line"><span class="symbol">4 </span>          cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="O-logn"><a href="#O-logn" class="headerlink" title="O(logn)"></a>O(logn)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch( <span class="built_in">int</span> arr[], <span class="built_in">int</span> n , <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>  <span class="built_in">int</span> l = <span class="number">0</span>, r = n - <span class="number">1</span>;</span><br><span class="line"> <span class="number">3</span>  <span class="keyword">while</span> ( l &lt;= r) &#123;</span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span> (arr[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line"> <span class="number">6</span>    <span class="keyword">if</span> (arr[mid] &gt; target ) r = mid - <span class="number">1</span>;</span><br><span class="line"> <span class="number">7</span>    <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line"> <span class="number">8</span>  &#125;</span><br><span class="line"> <span class="number">9</span>  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在二分查找法的代码中，通过 while 循环，成 2 倍数的缩减搜索范围，也就是说需要经过 log2^n 次即可跳出循环。</p>
-<p>同样的还有下面两段代码也是 O(logn) 级别的时间复杂度。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>  <span class="comment">// 整形转成字符串</span></span><br><span class="line"> <span class="number">2</span>  <span class="built_in">string</span> <span class="built_in">int</span>ToString ( <span class="built_in">int</span> num )&#123;</span><br><span class="line"> <span class="number">3</span>   <span class="built_in">string</span> s = <span class="string">&quot;&quot;</span>;</span><br><span class="line"> <span class="number">4</span>   <span class="comment">// n 经过几次“除以10”的操作后，等于0</span></span><br><span class="line"> <span class="number">5</span>   <span class="keyword">while</span> (num )&#123;</span><br><span class="line"> <span class="number">6</span>    s += <span class="string">&#x27;0&#x27;</span> + num%<span class="number">10</span>;</span><br><span class="line"> <span class="number">7</span>    num /= <span class="number">10</span>;</span><br><span class="line"> <span class="number">8</span>   &#125;</span><br><span class="line"> <span class="number">9</span>   reverse(s)</span><br><span class="line"><span class="number">10</span>   <span class="keyword">return</span> s;</span><br><span class="line"><span class="number">11</span>  &#125;</span><br><span class="line"><span class="number">1</span>void hello (<span class="built_in">int</span> n ) &#123;</span><br><span class="line"><span class="number">2</span>   <span class="comment">// n 除以几次 2 到 1</span></span><br><span class="line"><span class="number">3</span>   <span class="keyword">for</span> ( <span class="built_in">int</span> sz = <span class="number">1</span>; sz &lt; n ; sz += sz)</span><br><span class="line"><span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; n; i++)</span><br><span class="line"><span class="number">5</span>        cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="O-nlogn"><a href="#O-nlogn" class="headerlink" title="O(nlogn)"></a>O(nlogn)</h4><p>将时间复杂度为 O(logn)的代码循环 N 遍的话，那么它的时间复杂度就是 n * O(logn)，也就是了 O(nlogn)。</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void hello ()&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span>( m = <span class="number">1</span> ; m &lt; n ; m++)&#123;</span><br><span class="line"><span class="symbol">3 </span>   i = <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span>   <span class="keyword">while</span>( i &lt; n )&#123;</span><br><span class="line"><span class="symbol">5 </span>       i = i * <span class="number">2</span>;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span>  &#125;</span><br><span class="line"><span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="不常见的时间复杂度"><a href="#不常见的时间复杂度" class="headerlink" title="不常见的时间复杂度"></a>不常见的时间复杂度</h3><p>下面来分析一波另外几种复杂度： 递归算法的时间复杂度（recursive algorithm time complexity），最好情况时间复杂度（best case time complexity）、最坏情况时间复杂度（worst case time complexity）、平均时间复杂度（average case time complexity）和均摊时间复杂度（amortized time complexity）。</p>
-<h4 id="递归算法的时间复杂度"><a href="#递归算法的时间复杂度" class="headerlink" title="递归算法的时间复杂度"></a>递归算法的时间复杂度</h4><p>如果递归函数中，只进行一次递归调用，递归深度为 depth；</p>
-<p>在每个递归的函数中，时间复杂度为 T；</p>
-<p>*<em>则总体的时间复杂度为 O(T \</em> depth)**。</p>
-<p>在前面的学习中，归并排序 与 快速排序 都带有递归的思想，并且时间复杂度都是 O(nlogn) ，但并不是有递归的函数就一定是 O(nlogn) 级别的。从以下两种情况进行分析。</p>
-<h5 id="①-递归中进行一次递归调用的复杂度分析"><a href="#①-递归中进行一次递归调用的复杂度分析" class="headerlink" title="① 递归中进行一次递归调用的复杂度分析"></a>① 递归中进行一次递归调用的复杂度分析</h5><h6 id="二分查找法"><a href="#二分查找法" class="headerlink" title="二分查找法"></a>二分查找法</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch(<span class="built_in">int</span> arr[], <span class="built_in">int</span> l, <span class="built_in">int</span> r, <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>    <span class="keyword">if</span>( l &gt; r ) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"> <span class="number">3</span></span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r-l)/<span class="number">2</span>;</span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span>( arr[mid] == target ) <span class="keyword">return</span> mid;</span><br><span class="line"> <span class="number">6</span>    <span class="keyword">else</span> <span class="keyword">if</span>( arr[mid] &gt; target )</span><br><span class="line"> <span class="number">7</span>    <span class="keyword">return</span> binarySearch(arr, l, mid<span class="number">-1</span>, target);    <span class="comment">// 左边</span></span><br><span class="line"> <span class="number">8</span>    <span class="keyword">else</span></span><br><span class="line"> <span class="number">9</span>    <span class="keyword">return</span> binarySearch(arr, mid+<span class="number">1</span>, r, target);   <span class="comment">// 右边</span></span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>比如在这段二分查找法的代码中，每次在 [ l , r ] 范围中去查找目标的位置，如果中间的元素 <code>arr[mid]</code> 不是 <code>target</code>，那么判断 <code>arr[mid]</code>是比 <code>target</code> 大 还是 小 ，进而再次调用 <code>binarySearch</code>这个函数。</p>
-<p>在这个递归函数中，每一次没有找到<code>target</code>时，要么调用 左边 的 <code>binarySearch</code>函数，要么调用 右边 的 <code>binarySearch</code>函数。也就是说在此次递归中，最多调用了一次递归调用而已。根据数学知识，需要 log2n 次才能递归到底。因此，二分查找法的时间复杂度为 O(logn)。</p>
-<h6 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaS8P0IxiarxvqcTwqc0SHBOzmnyGvQkXE8pticX5DDicu68ILLcopaSnvw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum (<span class="keyword">int</span> n) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span> <span class="keyword">return</span> n + sum( n - <span class="number">1</span> )</span><br><span class="line"><span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这段代码中比较容易理解递归深度随输入 n 的增加而线性递增，因此时间复杂度为 O (n)。</p>
-<h6 id="求幂"><a href="#求幂" class="headerlink" title="求幂"></a>求幂</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iiap3NSVdYcYMicDw1PpsuxY8qQacHM8cIMOt3oBya9UHFrmWypASsyXkA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>//递归深度：logn</span><br><span class="line"><span class="number">2</span>//时间复杂度：O(logn)</span><br><span class="line"><span class="number">3d</span>ouble pow( double x, <span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">4 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="symbol">6 </span> double t = pow(x,n/<span class="number">2</span>);</span><br><span class="line"><span class="symbol">7 </span> <span class="keyword">if</span> (n %<span class="number">2</span>) <span class="keyword">return</span> x*t*t;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> t * t;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>递归深度为 <code>logn</code>，因为是求需要除以 2 多少次才能到底。</p>
-<h5 id="②-递归中进行多次递归调用的复杂度分析"><a href="#②-递归中进行多次递归调用的复杂度分析" class="headerlink" title="② 递归中进行多次递归调用的复杂度分析"></a>② 递归中进行多次递归调用的复杂度分析</h5><p>递归算法中比较难计算的是多次递归调用。</p>
-<p>先看下面这段代码，有两次递归调用。</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>// O(<span class="number">2</span>^n) 指数级别的数量级，后续动态规划的优化点</span><br><span class="line"><span class="number">2</span><span class="keyword">int</span> f(<span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">3 </span><span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span><span class="keyword">return</span> f(n-<span class="number">1</span>) + f(n - <span class="number">1</span>);</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia9S7ev0pwvhCLF5PbyWHVTXrDoJQ79xdSmf1H96AQo6l0A3ttnbaSVQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<p>递归树中节点数就是代码计算的调用次数。</p>
-<p>比如 当 <code>n = 3</code> 时，调用次数计算公式为</p>
-<blockquote>
-<p>1 + 2 + 4 + 8 = 15</p>
-</blockquote>
-<p>一般的，调用次数计算公式为</p>
-<blockquote>
-<p>2^0 + 2^1 + 2^2 + …… + 2^n = 2^(n+1) - 1 = O(2^n)</p>
-</blockquote>
-<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia7WpvIv6ibiaQibGibtSO0BvQyGSssye1sT7RmPOCsXB4e3xQPaicNbibJibqA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<p>与之有所类似的是 归并排序 的递归树，区别点在于</p>
-<ul>
-<li>\1. 上述例子中树的深度为 <code>n</code>，而 归并排序 的递归树深度为<code>logn</code>。</li>
-<li>\2. 上述例子中每次处理的数据规模是一样的，而在 归并排序 中每个节点处理的数据规模是逐渐缩小的</li>
-</ul>
-<p>因此，在如 归并排序 等排序算法中，每一层处理的数据量为 O(n) 级别，同时有 <code>logn</code> 层，时间复杂度便是 O(nlogn)。</p>
-<h4 id="最好、最坏情况时间复杂度"><a href="#最好、最坏情况时间复杂度" class="headerlink" title="最好、最坏情况时间复杂度"></a>最好、最坏情况时间复杂度</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaocwzriaeqkOJQsorsR5Q0jqxRY9GhRbC7MYiaDKyAstD7v6plsHuHPPw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<p>最好、最坏情况时间复杂度指的是特殊情况下的时间复杂度。</p>
-<p>动图表明的是在数组 array 中寻找变量 x 第一次出现的位置，若没有找到，则返回 -1；否则返回位置下标。</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> find(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> x) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span> (  <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n; i++) &#123;</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">if</span> (array[i] == x) &#123;</span><br><span class="line"><span class="symbol">4 </span>       <span class="keyword">return</span> i;</span><br><span class="line"><span class="symbol">5 </span>       break;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span> &#125;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里当数组中第一个元素就是要找的 x 时，时间复杂度是 O(1)；而当最后一个元素才是 x 时，时间复杂度则是 O(n)。</p>
-<p>最好情况时间复杂度就是在最理想情况下执行代码的时间复杂度，它的时间是最短的；最坏情况时间复杂度就是在最糟糕情况下执行代码的时间复杂度，它的时间是最长的。</p>
-<h4 id="平均情况时间复杂度"><a href="#平均情况时间复杂度" class="headerlink" title="平均情况时间复杂度"></a>平均情况时间复杂度</h4><p>最好、最坏时间复杂度反应的是极端条件下的复杂度，发生的概率不大，不能代表平均水平。那么为了更好的表示平均情况下的算法复杂度，就需要引入平均时间复杂度。</p>
-<p>平均情况时间复杂度可用代码在所有可能情况下执行次数的加权平均值表示。</p>
-<p>还是以 <code>find</code> 函数为例，从概率的角度看， x 在数组中每一个位置的可能性是相同的，为 1 / n。那么，那么平均情况时间复杂度就可以用下面的方式计算：</p>
-<blockquote>
-<p>((1 + 2 + … + n) / n + n) / 2 = (3n + 1) / 4</p>
-</blockquote>
-<p><code>find</code> 函数的平均时间复杂度为 O(n)。</p>
-<h4 id="均摊复杂度分析"><a href="#均摊复杂度分析" class="headerlink" title="均摊复杂度分析"></a>均摊复杂度分析</h4><p>我们通过一个动态数组的 <code>push_back</code> 操作来理解 <strong>均摊复杂度</strong>。</p>
-<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia0cnwqHXWTLZQO4dNl7hgE2g4iaibhJTqmRN12wTHFJiav5grgVCEyYNtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>template &lt;typename T&gt;</span><br><span class="line"> <span class="number">2</span>class MyVector&#123;</span><br><span class="line"> <span class="number">3</span><span class="keyword">private</span>:</span><br><span class="line"> <span class="number">4</span>    T* data;</span><br><span class="line"> <span class="number">5</span>    <span class="built_in">int</span> size;       <span class="comment">// 存储数组中的元素个数</span></span><br><span class="line"> <span class="number">6</span>    <span class="built_in">int</span> capacity;   <span class="comment">// 存储数组中可以容纳的最大的元素个数</span></span><br><span class="line"> <span class="number">7</span>    <span class="comment">// 复杂度为 O(n)</span></span><br><span class="line"> <span class="number">8</span>    <span class="built_in">void</span> resize(<span class="built_in">int</span> newCapacity)&#123;</span><br><span class="line"> <span class="number">9</span>        T *newData = new T[newCapacity];</span><br><span class="line"><span class="number">10</span>        <span class="keyword">for</span>( <span class="built_in">int</span> i = <span class="number">0</span> ; i &lt; size ; i ++ )&#123;</span><br><span class="line"><span class="number">11</span>              newData[i] = data[i];</span><br><span class="line"><span class="number">12</span>            &#125;</span><br><span class="line"><span class="number">13</span>        data = newData;</span><br><span class="line"><span class="number">14</span>        capacity = newCapacity;</span><br><span class="line"><span class="number">15</span>    &#125;</span><br><span class="line"><span class="number">16</span><span class="keyword">public</span>:</span><br><span class="line"><span class="number">17</span>    MyVector()&#123;</span><br><span class="line"><span class="number">18</span>        data = new T[<span class="number">100</span>];</span><br><span class="line"><span class="number">19</span>        size = <span class="number">0</span>;</span><br><span class="line"><span class="number">20</span>        capacity = <span class="number">100</span>;</span><br><span class="line"><span class="number">21</span>    &#125;</span><br><span class="line"><span class="number">22</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">23</span>    <span class="built_in">void</span> push_back(T e)&#123;</span><br><span class="line"><span class="number">24</span>        <span class="keyword">if</span>(size == capacity)</span><br><span class="line"><span class="number">25</span>            resize(<span class="number">2</span> * capacity);</span><br><span class="line"><span class="number">26</span>        data[size++] = e;</span><br><span class="line"><span class="number">27</span>    &#125;</span><br><span class="line"><span class="number">28</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">29</span>    T pop_back()&#123;</span><br><span class="line"><span class="number">30</span>        size --;</span><br><span class="line"><span class="number">31</span>        <span class="keyword">return</span> data[size];</span><br><span class="line"><span class="number">32</span>    &#125;</span><br><span class="line"><span class="number">33</span></span><br><span class="line"><span class="number">34</span>&#125;;</span><br></pre></td></tr></table></figure>
-
-<p><code>push_back</code>实现的功能是往数组的末尾增加一个元素，如果数组没有满，直接往后面插入元素；如果数组满了，即 <code>size == capacity</code> ，则将数组扩容一倍，然后再插入元素。</p>
-<p>例如，数组长度为 n，则前 n 次调用 <code>push_back</code> 复杂度都为 O(1) 级别；在第 n + 1 次则需要先进行 n 次元素转移操作，然后再进行 1 次插入操作，复杂度为 O(n)。</p>
-<p>因此，平均来看：对于容量为 n 的动态数组，前面添加元素需要消耗了 1 _ n 的时间，扩容操作消耗 n 时间 ，总共就是 2 _ n 的时间，因此均摊时间复杂度为 O(2n / n) = O(2)，也就是 O(1) 级别了。</p>
-<p>可以得出一个比较有意思的结论：一个相对比较耗时的操作，如果能保证它不会每次都被触发，那么这个相对比较耗时的操作，它所相应的时间是可以分摊到其它的操作中来的。</p>
-<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>一个程序的空间复杂度是指运行完一个程序所需内存的大小。利用程序的空间复杂度，可以对程序的运行所需要的内存多少有个预先估计。一个程序执行时除了需要存储空间和存储本身所使用的指令、常数、变量和输入数据外，还需要一些对数据进行操作的工作单元和存储一些为现实计算所需信息的辅助空间。程序执行时所需存储空间包括以下两部分：</p>
-<p>(1) 固定部分，这部分空间的大小与输入/输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。</p>
-<p>(2) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。</p>
-<p>一个算法所需的存储空间用 f(n)表示。S(n)=O(f(n))，其中 n 为问题的规模，S(n)表示空间复杂度。</p>
-<p><strong>空间复杂度可以理解为除了原始序列大小的内存，在算法过程中用到的额外的存储空间。</strong></p>
-<p>以二叉查找树为例，举例说明二叉排序树的查找性能。</p>
-<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>如果二叉树的是以红黑树等平衡二叉树实现的，则 n 个节点的二叉排序树的高度为 log2n+1 ，其查找效率为 O(Log2n)，近似于折半查找。</p>
-<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2IiaepCia27n7uxlH4ZuxKZTe7L6HypIkFLYHfoJ7xEBicoztf6nmeV43uhw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
-<h3 id="列表二叉树"><a href="#列表二叉树" class="headerlink" title="列表二叉树"></a>列表二叉树</h3><p>如果二叉树退变为列表了，则 n 个节点的高度或者说是长度变为了 n，查找效率为 O(n)，变成了顺序查找。</p>
-<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2Iia4hZdT7n7GAkmzCDNL9fweZm4RnRV8Or4cOmW1j1sqS1eeqvaecyW4A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
-<h3 id="一般二叉树"><a href="#一般二叉树" class="headerlink" title="一般二叉树"></a>一般二叉树</h3><p>介于「列表二叉树」与「平衡二叉树」之间，查找性能也在 O(Log2n)到 O(n)之间。</p>
-<h2 id="冰火交融"><a href="#冰火交融" class="headerlink" title="冰火交融"></a>冰火交融</h2><p>对于一个算法，其时间复杂度和空间复杂度往往是相互影响的。</p>
-<p>比如说，要判断某某年是不是闰年：</p>
-<ul>
-<li>\1. 可以编写一个算法来计算，这也就意味着，每次给一个年份，都是要通过计算得到是否是闰年的结果。</li>
-<li>\2. 还有另一个办法就是，事先建立一个有 5555 个元素的数组（年数比现实多就行），然后把所有的年份按下标的数字对应，如果是闰年，此数组项的值就是 1，如果不是值为 0。这样，所谓的判断某一年是否是闰年，就变成了查找这个数组的某一项的值是多少的问题。此时，我们的运算是最小化了，但是硬盘上或者内存中需要存储这 5555 个 0 和 1 。</li>
-</ul>
-<p>这就是典型的使用空间换时间的概念。</p>
-<p>当追求一个较好的时间复杂度时，可能会使空间复杂度的性能变差，即可能导致占用较多的存储空间；<br>反之，求一个较好的空间复杂度时，可能会使时间复杂度的性能变差，即可能导致占用较长的运行时间。</p>
-<p>另外，算法的所有性能之间都存在着或多或少的相互影响。因此，当设计一个算法(特别是大型算法)时，要综合考虑算法的各项性能，算法的使用频率，算法处理的数据量的大小，算法描述语言的特性，算法运行的机器系统环境等各方面因素，才能够设计出比较好的算法。</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>理论</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>模块</title>
     <url>/2020/09/20/%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>从 ECMAScript 2015 开始，JavaScript 引入了模块的概念。TypeScript 也沿用这个概念。</p>
@@ -3390,6 +3294,188 @@
       </categories>
       <tags>
         <tag>TypeScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>时间复杂度概念</title>
+    <url>/2020/10/28/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<p>先简要介绍一下</p>
+<p>算法复杂度分为时间复杂度和空间复杂度，时间复杂度是指执行这个算法所需要的计算工作量，空间复杂度是指执行这个算法所需的内存空间</p>
+<p>时间和空间都是计算机资源的重要体现，而算法的复杂性就是体现在该算法执行时计算机所需的资源多少</p>
+<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>算法的时间复杂度反映了程序执行时间随输入规模增长而增长的量级，在很大程度上很好的反映出算法的优劣与否</p>
+<p>算法的执行时间需要依据该算法编制的程序在计算机上执行运行所消耗的时间来度量，度量方法有两种，事后统计方法和事前分析估算方法，因为事后统计法更多的依赖计算机的硬件，软件等环境因素，有时容易掩盖算法本身的优劣，因此常常采用事后分析估算法</p>
+<p>一个算法由控制结构（顺序，分支，循环）和原操作（固有数据类型的操作）构成，而算法时间取决于两种的综合效率</p>
+<p>一个算法花费的时间与算法中语句的执行次数成正比，执行次数越多，花费的时间就越多，一个算法中的执行次数称为语句频度或时间频度，记为 T(n);</p>
+<p>在各种算法中，若算法中的语句执行次数为一个常数，则时间复杂度为 O(1), 同时若不同算法的时间频度不一样，但它们的时间复杂度可能时一样的<code>T(n)=n^2+2n+4 </code>与 <code>T（n）=4n^2+n+8</code> 它们的时间频度显然不一样，但他们的时间复杂度确是一样的，均为 O(n^2) 时间复杂度只关注最高数量级，且与之系数也没有关系，</p>
+<p>求解算法的时间复杂度的具体步骤是：</p>
+<ol>
+<li><p>找出算法中的基本语句；</p>
+<p>算法中执行次数最多的那条语句就是基本语句，通常是最内层循环的循环体</p>
+</li>
+<li><p>计算基本语句的执行次数的数量级</p>
+<p>只需计算基本语句执行次数的数量级，这就意味着只要保证基本语句执行次数的函数中的最高次幂正确即可，可以忽略所有低次幂和最高次幂，这样就能够简化算法分析，并且使注意力集中在最重要的一点上，增长率</p>
+</li>
+<li><p>用大 O 记号表示算法的时间性能</p>
+<p>将基本语句执行的数量放入大 O 记号中，如果算法中包含嵌套的循环，则基本语句通常使最内层的循环体，如果算法中包含并列循环，则将并列循环的时间复杂度相加</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  a++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (j = <span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">    a++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个 for 循环的时间复杂度为 O(n)，第二个 for 循环时间复杂度为 O(n^2)，则整个算法的时间复杂度为 O(n^2+n)。</p>
+<p>O(1)表示基本语句的执行次数是一个常数，一般来说，只要算法中不存在循环语句，时间复杂度就为 O(1)。</p>
+<hr>
+<p>算法（Algorithm）是指用来操作数据、解决程序问题的一组方法。对于同一个问题，使用不同的算法，也许最终得到的结果是一样的，比如排序就有前面的十大经典排序和几种奇葩排序，虽然结果相同，但在过程中消耗的资源和时间却会有很大的区别，比如快速排序与猴子排序：）。</p>
+<p>那么我们应该如何去衡量不同算法之间的优劣呢？</p>
+<p>主要还是从算法所占用的「时间」和「空间」两个维度去考量。</p>
+<ul>
+<li>时间维度：是指执行当前算法所消耗的时间，我们通常用「时间复杂度」来描述。</li>
+<li>空间维度：是指执行当前算法需要占用多少内存空间，我们通常用「空间复杂度」来描述。</li>
+</ul>
+<h2 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><h3 id="大-O-符号表示法"><a href="#大-O-符号表示法" class="headerlink" title="大 O 符号表示法"></a>大 O 符号表示法</h3><p>大 O 表示法：算法的时间复杂度通常用大 O 符号表述，定义为 **T[n] = O(f(n)) **。称函数 T(n)以 f(n)为界或者称 T(n)受限于 f(n)。</p>
+<p>如果一个问题的规模是 n，解这一问题的某一算法所需要的时间为 T(n)。T(n)称为这一算法的“时间复杂度”。</p>
+<blockquote>
+<p>上面公式中用到的 Landau 符号是由德国数论学家保罗·巴赫曼（Paul Bachmann）在其 1892 年的著作《解析数论》首先引入，由另一位德国数论学家艾德蒙·朗道（Edmund Landau）推广。Landau 符号的作用在于用简单的函数来描述复杂函数行为，给出一个上或下（确）界。在计算算法复杂度时一般只用到大 O 符号，Landau 符号体系中的小 o 符号、Θ 符号等等比较不常用。这里的 O，最初是用大写希腊字母，但现在都用大写英语字母 O；小 o 符号也是用小写英语字母 o，Θ 符号则维持大写希腊字母 Θ。</p>
+</blockquote>
+<p>大 O 符号是一种算法「复杂度」的「相对」「表示」方式。</p>
+<p>这个句子里有一些重要而严谨的用词：</p>
+<ul>
+<li>相对(relative)：你只能比较相同的事物。你不能把一个做算数乘法的算法和排序整数列表的算法进行比较。但是，比较 2 个算法所做的算术操作（一个做乘法，一个做加法）将会告诉你一些有意义的东西；</li>
+<li>表示(representation)：大 O(用它最简单的形式)把算法间的比较简化为了一个单一变量。这个变量的选择基于观察或假设。例如，排序算法之间的对比通常是基于比较操作(比较 2 个结点来决定这 2 个结点的相对顺序)。这里面就假设了比较操作的计算开销很大。但是，如果比较操作的计算开销不大，而交换操作的计算开销很大，又会怎么样呢？这就改变了先前的比较方式；</li>
+<li>复杂度(complexity)：如果排序 10,000 个元素花费了我 1 秒，那么排序 1 百万个元素会花多少时间？在这个例子里，复杂度就是相对其他东西的度量结果。</li>
+</ul>
+<h3 id="常见的时间复杂度量级"><a href="#常见的时间复杂度量级" class="headerlink" title="常见的时间复杂度量级"></a>常见的时间复杂度量级</h3><p>我们先从常见的时间复杂度量级进行大 O 的理解：</p>
+<ul>
+<li>常数阶 O(1)</li>
+<li>线性阶 O(n)</li>
+<li>平方阶 O(n²)</li>
+<li>对数阶 O(logn)</li>
+<li>线性对数阶 O(nlogn)</li>
+</ul>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_jpg/D67peceibeITdVEicwQ7T05FPwkggMR2IiaRc88PpnacPKl4xapFBz28QSu6HyGU2zpYCiaayiaKia2T2cZzEicYyXAJw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h4 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaC8GtCYhYHhkZgbwSiaBvctaIZ9nZIurQMaQZyeyKKAnEh1fJ6p4vmtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>无论代码执行了多少行，其他区域不会影响到操作，这个代码的时间复杂度都是 O(1)</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void swapTwoInts(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">int</span> temp = a;</span><br><span class="line"><span class="symbol">3 </span> a = b;</span><br><span class="line"><span class="symbol">4 </span> b = temp;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawGKfic7qoiaxGt1wmZjDwlJksMAN2nvsMplZNbsa0DxKFKx1Gzo02HaA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>在下面这段代码，for 循环里面的代码会执行 n 遍，因此它消耗的时间是随着 n 的变化而变化的，因此可以用 O(n)来表示它的时间复杂度。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum ( <span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span>  <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt;= n ; i ++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     ret += i;</span><br><span class="line"><span class="symbol">5 </span>  &#125;</span><br><span class="line"><span class="symbol">6 </span>  <span class="keyword">return</span> ret;</span><br><span class="line"><span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>特别一提的是 c * O(n) 中的 c 可能小于 1 ，比如下面这段代码：</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void reverse ( string &amp;s ) &#123;</span><br><span class="line"><span class="symbol">2 </span>   <span class="keyword">int</span> n = s.size();</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n/<span class="number">2</span> ; i++)&#123;</span><br><span class="line"><span class="symbol">4 </span>     <span class="keyword">swap</span> ( s[i] , s[n-<span class="number">1</span>-i]);</span><br><span class="line"><span class="symbol">5 </span>   &#125;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-n²"><a href="#O-n²" class="headerlink" title="O(n²)"></a>O(n²)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiagPTZBricA32aLO0SKJwBxg9ADp81gE4micOalibyciahExK3AP5woZzmsw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>当存在双重循环的时候，即把 O(n) 的代码再嵌套循环一遍，它的时间复杂度就是 O(n²) 了。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>void selectionSort(<span class="built_in">int</span> arr[],<span class="built_in">int</span> n)&#123;</span><br><span class="line"> <span class="number">2</span>   <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n ; i++)&#123;</span><br><span class="line"> <span class="number">3</span>     <span class="built_in">int</span> minIndex = i;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> j = i + <span class="number">1</span>; j &lt; n ; j++ )</span><br><span class="line"> <span class="number">5</span>       <span class="keyword">if</span> (arr[j] &lt; arr[minIndex])</span><br><span class="line"> <span class="number">6</span>           minIndex = j;</span><br><span class="line"> <span class="number">7</span></span><br><span class="line"> <span class="number">8</span>     swap ( arr[i], arr[minIndex]);</span><br><span class="line"> <span class="number">9</span>   &#125;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里简单的推导一下</p>
+<ul>
+<li>当 i = 0 时，第二重循环需要运行 (n - 1) 次</li>
+<li>当 i = 1 时，第二重循环需要运行 (n - 2) 次</li>
+<li>。。。。。。</li>
+</ul>
+<p>不难得到公式：</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>(n - <span class="number">1</span>) + (n - <span class="number">2</span>) + (n - <span class="number">3</span>) + ... + <span class="number">0</span></span><br><span class="line"><span class="number">2</span>= (<span class="number">0</span> + n - <span class="number">1</span>) * n / <span class="number">2</span></span><br><span class="line"><span class="number">3</span>= O (n ^<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当然并不是所有的双重循环都是 O(n²)，比如下面这段输出 30n 次 <code>Hello,五分钟学算法：）</code>的代码。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void printInformation (<span class="keyword">int</span> n )&#123;</span><br><span class="line"><span class="symbol">2 </span>  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span> ; i &lt;= n ; i++)</span><br><span class="line"><span class="symbol">3 </span>       <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span> ; j &lt;= <span class="number">30</span> ; j ++)</span><br><span class="line"><span class="symbol">4 </span>          cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-logn"><a href="#O-logn" class="headerlink" title="O(logn)"></a>O(logn)</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch( <span class="built_in">int</span> arr[], <span class="built_in">int</span> n , <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>  <span class="built_in">int</span> l = <span class="number">0</span>, r = n - <span class="number">1</span>;</span><br><span class="line"> <span class="number">3</span>  <span class="keyword">while</span> ( l &lt;= r) &#123;</span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span> (arr[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line"> <span class="number">6</span>    <span class="keyword">if</span> (arr[mid] &gt; target ) r = mid - <span class="number">1</span>;</span><br><span class="line"> <span class="number">7</span>    <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line"> <span class="number">8</span>  &#125;</span><br><span class="line"> <span class="number">9</span>  <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在二分查找法的代码中，通过 while 循环，成 2 倍数的缩减搜索范围，也就是说需要经过 log2^n 次即可跳出循环。</p>
+<p>同样的还有下面两段代码也是 O(logn) 级别的时间复杂度。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>  <span class="comment">// 整形转成字符串</span></span><br><span class="line"> <span class="number">2</span>  <span class="built_in">string</span> <span class="built_in">int</span>ToString ( <span class="built_in">int</span> num )&#123;</span><br><span class="line"> <span class="number">3</span>   <span class="built_in">string</span> s = <span class="string">&quot;&quot;</span>;</span><br><span class="line"> <span class="number">4</span>   <span class="comment">// n 经过几次“除以10”的操作后，等于0</span></span><br><span class="line"> <span class="number">5</span>   <span class="keyword">while</span> (num )&#123;</span><br><span class="line"> <span class="number">6</span>    s += <span class="string">&#x27;0&#x27;</span> + num%<span class="number">10</span>;</span><br><span class="line"> <span class="number">7</span>    num /= <span class="number">10</span>;</span><br><span class="line"> <span class="number">8</span>   &#125;</span><br><span class="line"> <span class="number">9</span>   reverse(s)</span><br><span class="line"><span class="number">10</span>   <span class="keyword">return</span> s;</span><br><span class="line"><span class="number">11</span>  &#125;</span><br><span class="line"><span class="number">1</span>void hello (<span class="built_in">int</span> n ) &#123;</span><br><span class="line"><span class="number">2</span>   <span class="comment">// n 除以几次 2 到 1</span></span><br><span class="line"><span class="number">3</span>   <span class="keyword">for</span> ( <span class="built_in">int</span> sz = <span class="number">1</span>; sz &lt; n ; sz += sz)</span><br><span class="line"><span class="number">4</span>     <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; n; i++)</span><br><span class="line"><span class="number">5</span>        cout&lt;&lt; <span class="string">&quot;Hello,五分钟学算法：）&quot;</span>&lt;&lt; endl;</span><br><span class="line"><span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-nlogn"><a href="#O-nlogn" class="headerlink" title="O(nlogn)"></a>O(nlogn)</h4><p>将时间复杂度为 O(logn)的代码循环 N 遍的话，那么它的时间复杂度就是 n * O(logn)，也就是了 O(nlogn)。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>void hello ()&#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span>( m = <span class="number">1</span> ; m &lt; n ; m++)&#123;</span><br><span class="line"><span class="symbol">3 </span>   i = <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span>   <span class="keyword">while</span>( i &lt; n )&#123;</span><br><span class="line"><span class="symbol">5 </span>       i = i * <span class="number">2</span>;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span>  &#125;</span><br><span class="line"><span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="不常见的时间复杂度"><a href="#不常见的时间复杂度" class="headerlink" title="不常见的时间复杂度"></a>不常见的时间复杂度</h3><p>下面来分析一波另外几种复杂度： 递归算法的时间复杂度（recursive algorithm time complexity），最好情况时间复杂度（best case time complexity）、最坏情况时间复杂度（worst case time complexity）、平均时间复杂度（average case time complexity）和均摊时间复杂度（amortized time complexity）。</p>
+<h4 id="递归算法的时间复杂度"><a href="#递归算法的时间复杂度" class="headerlink" title="递归算法的时间复杂度"></a>递归算法的时间复杂度</h4><p>如果递归函数中，只进行一次递归调用，递归深度为 depth；</p>
+<p>在每个递归的函数中，时间复杂度为 T；</p>
+<p>*<em>则总体的时间复杂度为 O(T \</em> depth)**。</p>
+<p>在前面的学习中，归并排序 与 快速排序 都带有递归的思想，并且时间复杂度都是 O(nlogn) ，但并不是有递归的函数就一定是 O(nlogn) 级别的。从以下两种情况进行分析。</p>
+<h5 id="①-递归中进行一次递归调用的复杂度分析"><a href="#①-递归中进行一次递归调用的复杂度分析" class="headerlink" title="① 递归中进行一次递归调用的复杂度分析"></a>① 递归中进行一次递归调用的复杂度分析</h5><h6 id="二分查找法"><a href="#二分查找法" class="headerlink" title="二分查找法"></a>二分查找法</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiawzlTM2VDrvCp8No2l1hRoyYcB5wxMZzdSPicp4GmL80fCm0o9on1ibZQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>int binarySearch(<span class="built_in">int</span> arr[], <span class="built_in">int</span> l, <span class="built_in">int</span> r, <span class="built_in">int</span> target)&#123;</span><br><span class="line"> <span class="number">2</span>    <span class="keyword">if</span>( l &gt; r ) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"> <span class="number">3</span></span><br><span class="line"> <span class="number">4</span>    <span class="built_in">int</span> mid = l + (r-l)/<span class="number">2</span>;</span><br><span class="line"> <span class="number">5</span>    <span class="keyword">if</span>( arr[mid] == target ) <span class="keyword">return</span> mid;</span><br><span class="line"> <span class="number">6</span>    <span class="keyword">else</span> <span class="keyword">if</span>( arr[mid] &gt; target )</span><br><span class="line"> <span class="number">7</span>    <span class="keyword">return</span> binarySearch(arr, l, mid<span class="number">-1</span>, target);    <span class="comment">// 左边</span></span><br><span class="line"> <span class="number">8</span>    <span class="keyword">else</span></span><br><span class="line"> <span class="number">9</span>    <span class="keyword">return</span> binarySearch(arr, mid+<span class="number">1</span>, r, target);   <span class="comment">// 右边</span></span><br><span class="line"><span class="number">10</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如在这段二分查找法的代码中，每次在 [ l , r ] 范围中去查找目标的位置，如果中间的元素 <code>arr[mid]</code> 不是 <code>target</code>，那么判断 <code>arr[mid]</code>是比 <code>target</code> 大 还是 小 ，进而再次调用 <code>binarySearch</code>这个函数。</p>
+<p>在这个递归函数中，每一次没有找到<code>target</code>时，要么调用 左边 的 <code>binarySearch</code>函数，要么调用 右边 的 <code>binarySearch</code>函数。也就是说在此次递归中，最多调用了一次递归调用而已。根据数学知识，需要 log2n 次才能递归到底。因此，二分查找法的时间复杂度为 O(logn)。</p>
+<h6 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaS8P0IxiarxvqcTwqc0SHBOzmnyGvQkXE8pticX5DDicu68ILLcopaSnvw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> sum (<span class="keyword">int</span> n) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="symbol">3 </span> <span class="keyword">return</span> n + sum( n - <span class="number">1</span> )</span><br><span class="line"><span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中比较容易理解递归深度随输入 n 的增加而线性递增，因此时间复杂度为 O (n)。</p>
+<h6 id="求幂"><a href="#求幂" class="headerlink" title="求幂"></a>求幂</h6><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iiap3NSVdYcYMicDw1PpsuxY8qQacHM8cIMOt3oBya9UHFrmWypASsyXkA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>//递归深度：logn</span><br><span class="line"><span class="number">2</span>//时间复杂度：O(logn)</span><br><span class="line"><span class="number">3d</span>ouble pow( double x, <span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">4 </span> <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="symbol">6 </span> double t = pow(x,n/<span class="number">2</span>);</span><br><span class="line"><span class="symbol">7 </span> <span class="keyword">if</span> (n %<span class="number">2</span>) <span class="keyword">return</span> x*t*t;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> t * t;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>递归深度为 <code>logn</code>，因为是求需要除以 2 多少次才能到底。</p>
+<h5 id="②-递归中进行多次递归调用的复杂度分析"><a href="#②-递归中进行多次递归调用的复杂度分析" class="headerlink" title="② 递归中进行多次递归调用的复杂度分析"></a>② 递归中进行多次递归调用的复杂度分析</h5><p>递归算法中比较难计算的是多次递归调用。</p>
+<p>先看下面这段代码，有两次递归调用。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>// O(<span class="number">2</span>^n) 指数级别的数量级，后续动态规划的优化点</span><br><span class="line"><span class="number">2</span><span class="keyword">int</span> f(<span class="keyword">int</span> n)&#123;</span><br><span class="line"><span class="symbol">3 </span><span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="symbol">4 </span><span class="keyword">return</span> f(n-<span class="number">1</span>) + f(n - <span class="number">1</span>);</span><br><span class="line"><span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia9S7ev0pwvhCLF5PbyWHVTXrDoJQ79xdSmf1H96AQo6l0A3ttnbaSVQ/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>递归树中节点数就是代码计算的调用次数。</p>
+<p>比如 当 <code>n = 3</code> 时，调用次数计算公式为</p>
+<blockquote>
+<p>1 + 2 + 4 + 8 = 15</p>
+</blockquote>
+<p>一般的，调用次数计算公式为</p>
+<blockquote>
+<p>2^0 + 2^1 + 2^2 + …… + 2^n = 2^(n+1) - 1 = O(2^n)</p>
+</blockquote>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia7WpvIv6ibiaQibGibtSO0BvQyGSssye1sT7RmPOCsXB4e3xQPaicNbibJibqA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>与之有所类似的是 归并排序 的递归树，区别点在于</p>
+<ul>
+<li>\1. 上述例子中树的深度为 <code>n</code>，而 归并排序 的递归树深度为<code>logn</code>。</li>
+<li>\2. 上述例子中每次处理的数据规模是一样的，而在 归并排序 中每个节点处理的数据规模是逐渐缩小的</li>
+</ul>
+<p>因此，在如 归并排序 等排序算法中，每一层处理的数据量为 O(n) 级别，同时有 <code>logn</code> 层，时间复杂度便是 O(nlogn)。</p>
+<h4 id="最好、最坏情况时间复杂度"><a href="#最好、最坏情况时间复杂度" class="headerlink" title="最好、最坏情况时间复杂度"></a>最好、最坏情况时间复杂度</h4><p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2IiaocwzriaeqkOJQsorsR5Q0jqxRY9GhRbC7MYiaDKyAstD7v6plsHuHPPw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<p>最好、最坏情况时间复杂度指的是特殊情况下的时间复杂度。</p>
+<p>动图表明的是在数组 array 中寻找变量 x 第一次出现的位置，若没有找到，则返回 -1；否则返回位置下标。</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span><span class="keyword">int</span> find(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> x) &#123;</span><br><span class="line"><span class="symbol">2 </span> <span class="keyword">for</span> (  <span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n; i++) &#123;</span><br><span class="line"><span class="symbol">3 </span>   <span class="keyword">if</span> (array[i] == x) &#123;</span><br><span class="line"><span class="symbol">4 </span>       <span class="keyword">return</span> i;</span><br><span class="line"><span class="symbol">5 </span>       break;</span><br><span class="line"><span class="symbol">6 </span>   &#125;</span><br><span class="line"><span class="symbol">7 </span> &#125;</span><br><span class="line"><span class="symbol">8 </span> <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"><span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里当数组中第一个元素就是要找的 x 时，时间复杂度是 O(1)；而当最后一个元素才是 x 时，时间复杂度则是 O(n)。</p>
+<p>最好情况时间复杂度就是在最理想情况下执行代码的时间复杂度，它的时间是最短的；最坏情况时间复杂度就是在最糟糕情况下执行代码的时间复杂度，它的时间是最长的。</p>
+<h4 id="平均情况时间复杂度"><a href="#平均情况时间复杂度" class="headerlink" title="平均情况时间复杂度"></a>平均情况时间复杂度</h4><p>最好、最坏时间复杂度反应的是极端条件下的复杂度，发生的概率不大，不能代表平均水平。那么为了更好的表示平均情况下的算法复杂度，就需要引入平均时间复杂度。</p>
+<p>平均情况时间复杂度可用代码在所有可能情况下执行次数的加权平均值表示。</p>
+<p>还是以 <code>find</code> 函数为例，从概率的角度看， x 在数组中每一个位置的可能性是相同的，为 1 / n。那么，那么平均情况时间复杂度就可以用下面的方式计算：</p>
+<blockquote>
+<p>((1 + 2 + … + n) / n + n) / 2 = (3n + 1) / 4</p>
+</blockquote>
+<p><code>find</code> 函数的平均时间复杂度为 O(n)。</p>
+<h4 id="均摊复杂度分析"><a href="#均摊复杂度分析" class="headerlink" title="均摊复杂度分析"></a>均摊复杂度分析</h4><p>我们通过一个动态数组的 <code>push_back</code> 操作来理解 <strong>均摊复杂度</strong>。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_gif/D67peceibeITdVEicwQ7T05FPwkggMR2Iia0cnwqHXWTLZQO4dNl7hgE2g4iaibhJTqmRN12wTHFJiav5grgVCEyYNtw/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1" alt="img"></p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span>template &lt;typename T&gt;</span><br><span class="line"> <span class="number">2</span>class MyVector&#123;</span><br><span class="line"> <span class="number">3</span><span class="keyword">private</span>:</span><br><span class="line"> <span class="number">4</span>    T* data;</span><br><span class="line"> <span class="number">5</span>    <span class="built_in">int</span> size;       <span class="comment">// 存储数组中的元素个数</span></span><br><span class="line"> <span class="number">6</span>    <span class="built_in">int</span> capacity;   <span class="comment">// 存储数组中可以容纳的最大的元素个数</span></span><br><span class="line"> <span class="number">7</span>    <span class="comment">// 复杂度为 O(n)</span></span><br><span class="line"> <span class="number">8</span>    <span class="built_in">void</span> resize(<span class="built_in">int</span> newCapacity)&#123;</span><br><span class="line"> <span class="number">9</span>        T *newData = new T[newCapacity];</span><br><span class="line"><span class="number">10</span>        <span class="keyword">for</span>( <span class="built_in">int</span> i = <span class="number">0</span> ; i &lt; size ; i ++ )&#123;</span><br><span class="line"><span class="number">11</span>              newData[i] = data[i];</span><br><span class="line"><span class="number">12</span>            &#125;</span><br><span class="line"><span class="number">13</span>        data = newData;</span><br><span class="line"><span class="number">14</span>        capacity = newCapacity;</span><br><span class="line"><span class="number">15</span>    &#125;</span><br><span class="line"><span class="number">16</span><span class="keyword">public</span>:</span><br><span class="line"><span class="number">17</span>    MyVector()&#123;</span><br><span class="line"><span class="number">18</span>        data = new T[<span class="number">100</span>];</span><br><span class="line"><span class="number">19</span>        size = <span class="number">0</span>;</span><br><span class="line"><span class="number">20</span>        capacity = <span class="number">100</span>;</span><br><span class="line"><span class="number">21</span>    &#125;</span><br><span class="line"><span class="number">22</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">23</span>    <span class="built_in">void</span> push_back(T e)&#123;</span><br><span class="line"><span class="number">24</span>        <span class="keyword">if</span>(size == capacity)</span><br><span class="line"><span class="number">25</span>            resize(<span class="number">2</span> * capacity);</span><br><span class="line"><span class="number">26</span>        data[size++] = e;</span><br><span class="line"><span class="number">27</span>    &#125;</span><br><span class="line"><span class="number">28</span>    <span class="comment">// 平均复杂度为 O(1)</span></span><br><span class="line"><span class="number">29</span>    T pop_back()&#123;</span><br><span class="line"><span class="number">30</span>        size --;</span><br><span class="line"><span class="number">31</span>        <span class="keyword">return</span> data[size];</span><br><span class="line"><span class="number">32</span>    &#125;</span><br><span class="line"><span class="number">33</span></span><br><span class="line"><span class="number">34</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>push_back</code>实现的功能是往数组的末尾增加一个元素，如果数组没有满，直接往后面插入元素；如果数组满了，即 <code>size == capacity</code> ，则将数组扩容一倍，然后再插入元素。</p>
+<p>例如，数组长度为 n，则前 n 次调用 <code>push_back</code> 复杂度都为 O(1) 级别；在第 n + 1 次则需要先进行 n 次元素转移操作，然后再进行 1 次插入操作，复杂度为 O(n)。</p>
+<p>因此，平均来看：对于容量为 n 的动态数组，前面添加元素需要消耗了 1 _ n 的时间，扩容操作消耗 n 时间 ，总共就是 2 _ n 的时间，因此均摊时间复杂度为 O(2n / n) = O(2)，也就是 O(1) 级别了。</p>
+<p>可以得出一个比较有意思的结论：一个相对比较耗时的操作，如果能保证它不会每次都被触发，那么这个相对比较耗时的操作，它所相应的时间是可以分摊到其它的操作中来的。</p>
+<h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>一个程序的空间复杂度是指运行完一个程序所需内存的大小。利用程序的空间复杂度，可以对程序的运行所需要的内存多少有个预先估计。一个程序执行时除了需要存储空间和存储本身所使用的指令、常数、变量和输入数据外，还需要一些对数据进行操作的工作单元和存储一些为现实计算所需信息的辅助空间。程序执行时所需存储空间包括以下两部分：</p>
+<p>(1) 固定部分，这部分空间的大小与输入/输出的数据的个数多少、数值无关。主要包括指令空间（即代码空间）、数据空间（常量、简单变量）等所占的空间。这部分属于静态空间。</p>
+<p>(2) 可变空间，这部分空间的主要包括动态分配的空间，以及递归栈所需的空间等。这部分的空间大小与算法有关。</p>
+<p>一个算法所需的存储空间用 f(n)表示。S(n)=O(f(n))，其中 n 为问题的规模，S(n)表示空间复杂度。</p>
+<p><strong>空间复杂度可以理解为除了原始序列大小的内存，在算法过程中用到的额外的存储空间。</strong></p>
+<p>以二叉查找树为例，举例说明二叉排序树的查找性能。</p>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>如果二叉树的是以红黑树等平衡二叉树实现的，则 n 个节点的二叉排序树的高度为 log2n+1 ，其查找效率为 O(Log2n)，近似于折半查找。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2IiaepCia27n7uxlH4ZuxKZTe7L6HypIkFLYHfoJ7xEBicoztf6nmeV43uhw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h3 id="列表二叉树"><a href="#列表二叉树" class="headerlink" title="列表二叉树"></a>列表二叉树</h3><p>如果二叉树退变为列表了，则 n 个节点的高度或者说是长度变为了 n，查找效率为 O(n)，变成了顺序查找。</p>
+<p><img data-src="https://mmbiz.qpic.cn/mmbiz_png/D67peceibeITdVEicwQ7T05FPwkggMR2Iia4hZdT7n7GAkmzCDNL9fweZm4RnRV8Or4cOmW1j1sqS1eeqvaecyW4A/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="img"></p>
+<h3 id="一般二叉树"><a href="#一般二叉树" class="headerlink" title="一般二叉树"></a>一般二叉树</h3><p>介于「列表二叉树」与「平衡二叉树」之间，查找性能也在 O(Log2n)到 O(n)之间。</p>
+<h2 id="冰火交融"><a href="#冰火交融" class="headerlink" title="冰火交融"></a>冰火交融</h2><p>对于一个算法，其时间复杂度和空间复杂度往往是相互影响的。</p>
+<p>比如说，要判断某某年是不是闰年：</p>
+<ul>
+<li>\1. 可以编写一个算法来计算，这也就意味着，每次给一个年份，都是要通过计算得到是否是闰年的结果。</li>
+<li>\2. 还有另一个办法就是，事先建立一个有 5555 个元素的数组（年数比现实多就行），然后把所有的年份按下标的数字对应，如果是闰年，此数组项的值就是 1，如果不是值为 0。这样，所谓的判断某一年是否是闰年，就变成了查找这个数组的某一项的值是多少的问题。此时，我们的运算是最小化了，但是硬盘上或者内存中需要存储这 5555 个 0 和 1 。</li>
+</ul>
+<p>这就是典型的使用空间换时间的概念。</p>
+<p>当追求一个较好的时间复杂度时，可能会使空间复杂度的性能变差，即可能导致占用较多的存储空间；<br>反之，求一个较好的空间复杂度时，可能会使时间复杂度的性能变差，即可能导致占用较长的运行时间。</p>
+<p>另外，算法的所有性能之间都存在着或多或少的相互影响。因此，当设计一个算法(特别是大型算法)时，要综合考虑算法的各项性能，算法的使用频率，算法处理的数据量的大小，算法描述语言的特性，算法运行的机器系统环境等各方面因素，才能够设计出比较好的算法。</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>理论</tag>
       </tags>
   </entry>
   <entry>
