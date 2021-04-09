@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/" class="post-title-link" itemprop="url">JavaScript面向对象还是基于对象？</a>
+            <a href="/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">持续集成与持续部署</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-11-03 16:07:23" itemprop="dateCreated datePublished" datetime="2020-11-03T16:07:23+08:00">2020-11-03</time>
+              <time title="创建时间：2020-11-09 14:18:20" itemprop="dateCreated datePublished" datetime="2020-11-09T14:18:20+08:00">2020-11-09</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:47:38" itemprop="dateModified" datetime="2020-11-10T10:47:38+08:00">2020-11-10</time>
+                <time title="修改时间：2020-11-24 11:21:44" itemprop="dateModified" datetime="2020-11-24T11:21:44+08:00">2020-11-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                  <a href="/categories/%E5%B7%A5%E7%A8%8B%E4%BD%93%E7%B3%BB/" itemprop="url" rel="index"><span itemprop="name">工程体系</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/03/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1%EF%BC%9F/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,101 +262,120 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>与其他语言相比，JavaScript 中的对象总是显得不那么合群。一些新人再学习 JavaScript 面向对象的时候，往往也会有疑惑</p>
-<ul>
-<li>为什么 JavaScript（直到 ES6）有对象的概念，但是却没有像其他语言那样，有类的概念呢？</li>
-<li>为什么 JavaScript 对象可以自由添加属性，而其他语言却不能呢？</li>
+          <p>DevOps、持续集成、持续交付、持续部署、敏捷等词语大家应该都耳熟能详了，说到底就是快速交付价值，从工程上、管理上、组织上、工具上来提高效率，打造可靠的、快速的产品（项目）交付过程。本书将围绕项目管理、自动化部署、自动化发布、自动化测试、容器云来实现持续集成、持续交付及持续部署，因为它不是一本理论图书，不打算大谈道理，我们将直接谈论持续集成、持续交付、持续部署的价值，抛出问题，说思路，讲方案，讲实际操作。希望能够帮助广大读者快速在企业落地持续集成、持续交付与持续部署。</p>
+<h3 id="CI-amp-CD-的价值"><a href="#CI-amp-CD-的价值" class="headerlink" title="CI&amp;CD 的价值"></a>CI&amp;CD 的价值</h3><ul>
+<li>持续集成（Continuous Integration，CI）是软件开发实践，在持续集成中，团队成员频繁集成它们的工作成果，一般每人每天至少集成一次，或者多次，每次集成会经过自动构建（包括静态扫描、安全扫描、自动测试等过程）的检验，以尽快发现集成错误。许多团队发现这种方法可以显著减少集成引起的问题，并可以加快团队合作软件开发的速度（以上引用自 Martin Fowler 对持续集成的定义）。</li>
+<li>持续交付（Continuous Delivery）是指频繁地将软件的新版本交付给质量团队或者用户，以供评审，如果评审通过，代码就进入生产阶段。</li>
+<li>持续部署（Continuous Deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境中。</li>
 </ul>
-<p>甚至，再一些争论中，有人强调：JavaScript 并非 “面向对象的语言”，而是基于对象的语言，这个说法一度流传甚广，而事实上，我至今遇到持有这一说法的人中，无一能够回答，如何定义面向对象和基于对象，这个问题</p>
-<p>实际上，基于对象和面向对象两个形容词都出现了 JavaScript 标准的各个版本当中</p>
-<p>我们可以先看看，JavaScript 标准基于对象的定义，这个定义的具体内容是：“语言和宿主的基础设施由对象来提供，并且 JavaScript 程序即是一系列相互通讯的对象集合”</p>
-<p>这里的意思根本不是表达弱化的面向对象的意思，反而是表达对象对于语言的重要性。</p>
-<p>那么，在本篇文章中，我会尝试让你去理解面向对象和 JavaScript 中的面向对象究竟是什么，</p>
-<h3 id="什么是面向对象"><a href="#什么是面向对象" class="headerlink" title="什么是面向对象"></a>什么是面向对象</h3><p>我们先来说说，什么是对象，因为翻译的原因，中文语境下我们很难理解“对象的真正含义”，事实上，Object（对象）在英文中，是一切事物的总称，这和面向对象的抽象思维有互通之处。</p>
-<p>中文的 “对象”，却没有这样的普适性，在学习编程的过程中，更多的是把它当作一个专业名词来理解</p>
-<p>但不论如何，我们应该认识到，对象并不是计算机领域凭空捏造出来的概念，它是顺着人类思维模式产生的一种抽象，（于是面向对象编程也被认为是更接近人类思维模式的一种编程范式）。</p>
-<p>那么我们先来看看人类思维模式下，对象究竟是什么。</p>
-<blockquote>
-<p>对象这以概念在人类的幼儿期形成，这远远早于我们编程中常用的值，过程等概念，在幼年期，我们总是先认识到某一个苹果能吃（这里的一个苹果就是一个对象）继而认识到所有的苹果都可以吃，（这里所有的苹果就是一个类），再后来我们才能意识到三个苹果和三个梨之间的联系，进而产生数字 3 （值）的概念</p>
-</blockquote>
-<p>在《面向对象分析与设计》这本书中，Grady Booch 替我们做了总结，他认为，从人类的认知角度来说，对象应该是下列事物之一：</p>
+<p>通过上面的定义我们不难发现，持续突出的就是一个快字，商业软件的快速落地需求推动了软件工程的发展。可持续的、快速迭代的软件过程是当今主流开发规约。尤其在互联网行业，快速响应即是生命线。从一个想法到产品落地都处在冲锋的过程中，机会稍纵即逝。响应用户反馈也是万分敏捷，早晨的反馈在当天就会上线发布，快得让用户感觉倍受重视。“快”已经成为商业竞争力。这一切都要求企业具备快速响应的能力，这正是推动持续集成、持续交付、持续部署的动力。</p>
+<p>产品或者项目的参与者应该能够深刻体会到团队协作时，工作交接（系统集成）部分最容易出问题，会消耗大量的沟通成本与时间成本，直接拖慢进度。所以，一个行之有效的项目管理过程（包括沟通管理、流程管理）在大型项目中效果明显。当前敏捷开发是主流，持续集成、持续交付与持续部署正好能够帮助高效地实施敏捷过程，促进开发、运维和质量保障（QA）部门之间的沟通、协作与整合。</p>
+<h3 id="CI-amp-CD-带来的变化"><a href="#CI-amp-CD-带来的变化" class="headerlink" title="CI&amp;CD 带来的变化"></a>CI&amp;CD 带来的变化</h3><p>通常把开发工作过程分为编码、构建、集成、测试、交付、部署几个阶段（见图 1-1），持续集成、持续交付、持续部署刚好覆盖这些阶段。从提高效率上来讲，对每个阶段的优化都可以缩短软件交付时间。持续集成、持续交付及持续部署的过程即是一个软件开发优化过程。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-958984fefb4525db84839cdc619294bf_720w.jpg"></p>
+<p>墨菲定律大家都不陌生，越是担心什么就越会发生什么；在多团队协作时，比如系统对接时，我们都会担心对接是否顺利，往往也不枉我们担心，时常我们会被集成折磨得焦头烂额。有很多团队只是担心，并没有拿出有效的措施去避免这种事情发生，以至于延长了交付时间。既然担心，我们何不及早集成，把问题先暴露出来？</p>
+<p>目前多数公司都已经使用了版本管理工具来管理源码，比如 GitLab、SVN 等版本管理工具。在版本管理这一块，公司会根据自己的实际情况来制订版本管理办法。对于持续集成来说，业内建议只维护一个源码仓库，降低版本管理的复杂度。开发人员持续提交自己的修改，自动触发编译，自动集成，自动进行自动化的测试，及早反馈集成过程中的问题，就能更好地防止出现平时不集成、集成就出问题的现象。</p>
+<p>通过自动化的持续集成，把管理流程固化；保证集成的有序性、可靠性；减少版本发布的不合规性（开发或者测试手动打包，可能一天打多个包，更新多次，测试不充分），保证版本可控，问题可追溯（至于哪个版本出现的问题，可以回溯）。</p>
+<h3 id="CI-amp-CD-实施现状"><a href="#CI-amp-CD-实施现状" class="headerlink" title="CI&amp;CD 实施现状"></a>CI&amp;CD 实施现状</h3><p>在日常生活中处处都体现着一个“快”字，互联网更是对快追求到极致。持续集成、持续交付、持续部署在互联网行业更为广泛。作者没有统计哪些公司在用，只是圈子中朋友公司都实施了持续集成，具备持续交付能力。至于持续部署就没这么广泛了，毕竟持续部署不仅仅是技术问题，还涉及管理、营运等问题。尤其是一些金融企业、大型国企，开发团队外包，测试外包，运营半外包，安全要求高，很难快速实施。多数能够在测试环境中建立起 CI&amp;CD 就已经很不错了。</p>
+<p>阿里云、腾讯云、网易蜂巢等国内云，都提供了从 GitLab 下拉代码、编译打包、单元测试、镜像制作、容器发布的功能。这个过程实际上就是持续集成、持续交付的过程，同时具有持续部署的能力。基本上，持续集成、持续交付、持续部署是一种服务能力，是云平台必须具备的能力。</p>
+<p>下面引自 2017 年 DevOps 现状调查报告。</p>
+<p>统计资料显示，DevOps 正在各个行业、各种规模的企业中落地。DevOps 团队的比例在 2014 年是 16%，在 2015 年是 19%，在 2016 年是 22%，在 2017 年已经增长到 27%，越来越多的企业和团队开始拥抱 DevOps。图 1-2 是 2017 年 DevOps 现状调查报告统计的从业分布情况。</p>
+<p>完整的报告可以从 qcloudimg 网站下载。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-b6711ac5c1f0729cf29b830bade2e49b_720w.jpg"></p>
+<p>在本书撰写过程中 2018 年 DevOps 现状调查报告也已经出来，图 1-3 是精英级执行团队使用 DevOps 后的效率。精英级执行团队在以下几个方面有着突出的表现。</p>
 <ul>
-<li>一个可以触摸或者可以看见的东西；</li>
-<li>人的智力可以理解的东西；</li>
-<li>可以指导思考或行动（进行想象或施加动作）的东西。</li>
+<li>代码发布频率高 46 倍。</li>
+<li>代码从提交至发布的速度快 2555 倍。</li>
+<li>故障变更率降低 1/7。</li>
+<li>事故恢复时间快 2604 倍。</li>
 </ul>
-<p>有了对象的自然定义后，我们就可以描述编程语言中的对象了。在不同的编程语言中，设计者也利用各种不同的语言特性来抽象描述对象，最为成功的流派是使用“类”的方式来描述对象，这诞生了诸如 C++、Java 等流行的编程语言。</p>
-<p>而 JavaScript 早年却选择了一个更为冷门的方式：原型。这是我在前面说它不合群的原因之一。</p>
-<p>然而很不幸，因为一些公司政治原因，JavaScript 推出之时受管理层之命被要求模仿 Java，所以，JavaScript 创始人 Brendan Eich 在“原型运行时”的基础上引入了 new、this 等语言特性，使之“看起来更像 Java”。</p>
-<p>在 ES6 出现之前，大量的 JavaScript 程序员试图在原型体系的基础上，把 JavaScript 变得更像是基于类的编程，进而产生了很多所谓的“框架”，比如 PrototypeJS、Dojo。</p>
-<p>事实上，它们成为了某种 JavaScript 的古怪方言，甚至产生了一系列互不相容的社群，显然这样做的收益是远远小于损失的。</p>
-<p>如果我们从运行时角度来谈论对象，就是在讨论 JavaScript 实际运行中的模型，这是由于任何代码执行都必定绕不开运行时的对象模型。</p>
-<p>不过，幸运的是，从运行时的角度看，可以不必受到这些“基于类的设施”的困扰，这是因为任何语言运行时类的概念都是被弱化的。</p>
-<p>首先我们来了解一下 JavaScript 是如何设计对象模型的。</p>
-<h3 id="JavaScript-对象的特征"><a href="#JavaScript-对象的特征" class="headerlink" title="JavaScript 对象的特征"></a>JavaScript 对象的特征</h3><p>在我看来，不论我们使用什么样的编程语言，我们都先应该去理解对象的本质特征（参考 Grandy Booch 《面向对象分析与设计》）。总结看来，对象有如下几个特点。</p>
+<p>另外，云计算持续增长（见图 1-4）。有 17%的调查者仍然没有使用云厂商的服务。AWS 最受欢迎，占比为 52%，Azure 屈居次席，占比为 34%。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-26406fab0121c4640689dd0b59cb9c4b_720w.jpg"></p>
+<h3 id="CI-amp-CD-技术栈"><a href="#CI-amp-CD-技术栈" class="headerlink" title="CI&amp;CD 技术栈"></a>CI&amp;CD 技术栈</h3><p>目前持续集成、持续交付、持续部署在开源社区都是热点，用户可以方便地利用这些开源组件来构建自己企业的持续集成、持续交付及持续部署平台。</p>
+<p>持续集成工具中以 Jenkins 使用最为广泛，由 Jenkins 来作业化持续集成过程；利用 GitLab 来管理程序版本；利用 Gerrit 来做代码审核；利用 Sonar 进行代码质量扫描；利用 JUnit 进行单元测试；利用 Docker compose 来构建镜像；利用 Docker 来部署容器；利用 Kubernetes、Rancher 等进行服务编排。图 1-5 显示了常见的 CI&amp;CD 技术栈。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-b71a61ad92b47b87bd7be277d4a99d11_720w.jpg"></p>
+<p>后续讲解 CI&amp;CD 落地时会运用到其中的一些技术与工具。当然，基本上都运用开源工具，这也有助于企业在落地时节省费用。</p>
+<h3 id="大规模部署的烦恼"><a href="#大规模部署的烦恼" class="headerlink" title="大规模部署的烦恼"></a>大规模部署的烦恼</h3><p>对于同样的功能，在用户量不同的系统中，工作量是完全不同的，后台为性能考虑而设计的架构完全不一样。对于 CI&amp;CD 也是如此，小规模的很容易，配几个作业就可以完成工作，但对于大规模的 CI&amp;CD，一旦系统数量、实例数量上去后各种问题就都来了。下面列举几个主要的问题。</p>
+<ol>
+<li><p>更新问题。更新一次要耗费大量精力，很多企业都是晚上更新，员工得通宵加班，还不能保证更新没问题，不具备快速大批量部署的能力。</p>
+</li>
+<li><p>部署包（jar 包、war 包、ear 包等）的管理问题。为了保证版本可追溯，出错后能够回滚，我们需要保存各个历史版本，而且方便下载。</p>
+</li>
+<li><p>版本的安全性。传统上以 Java 语言开发的系统多数以 jar 包、war 包、ear 包的方式发布，容易被篡改（人为修改，传输过程不完整）；通常我们用 md5 来验证完整性，但包与 md5 对应关系的管理并没有系统化，往往在出问题后人工进行 md5 验证。</p>
+</li>
+<li><p>主机管理问题。系统部署到哪些机器上需要进行主机管理？在部署时人工选择部署到哪台主机显然不是一种明智的方式，能否自动进行调度？同时，不会产生有些主机性能堪忧、有些主机空闲导致的负载不均情况。</p>
+</li>
+<li><p>端口管理问题，在部署 Java 项目时我们并不建议设置太多的 JVM 内存，因此一台主机上往往能够部署多个应用实例，同一台机器上多个实例的开放端口就必须不一致，于是端口又成了需要管理的资源。有人会说可以选用虚拟机，一台虚拟机上只部署一个实例。当然，这也是可以的。实际上，多数企业也是这么做的。这种做法也有弊端，虚拟机虽然帮助做了隔离，但会损失一些主机性能；虚拟机要使用内网 IP，这样 IP 又成了稀有资源，当部署多个实例时 IP 会不够用。</p>
+</li>
+<li><p>负载均衡管理问题。不管是在主机上部署多个实例，还是利用虚拟机来部署多个实例，在做集群时，都会通过代理（Nginx、Apache、LVS……）软件来做负载均衡，因此我们需要把各实例的访问地址配置到负载器的配置文件中。实例数少的时候手工配置还可以接受，多了就没法手工配置了。当然，方法也会有，比如用 Etcd+Confd+Nginx（HAProxy）来做服务发现，我们需要自己部署一套工具，并进行维护，复杂的框架提高了对运维人员的要求。</p>
+</li>
+<li><p>服务伸缩问题。当服务访问量上去后，要能够具备快速扩充的能力；当访问量下去后，要能够具备缩小服务规模的能力，收放自如。这种弹性的服务能力显然是通过工具来完成的，手动完成是不可能的。</p>
+</li>
+<li><p>IP 管理问题。当大规模部署后，IP 资源会成为稀有资源，如何用更少的 IP 来部署更多的服务？IP 的分配及管理显然不能人工完成，那样效率太过低下，这就需要一个 IP 管理工具。</p>
+</li>
+</ol>
+<p>如果有一个系统能够一站式解决以上问题，那真是太完美了。因为没有这样的系统，所以很多公司开发了他们的运维平台，专门用来解决大规模部署问题。但对于中小公司来说，技术与人力投入往往受限，没有这个能力、精力或者财力去建立一个智能的运维平台。但是我们可以利用开源工具、开源技术来搭建一个相对完善的持续集成、持续部署体系。</p>
+<h3 id="实施云平台化"><a href="#实施云平台化" class="headerlink" title="实施云平台化"></a>实施云平台化</h3><p>虚拟化、云平台化为大规模部署提供了方便，尤其是在硬件资源管理及网络管理方面。互联网的火热更是推动了云的快速发展，基本上各大互联网企业都已经完成了云平台化，生产力也在不断提升。以 Docker 为代表的容器化技术出现后，云变得更灵活，容器化已经成为大潮，Docker 也占据了容器市场的绝对份额。容器部署方式能够满足快速大批量部署的要求，充分利用物理机器资源。以 Docker 为例，Docker 容器技术让应用一次构建，到处（物理机、虚拟机、公有云、私有云、Windows 系统、Linux 系统等）可运行，加快了本地开发和构建，实现了快速交付和部署；同时还可以在操作系统层面提供资源隔离服务。</p>
+<p>为了提高服务水平，企业服务需要能够快速水平扩展，在系统设计层面也大举采用 SOA 框架，这种框架天生适合使用容器大规模部署。当然，也存在一些问题，比如管理大量的服务实例成为一个挑战，运维、监控、问题分析等变得复杂。那么如何管理这些容器呢？于是就产生了大量的容器管理工具，支持 Docker 容器管理的工具使用得比较广的有 Swarm、Mesos、Kubernetes、Rancher 等工具。这些工具能够帮我们方便管理容器，虽然有一些问题的解决方式并不完美，但这也给运维开发、测试开发提供了更多的想象空间与工作机会。目前容器管理工具 Kubernetes 影响最大，但 Kubernetes 的学习与运维成本相对较高，需要专业人士的支持。目前国内大型互联网公司基本都基于 Kubernetes 来管理大量容器，包括 BAT、京东等企业。腾讯的蓝鲸（DevOps）也基于 Kubernetes，已经开始市场化；淘宝的云效也是与蓝鲸同类型的产品。</p>
+<p>对于中小型企业来说，上 Kubernetes 显得有点操之过急，需要有技术储备与维护团队，学习成本相对也会高一点，因此应该选择简单的、快速能够落地的、能够满足企业要求的、有一定市场的工具。当然，最好还是开源的，社区也支持的。所以我们选择 Rancher，据说早期云效也是整合 Rancher 的，作者也在基于 Rancher 做整合，利用 Rancher 实现容器的管理，利用 Jenkins 构建，利用 GitLab 实现源码管理，再加上静态扫描、自动化测试、性能测试、日志管理等功能，整合成 DevOps，足够运行、管理上千个实例级别的容器实例。实际上，拥有 DevOps 并且已经容器化，就相当于已经拥有一个相对智能化的私有云平台（不是真正意义上的云，并没有对物理资源进行管理，抽象成服务）。图 1-6 是作者早期开发的 DevOps 静态架构。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-d0bd916daf8680bb7b549a67dfc6752f_720w.jpg"></p>
+<p>此平台类似于一个私有云平台，基本涵盖了系统的生命周期：编译、打包、发布、测试、上线、运维、下线。同时把硬件资源管理起来，这些硬件对用户透明。平台主要分 3 层。</p>
 <ul>
-<li>对象具有唯一标识性：即使完全相同的两个对象，也并非同一个对象</li>
-<li>对象有状态：对象具有状态，同一对象可能处于不同状态之下</li>
-<li>对象具有行为：即对象的状态，可能因为它的行为产生变迁</li>
+<li>基础组件层，提供了存储、网络与运算功能。对于上层来说，硬件只是一个服务而已。</li>
+<li>服务组件层，提供了运维与监控功能。对于大规模系统营运来说，系统监控、问题诊断分析变得复杂，必须在系统层面给予帮助，结合平台能力，让用户分析问题变得简单。那种从服务器上看日志的老旧方式一去不复返了。</li>
+<li>DevOps 用户层，直接面向运维人员，做到持续集成、持续交付、持续部署，在平台中完成各种测试。支持多种形式的发布，减少上线风险。</li>
 </ul>
-<p>我们先来看第一个特征，对象具有唯一标识性，一般而言，各种语言的对象唯一标识性都是用内存地址来体现的，对象具有唯一标识的内存地址，所以具有唯一的标识。</p>
-<p>所以 JavaScript 程序员都知道，任何不同的 JavaScript 对象其实都是互不相等的，我们可以看下面的代码，o1 和 o2 初看是两个一摸一样的对象，但是打印出来的结果却是 false</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> o2 = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(o1 == o2); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-
-<p>关于对象的第二个和第三个特征 “状态和行为”，不同语言会使用不同的属于来抽象描述它们，比如 C++ 中称它们为 “成员变量”和“成员函数”，Java 中则称它们为 “属性”和“方法”</p>
-<p>在 JavaScript 中，将状态和行为统一抽象为 “属性”，考虑到 JavaScript 中将函数设计成一种特殊的对象，所以 JavaScript 中的行为和状态都能用属性来抽象</p>
-<p>下面这段代码其实就展示了普通属性和函数作为属性的一个例子，其中 o 是对象，d 是一个属性，而函数 f 也是一个属性，尽管写法不太相同，但是对 JavaScript 来说，d 和 f 就是两个普通属性。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;</span><br><span class="line">    d: <span class="number">1</span>,</span><br><span class="line">    f() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">this</span>.d);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>所以，总结一句话来看，在 JavaScript 中，对象的状态和行为其实都被抽象为了属性。如果你用过 Java，一定不要觉得奇怪，尽管设计思路有一定差别，但是二者都很好地表现了对象的基本特征：标识性、状态和行为。</p>
-<p>在实现了对象基本特征的基础上, 我认为，JavaScript 中对象独有的特色是：对象具有高度的动态性，这是因为 JavaScript 赋予了使用者在运行时为对象添改状态和行为的能力。</p>
-<p>我来举个例子，比如，JavaScript 允许运行时向对象添加属性，这就跟绝大多数基于类的、静态的对象设计完全不同。如果你用过 Java 或者其它别的语言，肯定会产生跟我一样的感受。</p>
-<p>下面这段代码就展示了运行时如何向一个对象添加属性，一开始我定义了一个对象 o，定义完成之后，再添加它的属性 b，这样操作是完全没问题的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line">o.b = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(o.a, o.b); <span class="comment">//1 2</span></span><br></pre></td></tr></table></figure>
-
-<p>为了提高抽象能力，JavaScript 的属性被设计成比别的语言更加复杂的形式，它提供了数据属性和访问器属性（getter/setter）两类。</p>
-<h3 id="JavaScript-对象的两类属性"><a href="#JavaScript-对象的两类属性" class="headerlink" title="JavaScript 对象的两类属性"></a>JavaScript 对象的两类属性</h3><p>对 JavaScript 来说，属性并非只是简单的名称和值，JavaScript 用一组特征（attribute）来描述属性（property）</p>
-<p>先来说说第一类属性，数据属性，它比较接近其他语言的属性概念，数据属性具有四个特征</p>
+<p>图 1-7 是上述平台用到的技术栈。下面对用到的部分工具进行简单说明。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-04844cd0f7bc996f21043a601acfb1f1_720w.jpg"></p>
 <ul>
-<li>value：就是属性的值。</li>
-<li>writable：决定属性能否被赋值。</li>
-<li>enumerable：决定 for in 能否枚举该属性。</li>
-<li>configurable：决定该属性能否被删除或者改变特征值。</li>
+<li>Rancher：一个开源的企业级容器管理平台。通过 Rancher，企业再也不必自己使用一系列的开源软件去从头搭建容器服务平台。Rancher 提供了在生产环境中使用的管理 Docker 和 Kubernetes 的全栈化容器部署与管理平台。</li>
+<li>Jenkins：用于构建管理，定义管理工作过程。</li>
+<li>Docker compose：一种定义编排容器的工具，以 YAML 或者 XML 的格式展示编排内容。</li>
+<li>Maven：源码编译工具。</li>
+<li>GitLab：源码管理工具。</li>
+<li>Gerrit：代码审核工具。</li>
+<li>Sonar：代码静态扫描工具。</li>
+<li>robot：自动化测试工具。</li>
+<li>Ceph：分布式存储产品。</li>
+<li>Spring Boot：DevOps 集成开发技术框架。</li>
+<li>React：门户开发框架。</li>
+<li>Redux：门户开发框架。</li>
+<li>MySQL：数据库。</li>
+<li>MyBatis：ORM 框架。</li>
+<li>Kibana、Logstash、Elastic：用于统一进行日志管理、日志存储、日志分析。</li>
 </ul>
-<p>在大多数情况下，我们只关心数据属性的只即可</p>
-<p>第二类属性是访问器（getter/setter）属性，它也有四个特征</p>
+<p>本书讲到的 CI&amp;CD 刚好是这个 DevOps 的一个子集，我们将围绕上述架构及技术栈展开，</p>
+<p>本书不仅讲解如何实现，还会结合实例展示如何落地。这些对于大多数中小型企业来说已经足够支撑业务。企业给 CI&amp;CD 加上 Web 版本的门户、集中的账户管理体系以及运维监控体系，即可打造一个智能的 DevOps 平台。</p>
+<p>图 1-8 是 CI&amp;CD 流程，后面的实例也将围绕这个流程。</p>
+<p><img data-src="https://liangx-gallery.oss-cn-beijing.aliyuncs.com/v2-ce251210246218a21194dba51d686f82_720w.jpg"></p>
+<p>下面先简单介绍该流程。</p>
+<ol>
+<li>程序员提交代码。</li>
+<li>Gerrit 做代码审核，通过提交到 GitLab，能通过邮件通知相关人员。</li>
+<li>Sonar 做代码静态扫描，并把结果通知相关人员。</li>
+<li>在 GitLab 中贴标签（通过 WebHook 触发 Jenkins 作业）或者手动在 Jenkins 中触发作业，Maven 开始下拉代码进行编译，然后进行单元测试和打包。</li>
+<li>打包完成后利用 Docker cli 构建镜像。</li>
+<li>把镜像上传到镜像仓库中。</li>
+<li>Jenkins 作业触发 Rancher 在测试环境中启动容器，首先下拉镜像，然后根据配置启动容器。</li>
+<li>Rancher 自动或者按规则调度容器在哪台机器上运行。</li>
+<li>Rancher 负责容器生命周期管理（启动、监控、健康检查、扩展等）。</li>
+<li>进行自动化测试。</li>
+<li>测试通过后，Jenkins 触发 Rancher 在生产环境中启动或者更新测试通过的服务，当然，也可以手动在 Rancher 中进行发布，当实例增加时只需要填写实例数量即可快速扩展，在发布时可以支持灰度发布、蓝绿发布等个性化的发布需求。</li>
+</ol>
+<p>注意：</p>
+<ol>
+<li><p>我们一直不加上云平台这个名称，是因为云平台的定义太广，我们并没有产品接入功能，比如提供数据存储服务、缓存服务，以及提供大数据运算能力。</p>
+</li>
+<li><p>当然，我们也具备云要提供的很多服务，所以在把下面要讲的一套东西落地后，也可以冠以云平台之名，其他的功能可以慢慢补上来。“欲立新功，行之有名；立人之先，憨享其成。”</p>
+</li>
+</ol>
+<p>由于要用的工具比较多，这些工具多由外国人开发，译过来叫法比较多，因此为了方便讲述，下面介绍术语。</p>
 <ul>
-<li>getter：函数或 undefined，在取属性值时被调用。</li>
-<li>setter：函数或 undefined，在设置属性值时被调用。</li>
-<li>enumerable：决定 for in 能否枚举该属性。</li>
-<li>configurable：决定该属性能否被删除或者改变特征值。</li>
+<li>服务：完成某一功能的程序。</li>
+<li>服务实例：程序部署单元，比如一个订单程序由 Tomcat 启动，一个这样的部署单元（一个 JVM 实例）称为一个服务实例。</li>
+<li>容器：如 Docker 容器。</li>
+<li>容器实例：镜像的运行态叫容器实例，如果运行一个 Nginx 镜像，那么这就是一个容器实例，我们利用镜像运行两个 Nginx，那么实例数为 2；这些实例称为容器实例，一定语境下直接称为实例。</li>
 </ul>
-<p>访问器属性使得属性在读和写时执行代码，它允许使用者在写和读属性时，得到完全不同的值，它可以视为一种函数的语法糖。</p>
-<p>我们通常用于定义属性的代码会产生数据属性，其中的 writable、enumerable、configurable 都默认为 true。我们可以使用内置函数 getOwnPropertyDescripter 来查看，如以下代码所示：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line">o.b = <span class="number">2</span>;</span><br><span class="line"><span class="comment">//a和b皆为数据属性</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;a&quot;</span>) <span class="comment">// &#123;value: 1, writable: true, enumerable: true, configurable: true&#125;</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;b&quot;</span>) <span class="comment">// &#123;value: 2, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>我们在这里使用了两种语法来定义属性，定义完属性后，我们用 JavaScript 的 API 来查看这个属性，我们可以发现，这样定义出来的属性都是数据属性，writeable、enumerable、configurable 都是默认值为 true。</p>
-<p>如果我们要想改变属性的特征，或者定义访问器属性，我们可以使用 Object.defineProperty，示例如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(o, <span class="string">&quot;b&quot;</span>, &#123;<span class="attr">value</span>: <span class="number">2</span>, <span class="attr">writable</span>: <span class="literal">false</span>, <span class="attr">enumerable</span>: <span class="literal">false</span>, <span class="attr">configurable</span>: <span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//a和b都是数据属性，但特征值变化了</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;a&quot;</span>); <span class="comment">// &#123;value: 1, writable: true, enumerable: true, configurable: true&#125;</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(o,<span class="string">&quot;b&quot;</span>); <span class="comment">// &#123;value: 2, writable: false, enumerable: false, configurable: true&#125;</span></span><br><span class="line">o.b = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(o.b); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-
-<p>这里我们使用了 Object.defineProperty 来定义属性，这样定义属性可以改变属性的 writable 和 enumerable。</p>
-<p>我们同样用 Object.getOwnPropertyDescriptor 来查看，发现确实改变了 writable 和 enumerable 特征。因为 writable 特征为 false，所以我们重新对 b 赋值，b 的值不会发生变化。</p>
-<p>在创建对象时，也可以使用 get 和 set 关键字来创建访问器属性，代码如下所示：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123; <span class="keyword">get</span> <span class="title">a</span>() &#123; <span class="keyword">return</span> <span class="number">1</span> &#125; &#125;;</span><br><span class="line"><span class="built_in">console</span>.log(o.a); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-
-<p>访问器属性跟数据属性不同，每次访问属性都会执行 getter 或者 setter 函数。这里我们的 getter 函数返回了 1，所以 o.a 每次都得到 1。</p>
-<p>这样，我们就理解了，实际上 JavaScript 对象的运行时是一个“属性的集合”，属性以字符串或者 Symbol 为 key，以数据属性特征值或者访问器属性特征值为 value。</p>
-<p>对象是一个属性的索引结构（索引结构是一类常见的数据结构，我们可以把它理解为一个能够以比较快的速度用 key 来查找 value 的字典）。我们以上面的对象 o 为例，你可以想象一下“a”是 key。</p>
-<p>{writable:true,value:1,configurable:true,enumerable:true}是 value。我们在前面的类型课程中，已经介绍了 Symbol 类型，能够以 Symbol 为属性名，这是 JavaScript 对象的一个特色。</p>
-<p>讲到了这里，如果你理解了对象的特征，也就不难理解我开篇提出来的问题。</p>
-<p>你甚至可以理解为什么会有“JavaScript 不是面向对象”这样的说法了。这是由于 JavaScript 的对象设计跟目前主流基于类的面向对象差异非常大。</p>
-<p>可事实上，这样的对象系统设计虽然特别，但是 JavaScript 提供了完全运行时的对象系统，这使得它可以模仿多数面向对象编程范式（下一节课我们会给你介绍 JavaScript 中两种面向对象编程的范式：基于类和基于原型），所以它也是正统的面向对象语言。</p>
-<p>JavaScript 语言标准也已经明确说明，JavaScript 是一门面向对象的语言，我想标准中能这样说，正是因为 JavaScript 的高度动态性的对象系统。</p>
-<p>所以，我们应该在理解其设计思想的基础上充分挖掘它的能力，而不是机械地模仿其它语言。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>要想理解 JavaScript 对象，必须清空我们脑子里“基于类的面向对象”相关的知识，回到人类对对象的朴素认知和面向对象的语言无关基础理论，我们就能够理解 JavaScript 面向对象设计的思路。</p>
-<p>在这篇文章中，我从对象的基本理论出发，和你理清了关于对象的一些基本概念，分析了 JavaScript 对象的设计思路。接下来又从运行时的角度，介绍了 JavaScript 对象的具体设计：具有高度动态性的属性集合。</p>
-<p>很多人在思考 JavaScript 对象时，会带着已有的“对象”观来看问题，最后的结果当然就是“剪不断理还乱”了。</p>
-<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>结合文章通篇看下来，觉得 JS 的 OO 和他基于类的 OO 不同之处，在于 JS 可以在运行时修改对象，而 class based 的类只能预先全部定义好，我们并不能在运行时动态修改类。在我理解来说，条条大路通罗马，面向对象是罗马，class based 是一条路，prototype based 是另一条路。而且 Symbol 的出现，暴露出了许多内置接口，让 JS 又在这条路上走了更远一些。（以前上学背面向对象的三个特征，封装，继承，多态，现在看一下突然觉得很对。。。</p>
+<h3 id="本章小结"><a href="#本章小结" class="headerlink" title="本章小结"></a>本章小结</h3><p>本章简单叙述了进行 CI&amp;CD 的价值，以及通过 CI&amp;CD 的实施能够帮我们解决什么问题。结合当前的 CI&amp;CD 技术栈，我们知道要朝哪个方向去发力建立自己的私有云平台。利用当前的开源技术实现 CI&amp;CD，运行自己的私有云平台，加速企业的系统集成效率，缩短部署时间，提高成功率。</p>
 
       
     </div>
@@ -375,7 +394,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/31/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/33/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/31/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/33/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -443,7 +462,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

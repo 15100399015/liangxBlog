@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/10/29/KMP/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/06/cssom/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/29/KMP/" class="post-title-link" itemprop="url">KMP</a>
+            <a href="/2020/11/06/cssom/" class="post-title-link" itemprop="url">cssom</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-10-29 16:35:11" itemprop="dateCreated datePublished" datetime="2020-10-29T16:35:11+08:00">2020-10-29</time>
+              <time title="创建时间：2020-11-06 13:31:02" itemprop="dateCreated datePublished" datetime="2020-11-06T13:31:02+08:00">2020-11-06</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-09 17:49:29" itemprop="dateModified" datetime="2020-11-09T17:49:29+08:00">2020-11-09</time>
+                <time title="修改时间：2020-11-09 17:49:47" itemprop="dateModified" datetime="2020-11-09T17:49:47+08:00">2020-11-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                  <a href="/categories/css/" itemprop="url" rel="index"><span itemprop="name">css</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/10/29/KMP/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/29/KMP/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/06/cssom/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/06/cssom/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,22 +262,121 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>有些算法，适合从他的产生的动机，如何设计与解决问题这样正向的去介绍，但 KMP 算法真的不合适这样去学，最好的方法使先搞清楚它所用的数据结构是什么，再搞清楚怎么用，最后为什么的问题就会有恍然大悟的感觉，我试着从这个思路介绍一下</p>
-<p>KMP 算法的和核心，是一个被称为部分匹配表（Partial Match Table）的数组，理解 KMP 的最大障碍就是 PMT，有些人看了很多 KMP 的文章后仍然搞不懂 PMT 中的值代表什么意思，这里我们抛开所有的枝枝蔓蔓，先来解释下这个数据到底是什么东西</p>
-<p>对于字符转 “abababca”，它的 PMT 如下表所示</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-e905ece7e7d8be90afc62fe9595a9b0f_720w.jpg?source=1940ef5c" alt="PMT"></p>
-<p>就像图中所示，如果待匹配的模式字符串有 8 个字符，那么 PMT 就会有 8 个值。</p>
-<p>我先解释下字符串的前缀和后缀，如果字符串 A 和 B 存在 A=BS，其中 S 是任意的非空字符串，那么就称 B 为 A 的前缀，例如“Harry”的前缀包括<code>[&quot;H&quot;,&quot;Ha&quot;,&quot;Har&quot;,&quot;Harr&quot;]</code> 我们把所有前缀组合成的集合称为字符串的前缀集合，同样可以定义 A=SB ，其中 S 是任意非空字符，那就称 B 为 A 的后缀，例如，“Potter”的后缀包括<code>[&quot;otter&quot;,&quot;tter&quot;,&quot;ter&quot;,&quot;er&quot;,&quot;r&quot;]</code>。然后把所有的后缀组合成新的集合，称为字符串的后缀集合，要注意的是，字符串本身并不是自己的后缀或前缀</p>
-<p>有了这个定义，就可以说明 PMT 中的值的意义了，<strong>PMT 中的值是字符串的前缀集合与后缀集合的交集中最长元素的长度</strong>。例如，对于 “aba”，它的前缀集合为<code>[&quot;a&quot;,&quot;ab&quot;]</code>，后缀集合为<code>[&quot;ba&quot;,&quot;a&quot;]</code>，这两个集合的交集为<code>[&quot;a&quot;]</code>，那么最长的元素就是字符串 “a” 了，长度为 1，所以对于”abc”而言， 它在 PMT 表中对应值就是 1。再比如，对于字符串 ”ababa”，它的前缀集合为<code>[”a”, ”ab”, ”aba”, ”abab”]</code>，它的后缀集合为<code>[”baba”, ”aba”, ”ba”, ”a”]</code>， 两个集合的交集为<code>[”a”, ”aba”]</code>，其中最长的元素为 ”aba”，长度为 3。</p>
-<p>好了，解释清楚这个表是什么之后，我们再来看如何使用这个表来加速字符串的查找，以及这样用的道理是什么。如图 1.12 所示，要在主字符串”ababababca”中查找模式字符串”abababca”。如果在 j 处字符不匹配，那么由于前边所说的模式字符串 PMT 的性质，主字符串中 i 指针之前的 PMT[j −1] 位就一定与模式字符串的第 0 位至第 PMT[j−1] 位是相同的。这是因为主字符串在 i 位失配，也就意味着主字符串从 i−j 到 i 这一段是与模式字符串的 0 到 j 这一段是完全相同的。而我们上面也解释了，模式字符串从 0 到 j−1 ，在这个例子中就是”ababab”，其前缀集合与后缀集合的交集的最长元素为”abab”， 长度为 4。所以就可以断言，主字符串中 i 指针之前的 4 位一定与模式字符串的第 0 位至第 4 位是相同的，即长度为 4 的后缀与前缀相同。这样一来，我们就可以将这些字符段的比较省略掉。具体的做法是，保持 i 指针不动，然后将 j 指针指向模式字符串的 PMT[j −1]位即可。</p>
-<p>简言之，以图中的例子来说，在 i 处失配，那么主字符串和模式字符串的前边 6 位就是相同的。又因为模式字符串的前 6 位，它的前 4 位前缀和后 4 位后缀是相同的，所以我们推知主字符串 i 之前的 4 位和模式字符串开头的 4 位是相同的。就是图中的灰色部分。那这部分就不用再比较了。</p>
-<p><img data-src="https://pic4.zhimg.com/50/v2-03a0d005badd0b8e7116d8d07947681c_hd.jpg?source=1940ef5"></p>
-<p>有了上面的思路，我们就可以使用 PMT 加速字符串的查找了。我们看到如果是在 j 位 失配，那么影响 j 指针回溯的位置的其实是第 j −1 位的 PMT 值，所以为了编程的方便， 我们不直接使用 PMT 数组，而是将 PMT 数组向后偏移一位。我们把新得到的这个数组称为 next 数组。下面给出根据 next 数组进行字符串匹配加速的字符串匹配程序。其中要注意的一个技巧是，在把 PMT 进行向右偏移时，第 0 位的值，我们将其设成了-1，这只是为了编程的方便，并没有其他的意义。在本节的例子中，next 数组如下表所示。</p>
-<p><img data-src="https://pic1.zhimg.com/80/v2-40b4885aace7b31499da9b90b7c46ed3_720w.jpg?source=1940ef5c"></p>
-<p>具体的程序如下所示：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">kmp</span>(<span class="params">source, pattern</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 求出 pmt 表格</span></span><br><span class="line">  <span class="keyword">let</span> table = <span class="keyword">new</span> <span class="built_in">Array</span>(pattern.length).fill(<span class="number">0</span>);</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; pattern.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[i] === pattern[j]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">        table[i] = j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 匹配</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; source.length) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pattern[j] === source[i]) &#123;</span><br><span class="line">        ++i, ++j;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          j = table[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ++i;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (j === pattern.length) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(kmp(<span class="string">&quot;abababcaabababca&quot;</span>, <span class="string">&quot;abababca&quot;</span>));</span><br></pre></td></tr></table></figure>
+          <p>前面的课程中，我们已经学些了 DOM 相关的 API，狭义的 DOM API 仅仅包含 DOM 树形结构的相关内容，今天我们来学习一类新的 API：CSSOM</p>
+<p>我想，你在最初接触浏览器 API 的时候，应该都有跟我类似的想法，“好想要 element.width,element.height” 这样的 API 啊</p>
+<p>这样的 API 可以直接获取元素的显示相关信息，它们是非常符合人的第一印象的设计，但是偏偏 DOM API 中没有这样的内容。</p>
+<p>随着深入我才知道，这样的设计是有背后逻辑的，正如 HMLT 和 CSS 分别承担了语义和表现的分工，DOM 和 CSSOM 也有语义和表现的分工，</p>
+<p>顾名思义，CSSOM 是 CSS 对象模型，在 W3C 标准中，它包含两个部分，描述样式表和规则等 CSS 的模型部分（CSSOM），和跟元素视图相关 View 部分（CSSOM，View）</p>
+<p>在实际使用中，CSSOM View 比 CSSOM 更常用一些，因为我们很少需要用代码动态的管理样式表</p>
+<p>在今天的文章中，我来分别为你介绍这两部分 API</p>
+<h3 id="CSSOM"><a href="#CSSOM" class="headerlink" title="CSSOM"></a>CSSOM</h3><p>首先我们来介绍 CSS 样式表的模型，也就是 CSSOM 的本体。</p>
+<p>我们通常创建样式表都是使用 HTML 标签来做的，我们使 style 和 link 标签创建样式表，就像这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;style title=<span class="string">&quot;Hello&quot;</span>&gt;</span><br><span class="line">a &#123;</span><br><span class="line">  color:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;link rel=<span class="string">&quot;stylesheet&quot;</span> title=<span class="string">&quot;x&quot;</span> href=<span class="string">&quot;data:text/css,p%7Bcolor:blue%7D&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
 
-<p>好了，讲到这里，其实 KMP 算法的主体就已经讲解完了。你会发现，其实 KMP 算法的动机是很简单的，解决的方案也很简单。远没有很多教材和算法书里所讲的那么乱七八糟，只要搞明白了 PMT 的意义，其实整个算法都迎刃而解。</p>
+<p>我们创建好样式表后，还有可能要对它进行一些操作。如果我们以 DOM 的角度去理解的话，这些标签在 DOM 中是一个节点，它们有节点的内容、属性，这两个标签也遵循 DOM 节点的操作规则，所以可以使用 DOM API 去访问。</p>
+<p>但是，这样做的后果是我们需要去写很多分支逻辑，并且，要想解析 CSS 代码结构也不是一件简单的事情，所以，这种情况下，我们直接使用 CSSOM API 去操作它们生成的样式表，这是一个更好的选择。</p>
+<p>我们首先了解一下 CSSOM API 的基本用法，一般来说，我们需要先获取文档中所有的样式表：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.styleSheets</span><br></pre></td></tr></table></figure>
+
+<p>document 的 styleSheets 属性表示文档中的所有样式表，这是一个只读的列表，我们可以用方括号运算符下标访问样式表，也可以使用 item 方法来访问，它有 length 属性表示文档中的样式表数量。</p>
+<p>样式表只能使用 style 标签或者 link 标签创建（对 XML 来说，还可以使用，咱们暂且不表）。</p>
+<p>我们虽然无法用 CSSOM API 来创建样式表，但是我们可以修改样式表中的内容。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.styleSheets[<span class="number">0</span>].insertRule(<span class="string">&quot;p &#123; color:pink; &#125;&quot;</span>, <span class="number">0</span>)</span><br><span class="line"><span class="built_in">document</span>.styleSheets[<span class="number">0</span>].removeRule(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>更进一步，我们可以获取样式表中特定的规则（Rule），并且对它进行一定的操作，具体来说，就是使用它的 cssRules 属性来实现：</p>
+<p>这里取到的规则列表，同样是支持 item、length 和下标运算。</p>
+<p>不过，这里的 Rules 可就没那么简单了，它可能是 CSS 的 at-rule，也可能是普通的样式规则。不同的 rule 类型，具有不同的属性。</p>
+<p>我们在 CSS 语法部分，已经为你整理过 at-rule 的完整列表，多数 at-rule 都对应着一个 rule 类型：</p>
+<ul>
+<li>CSSStyleRule</li>
+<li>CSSCharsetRule</li>
+<li>CSSImportRule</li>
+<li>CSSMediaRule</li>
+<li>CSSFontFaceRule</li>
+<li>CSSPageRule</li>
+<li>CSSNamespaceRule</li>
+<li>CSSKeyframesRule</li>
+<li>CSSKeyframeRule</li>
+<li>CSSSupportsRule</li>
+</ul>
+<p>具体规则支持的属性，建议你用到的时候，再去查阅 MDN 或者 W3C 的文档，在我们文章中，仅为你介绍最常用 CSSStyleRule。</p>
+<p>CSSStyleRule 有两个属性：selectorText 和 style，分别表示一个规则的选择器部分和样式部分。</p>
+<p>selector 部分是一个字符串，这里显然偷懒了没有设计进一步的选择器模型，我们按照选择器语法设置即可。</p>
+<p>style 部分是一个样式表，它跟我们元素的 style 属性是一样的类型，所以我们可以像修改内联样式一样，直接改变属性修改规则中的具体 CSS 属性定义，也可以使用 cssText 这样的工具属性。</p>
+<p>此外，CSSOM 还提供了一个非常重要的方法，来获取一个元素最终经过 CSS 计算得到的属性：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.getComputedStyle(elt, pseudoElt);</span><br></pre></td></tr></table></figure>
+
+<p>其中第一个参数就是我们要获取属性的元素，第二个参数是可选的，用于选择伪元素。</p>
+<p>好了，到此为止，我们可以使用 CSSOM API 自由地修改页面已经生效的样式表了。接下来，我们来一起关注一下视图的问题。</p>
+<h3 id="CSSOM-View"><a href="#CSSOM-View" class="headerlink" title="CSSOM View"></a>CSSOM View</h3><p>CSSOM View 这一部分的 API，可以视为 DOM API 的扩展，它在本来的 Element 接口上，添加了显示相关的功能， 又可以分为三个部分：窗口部分，滚动部分和布局部分，下面我们来一一了解。</p>
+<h4 id="窗口-API"><a href="#窗口-API" class="headerlink" title="窗口 API"></a>窗口 API</h4><p>窗口 API 用于操作浏览器窗口的位置，尺寸等。</p>
+<ul>
+<li>moveTo(x, y) 窗口移动到屏幕的特定坐标；</li>
+<li>moveBy(x, y) 窗口移动特定距离；</li>
+<li>resizeTo(x, y) 改变窗口大小到特定尺寸；</li>
+<li>resizeBy(x, y) 改变窗口大小特定尺寸；</li>
+</ul>
+<p>此外，窗口 API 还规定了 window.open() 的第三个参数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.open(<span class="string">&quot;about:blank&quot;</span>, <span class="string">&quot;_blank&quot;</span> ,<span class="string">&quot;width=100,height=100,left=100,right=100&quot;</span> )</span><br></pre></td></tr></table></figure>
+
+<p>一些浏览器出于安全考虑没有实现，也不适用于移动端浏览器，这部分你仅需简单了解即可。下面我们来了解一下滚动 API。</p>
+<h4 id="滚动-API"><a href="#滚动-API" class="headerlink" title="滚动 API"></a>滚动 API</h4><p>要想理解滚动，首先我们必须要建立一个概念，在 PC 时代，浏览器可视区域的滚动和内部元素的滚动关系是比较模糊的，但是在移动端越来越重要的今天，两者必须分开看待，两者的性能和行为都有区别。</p>
+<h4 id="视口滚动-API"><a href="#视口滚动-API" class="headerlink" title="视口滚动 API"></a>视口滚动 API</h4><p>可视区域（视口）滚动行为由 window 对象上的一组 API 控制，我们先了解一下。</p>
+<ul>
+<li>srollX 是视口的属性，标识 X 方向的当前滚动距离，有别名 pageXOffset</li>
+<li>scrollY 是视口的属性，标识 Y 方向的当前滚动距离，有别名 pageYOffset</li>
+<li>scroll(x, y) 使得页面滚动到特定的位置，有别名 scrollTo，支持传入配置型参数 {top, left}</li>
+<li>scrollBy(x, y) 使得页面滚动特定的距离，支持传入配置型参数 {top, left}</li>
+</ul>
+<p>通过这些属性和方法，我们可以读取视口的滚动位置和操作视口的滚动，不过，要想监听视口的滚动事件，我们需要 document 对象上绑定事件监听函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&quot;scroll&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="comment">// .....</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>视口滚动 API 是页面的顶层容器的滚动，大部分移动端浏览器都会采用一些性能优化，它和元素滚动不完全一样，请大家一定建立这个区分的意识</p>
+<h4 id="元素滚动"><a href="#元素滚动" class="headerlink" title="元素滚动"></a>元素滚动</h4><p>接下来我们认识一下元素滚动 API，在 Element 类（参见 DOM 部分），为了支持滚动，加入了以下 API。</p>
+<ul>
+<li>scrollTop 元素的属性，表示 Y 方向上的当前滚动距离。</li>
+<li>scrollLeft 元素的属性，表示 X 方向上的当前滚动距离。</li>
+<li>scrollWidth 元素的属性，表示元素内部的滚动内容的宽度，一般来说会大于等于元素宽度。</li>
+<li>scrollHeight 元素的属性，表示元素内部的滚动内容的高度，一般来说会大于等于元素高度。</li>
+<li>scroll(x, y) 使得元素滚动到特定的位置，有别名 scrollTo，支持传入配置型参数 {top, left}。</li>
+<li>scrollBy(x, y) 使得元素滚动到特定的位置，支持传入配置型参数 {top, left}。</li>
+<li>scrollIntoView(arg) 滚动元素所在的父元素，使得元素滚动到可见区域，可以通过 arg 来指定滚到中间、开始或者就近。</li>
+</ul>
+<p>除此之外，可滚动的元素也支持 scroll 事件。我们在元素上监听它的事件即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">element.addEventListener(<span class="string">&quot;scroll&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">  <span class="comment">//......</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这里你需要注意一点，元素部分的 API 设计与视口滚动命名风格上略有差异，你在使用的时候不要记混</p>
+<h4 id="布局-API"><a href="#布局-API" class="headerlink" title="布局 API"></a>布局 API</h4><p>最后我们来介绍一下布局 API，这是整个 CSSOM 中最常用的部分，我们同样要分成全局 API 和元素上的 API。</p>
+<h5 id="全局尺寸信息"><a href="#全局尺寸信息" class="headerlink" title="全局尺寸信息"></a>全局尺寸信息</h5><p>window 对象上提供了一些全局的尺寸信息，它是通过属性来提供的，我们来了解一下这些属性。</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/b6/10/b6c7281d86eb7214edf17069f95ae610.png"></p>
+<ul>
+<li>window.innerHeight, window.innerWidth 这两个属性表示视口的大小。</li>
+<li>window.outerWidth, window.outerHeight 这两个属性表示浏览器窗口占据的大小，很多浏览器没有实现，一般来说这两个属性无关紧要。</li>
+<li>window.devicePixelRatio 这个属性非常重要，表示物理像素和 CSS 像素单位的倍率关系，Retina 屏这个值是 2，后来也出现了一些 3 倍的 Android 屏。</li>
+<li>window.screen （屏幕尺寸相关的信息）<ul>
+<li>window.screen.width, window.screen.height 设备的屏幕尺寸。</li>
+<li>window.screen.availWidth, window.screen.availHeight 设备屏幕的可渲染区域尺寸，一些 Android 机器会把屏幕的一部分预留做固定按钮，所以有这两个属性，实际上一般浏览器不会实现的这么细致。</li>
+<li>window.screen.colorDepth, window.screen.pixelDepth 这两个属性是固定值 24，应该是为了以后预留。</li>
+</ul>
+</li>
+</ul>
+<p>虽然 window 有这么多相关信息，在我看来，我们主要使用的是 innerHeight、innerWidth 和 devicePixelRatio 三个属性，因为我们前端开发工作只需要跟视口打交道，其它信息大概了解即可。</p>
+<h5 id="元素的布局信息"><a href="#元素的布局信息" class="headerlink" title="元素的布局信息"></a>元素的布局信息</h5><p>最后我们来到了本节课一开始提到的问题，我们是否能够取到一个元素的宽（width）和高（height）呢？</p>
+<p>实际上，我们首先应该从脑中消除“元素有宽高”这样的概念，我们课程中已经多次提到了，有些元素可能产生多个盒，事实上，只有盒有宽和高，元素是没有的。</p>
+<p>所以我们获取宽高的对象应该是“盒”，于是 CSSOM View 为 Element 类添加了两个方法：</p>
+<ul>
+<li>getClientRects()。</li>
+<li>getBoundingClientRect()。</li>
+</ul>
+<p>getClientRects 会返回一个列表，里面包含元素对应的每一个盒所占据的客户端矩形区域，这里每一个矩形区域可以用 x, y, width, height 来获取它的位置和尺寸。</p>
+<p>getBoundingClientRect ，这个 API 的设计更接近我们脑海中的元素盒的概念，它返回元素对应的所有盒的包裹的矩形区域，需要注意，这个 API 获取的区域会包括当 overflow 为 visible 时的子元素区域。</p>
+<p>根据实际的精确度需要，我们可以选择何时使用这两个 API。</p>
+<p>这两个 API 获取的矩形区域都是相对于视口的坐标，这意味着，这些区域都是受滚动影响的。</p>
+<p>如果我们要获取相对坐标，或者包含滚动区域的坐标，需要一点小技巧：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> offsetX = <span class="built_in">document</span>.documentElement.getBoundingClientRect().x - element.getBoundingClientRect().x;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>今天我们一起学习了 CSSOM 这一类型的 API。我们首先就说到了，就像 HTML 和 CSS 分别承担了语义和表现的分工，DOM 和 CSSOM 也有语义和表现的分工。</p>
+<p>CSSOM 是 CSS 的对象模型，在 W3C 标准中，它包含两个部分：描述样式表和规则等 CSS 的模型部分（CSSOM），和跟元素视图相关的 View 部分（CSSOM View）。</p>
 
       
     </div>
@@ -296,7 +395,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/34/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><span class="page-number current">35</span><a class="page-number" href="/page/36/">36</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/36/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/34/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><span class="page-number current">35</span><a class="page-number" href="/page/36/">36</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/36/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -364,7 +463,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

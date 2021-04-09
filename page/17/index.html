@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/21/%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/" class="post-title-link" itemprop="url">人类将成为人工智能的宠物？</a>
+            <a href="/2020/11/21/%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7/" class="post-title-link" itemprop="url">运算符优先级</a>
         </h2>
 
         <div class="post-meta">
@@ -218,24 +218,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-11-09 17:30:01" itemprop="dateCreated datePublished" datetime="2020-11-09T17:30:01+08:00">2020-11-09</time>
+              <time title="创建时间：2020-11-21 00:04:23" itemprop="dateCreated datePublished" datetime="2020-11-21T00:04:23+08:00">2020-11-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:48:31" itemprop="dateModified" datetime="2020-11-10T10:48:31+08:00">2020-11-10</time>
+                <time title="修改时间：2020-11-22 23:31:58" itemprop="dateModified" datetime="2020-11-22T23:31:58+08:00">2020-11-22</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%A4%A7%E8%AF%9D%E8%AF%B4/" itemprop="url" rel="index"><span itemprop="name">大话说</span></a>
-                </span>
-            </span>
 
           
   
@@ -246,8 +237,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/21/%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/21/%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,31 +253,115 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>前面几篇文章从图灵说到图灵机，再到人工智能，其实对于人工智能有很多话题。其中包括对人工智能的定义、人工智能技术实现、人工智能是使用场景和范围、人工智能是否会取代人类甚至屠杀人类等等。今天我们就“人工智能是否会取代人类？”这个很有争议性话题进行解读，希望大家对人工智能有更多的思考维度。</p>
-<p>现实版钢铁侠的马斯克（特斯拉 CEO），2017 年在社交平台回怼 Facebook 创始人扎克伯格，原因是扎克伯格不认为人工智能是末日，马斯克回怼：他对人工智能的理解很有限。</p>
-<p>马斯克多次在不同场合表示自己对人工智能发展的担忧，认为工人智能是人类文明的最大威胁，甚至发出警告：人工智能可能引发第三次世界大战。</p>
-<h1 id="一、人工智能威胁论"><a href="#一、人工智能威胁论" class="headerlink" title="一、人工智能威胁论"></a>一、人工智能威胁论</h1><p>2016 年阿尔法狗战胜了世界围棋冠军李世石，一时间整个世界哗然，围棋一直被冠以人类智力游戏的最后一高地，就这样突然被占领。 人工智能经过几十年的发展，特别在近几年大数据的共同发展，已经取得了不少的进展，人工智能在很多方面远超了人类。</p>
-<p>在全世界范围内，很多科技大佬表示对人工智能的担心，上面已经提到了特斯拉 CEO 马斯克，还有今年（2018 年）刚去世的著名物理学家，天文学家霍金也提出对人工智能的担心：“我真的害怕人工智能取代人类，成为新的物种。”、“我们已经拥有原始形式的人工智能，但我认为人工智能的完全发展会导致人类的终结”等等言论。</p>
-<p>对于普通民众来讲，很多人担心人工智能抢了自己的工作而丢了饭碗。在第一次工业期间，由于蒸汽机的发明，机器代替了人工在英国掀起了捣毁纺织机械为手段的工人罢工。但是其实机器大规模使用不但没有减少工作岗位，反而是增多了。</p>
-<h1 id="二、人工智能有意识吗？"><a href="#二、人工智能有意识吗？" class="headerlink" title="二、人工智能有意识吗？"></a>二、人工智能有意识吗？</h1><p>计算机在非离散数学计算、存储等方面已经远超于人类，也真是因为计算机，因为信息互联网给人类带来了巨大的便利，更创造了超之前几千年之和的财富。从最广义的角度看，传统软件也应属于人工智能的范畴：实际上很多早期的计算机科学家，比如图灵，就是以人工智能为动力展开对计算机科学的研究。从这个意义上来看，人工智能是一种为人类工作的工具或机器。</p>
-<p>如果人工智能只是一种可以代替人类工作的机器，它的出现并不足以让人们恐惧。 终极问题是：<strong>人工智能会有人一样，甚至超出人类的意识吗？</strong></p>
-<p>现在机器（人工智能）是被人类奴役着，如果人工智能得到长足发展后，在未来，人类奴役机器的剧情将得到反转，未来，人类才是那个被“奴役”的物种！这种情节我们在很多的电影中都看到过。</p>
-<p>从现在的人工智能发展水平来看，现在的人工智能其实还非常初级，只能算做弱人工智能，其实在我们有生之年估计看不到超级人工智能的存在。</p>
-<h1 id="三、人工智能是生命-3-0？"><a href="#三、人工智能是生命-3-0？" class="headerlink" title="三、人工智能是生命 3.0？"></a>三、人工智能是生命 3.0？</h1><p>最近在看人工智能专家，麻省理工终身教授泰格马克的《生命 3.0》，这本书题目是生命，但是其实一本讲人工智能的书，作者对人工智能的发展、人类的终极命运将会是什么，进行了预测，脑洞非常大。</p>
-<p>我们现在思考人工智能，动不动就担心机器会不会有人类的意识，人类的喜怒哀乐，情感都是因为意识。机器会自动驾驶，会人脸识别，会翻译等只不过是一种机械运动而已。但是实际上，图灵和现代生物学家都认为，人在做事的时候，本质上也是机械的，也就是可以用图灵机来进行表达，只是我们还没有找到表达的算法而已。</p>
-<p>在我们都在担心意识问题的时候，泰格马克教授从生命的角度进行了解读。他把生命分成了三个阶段：生命 1.0、生命 2.0 和生命 3.0</p>
-<p>生命是什么？这个问题争议很大，就像意识一样难以定义。</p>
-<blockquote>
-<p>泰格马克对生命进行了广阔的定义：生命是一个能够进行复制和保持自我复杂性的过程。</p>
-</blockquote>
-<p>1，生命 1.0 的有生之年都无法重新设计自己的硬件和软件，二者由基因 DNA 来决定，只有进化才能带来改变，而进行则需要许多代才能有很小的改变，因此生命 1.0 的进化是非常非常非常缓慢的，生命 1.0 典型的是细菌。</p>
-<p>2，生命 2.0 则能够重新设计自身大部分的软件，比如人类，人类可以学习复杂的新技能、语言、知识和职业技能，并且能够从认知上更新自己的目标，自己对世界的认识。</p>
-<p>3，生命 3.0 现在在地球上还没有出现，他不仅能够最大限度的重新设计自己的软件，还是重新设计自己的硬件，而不需要等待许多代进行缓慢的进化。</p>
-<p>当然，我们会问，那其他的动物算生命几点 0 呢？如果细菌是 1.0，人类是 2.0，老鼠可以看做 1.1，虽然它们可以学习许多知识，但是不足以进化出语言，所以许多的东西死亡就会消失，不能积累传承。</p>
-<p>那么问题来了，生命 3.0 什么时候出现？出现后，作为生命 2.0 的人类怎么共存呢？ 不知道大家有没有一个感觉？人工智能技术，特别是语音识别技术就是在近 5 年才突然爆发的，其实人工智的能力增长是指数级的，是爆发式的。超级人工智能的出现也许就需要一个契机，一个突破，比如量子计算机，他的出现肯定是爆发式的，突然出现的。</p>
-<p>如果有一天人类造出了超级人工智能，即生命 3.0，就可能触发一场智能革命，将人类远远甩在后面，就像我们人类对比细菌一样，甚至更大。 如果这场智能革命由某一小撮人类控制，那他们讲可能在短短几年内控制整个世界。 如果人类没有控制这场智能革命，那么，人工智能可能以更快的速度控制世界。 因为生命 3.0 比我们高一个维度，人类将成为人工智能的宠物。</p>
-<h1 id="说在最后"><a href="#说在最后" class="headerlink" title="说在最后"></a>说在最后</h1><p>有个图灵机、人工智能的话题差不多写完了，这些话题太大，很难写。在看了《生命 3.0》这本书，对人工智能有了更多的理解和想法，其实心情既兴奋也很担忧。在我们所做的宇宙，从宇宙大爆发那一刻开始，各种参数其实已经决定了整个宇宙发展的过程。图灵的结论告诉我们，即使未来是注定的，我们也没有一种算法去预测它，除非模拟它运行一遍。但是，要想模拟这个宇宙的运行，需要的计算量必然超出了这个宇宙自身的所有资源。运行这个宇宙的唯一方式，就是运行这个宇宙本身，或者参与其中才能知道最终的答案！</p>
-<p>除非有麦克斯韦妖修改宇宙大爆炸的时候的参数，生命 3.0，超级人工智能一定会把人类甩在后面，而不仅仅是取代，人类将成为人工智能的宠物。</p>
+          <h3 id="语法树和运算符优先级的关系"><a href="#语法树和运算符优先级的关系" class="headerlink" title="语法树和运算符优先级的关系"></a>语法树和运算符优先级的关系</h3><p>我们都知道四则运算中运算符的优先级是 <code> +- 小于 */ 小于 ()</code> ，所以如果我们要构造一棵描述四则运算的语法树的时候，我们需要考虑</p>
+<ul>
+<li>括号会形成比乘除更小一级的语法结构</li>
+<li>乘除会形成比加减更小一级的语法结构</li>
+<li>加减的是更高一级的语法结构</li>
+</ul>
+<p>比如说我们的 <code>1+2*3</code> 的表示如下</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  +</span><br><span class="line"> / \</span><br><span class="line">1   *</span><br><span class="line">   / \</span><br><span class="line">  2   3</span><br></pre></td></tr></table></figure>
+
+<p>这棵树并不严谨，它并不是一个抽象语法树，它是一个所谓的中缀树，但是它大概可以说明我们运算符优先级会影响到语法树的构成</p>
+<p>所以说我们会在 JavaScript 的标准中，它是用产生式来描述运算符的优先级的（产生式更加严谨）</p>
+<p>接下来我们就来从它的优先级由高到低来看看整个表达式</p>
+<h3 id="运算符优先级"><a href="#运算符优先级" class="headerlink" title="运算符优先级"></a>运算符优先级</h3><p>以下列表大概说明了 JavaScript 中表达式的优先级关系</p>
+<ol>
+<li><p>Member</p>
+<ul>
+<li>a.b</li>
+<li>a[“b”]</li>
+<li>foo`string`</li>
+<li>super.b</li>
+<li>super[b]</li>
+<li>new.target</li>
+<li>new Foo()</li>
+</ul>
+</li>
+<li><p>New</p>
+<ul>
+<li>new Foo</li>
+</ul>
+</li>
+<li><p>Call</p>
+<ul>
+<li>foo()</li>
+<li>super()</li>
+<li>foo()[“b”]</li>
+<li>foo().b</li>
+<li>foo()`abc`</li>
+</ul>
+</li>
+<li><p>Update</p>
+<ul>
+<li>a++</li>
+<li>a–</li>
+<li>–a</li>
+<li>++a</li>
+</ul>
+</li>
+<li><p>Unary</p>
+<ul>
+<li>delete a.b</li>
+<li>void foo()</li>
+<li>typeof a</li>
+<li>+a</li>
+<li>-a</li>
+<li>~a</li>
+<li>!a</li>
+<li>await a</li>
+</ul>
+</li>
+<li><p>Exponental</p>
+<ul>
+<li>**</li>
+</ul>
+</li>
+<li><p>Multiplicative</p>
+<ul>
+<li>*，/，%</li>
+</ul>
+</li>
+<li><p>Additive</p>
+<ul>
+<li>+，-</li>
+</ul>
+</li>
+<li><p>Shift</p>
+<ul>
+<li>&lt;&lt;，&gt;&gt;，&gt;&gt;&gt;</li>
+</ul>
+</li>
+<li><p>Relationship</p>
+<ul>
+<li>&lt;，&gt;，&lt;=，&gt;=，instanceof，in</li>
+</ul>
+</li>
+<li><p>Equality</p>
+<ul>
+<li>==</li>
+<li>!=</li>
+<li>===</li>
+<li>!==</li>
+</ul>
+</li>
+<li><p>Bitwise</p>
+<ul>
+<li>&amp;，^，|</li>
+</ul>
+</li>
+<li><p>Logical</p>
+<ul>
+<li>&amp;&amp;</li>
+<li>||</li>
+</ul>
+</li>
+<li><p>Conditiional</p>
+<ul>
+<li>? :</li>
+</ul>
+</li>
+</ol>
 
       
     </div>
@@ -305,7 +380,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -373,7 +448,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

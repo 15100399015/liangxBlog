@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/18/AletterToArthur/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/18/AletterToArthur/" class="post-title-link" itemprop="url">写给亚瑟的一封信</a>
+            <a href="/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/" class="post-title-link" itemprop="url">浏览器DOM API</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-09-18 14:28:35" itemprop="dateCreated datePublished" datetime="2020-09-18T14:28:35+08:00">2020-09-18</time>
+              <time title="创建时间：2020-09-26 21:09:19" itemprop="dateCreated datePublished" datetime="2020-09-26T21:09:19+08:00">2020-09-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-09 17:49:51" itemprop="dateModified" datetime="2020-11-09T17:49:51+08:00">2020-11-09</time>
+                <time title="修改时间：2020-11-18 13:31:00" itemprop="dateModified" datetime="2020-11-18T13:31:00+08:00">2020-11-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B8%B8%E6%88%8F%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">游戏日记</span></a>
+                  <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/" itemprop="url" rel="index"><span itemprop="name">浏览器</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/09/18/AletterToArthur/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/18/AletterToArthur/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/26/%E6%B5%8F%E8%A7%88%E5%99%A8DOM%20API/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,27 +262,171 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <iframe src="//player.bilibili.com/player.html?aid=78171705&bvid=BV1TJ411i7u9&cid=133749242&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+          <p>DOM API 是最早被设计出来的一批 API，也是用途最广的 API，所以早年的技术社区，常常用 DOM 来泛指浏览器中所有的 API。不过今天这里我们要介绍的 DOM，指的就是狭义的文档对象模型。</p>
+<h3 id="DOM-API-介绍"><a href="#DOM-API-介绍" class="headerlink" title="DOM API 介绍"></a>DOM API 介绍</h3><p>首先我们先来讲一讲什么叫做文档对象模型，</p>
+<p>顾名思义，文档对象模型是用来描述文档，这里的文档，是特指 HTML 文档（也用于 XML 文档，但是本课不讨论 XML）。同时它又是一个“对象模型”，这意味着它使用的是对象这样的概念来描述 HTML 文档。</p>
+<p>说起 HTML 文档，这是大家最熟悉的东西了，我们都知道，HTML 文档是一个由标签嵌套而成的树形结构，因此，DOM 也是使用树形的对象模型来描述一个 HTML 文档。</p>
+<p>DOM API 大致会包含四个部分。</p>
+<ul>
+<li>节点：DOM 树形结构中的节点相关 API</li>
+<li>事件：触发和监听事件相关 API</li>
+<li>Range：操作文字范围相关 API</li>
+<li>遍历：遍历 DOM 需要的工具 API</li>
+</ul>
+<p>事件相关 API 和事件模型，我们会用单独的文章讲解，所以我们本篇文章重点会为你介绍节点和遍历相关 API。</p>
+<p>DOM API 数量很多，我希望给你提供一个理解 DOM API 设计的思路，避免单靠机械的方式去死记硬背。</p>
+<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>DOM 的树形结构所有的节点由统一的接口 Node，我们按照继承关系，介绍一下节点的类型</p>
+<p><img data-src="https://static001.geekbang.org/resource/image/6e/f6/6e278e450d8cc7122da3616fd18b9cf6.png"></p>
+<p>在这些节点中，除了 Document 和 DocumentFrangment，都有与之对应的 HTML 写法，我们可以看一下。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Element: &lt;tagname&gt;...&lt;/tagname&gt;</span><br><span class="line">Text: text</span><br><span class="line">Comment: &lt;!-- comments --&gt;</span><br><span class="line">DocumentType: &lt;!Doctype html&gt;</span><br><span class="line">ProcessingInstruction: &lt;?a 1?&gt;</span><br></pre></td></tr></table></figure>
 
-<p>&emsp;&emsp;我偶尔还是会在西部的荒野疾驰，去听听森林的鸟鸣，去和那该死的灰熊相扑，去拜访一下你以前的老友，少了你的西部，少了点狂野味道</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4280.jpg" width=100%/>
+<p>我们在编写 HTML 代码并且运行后，就会在内存中得到这样一棵 DOM 树，HTML 的写法会被转化成对应的文档模型，而我们则可以通过 JavaScript 等语言去访问这个文档模型。</p>
+<p>这里我们每天都需要用到，要重点掌握的是：Document、Element、Text 节点。</p>
+<p>DocumentFragment 也非常有用，它常常被用来高性能地批量添加节点。因为 Comment、DocumentType 和 ProcessingInstruction 很少需要运行时去修改和操作，所以有所了解即可。</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>Node 是 DOM 树继承关系的根节点，它定义了 DOM 节点在 DOM 树上的操作，首先，Node 提供了一组属性，来表示它在 DOM 树中的关系，它们是：</p>
+<ul>
+<li>parentNode</li>
+<li>childNodes</li>
+<li>firstChild</li>
+<li>lastChild</li>
+<li>nextSibling</li>
+<li>previousSibling</li>
+</ul>
+<p>从命名上，我们可以很清晰地看出，这一组属性提供了前、后、父、子关系，有了这几个属性，我们可以很方便地根据相对位置获取元素。当然，Node 中也提供了操作 DOM 树的 API，主要有下面几种。</p>
+<ul>
+<li>appendChild</li>
+<li>insertBefore</li>
+<li>removeChild</li>
+<li>replaceChild</li>
+</ul>
+<p>这个命名跟上面一样，我们基本可以知道 API 的作用。这几个 API 的设计可以说是饱受诟病。其中最主要的批评是它不对称——只有 before，没有 after，而 jQuery 等框架都对其做了补充。</p>
+<p>实际上，appendChild 和 insertBefore 的这个设计，是一个“最小原则”的设计，这两个 API 是满足插入任意位置的必要 API，而 insertAfter，则可以由这两个 API 实现出来。</p>
+<p>我个人其实不太喜欢这个设计，对我而言，insertAt(pos) 更符合审美一些。当然，不论喜不喜欢，这个标准已经确定，我们还是必须要掌握它。</p>
+<p>这里从设计的角度还想要谈一点，那就是，所有这几个修改型的 API，全都是在父元素上操作的，比如我们要想实现“删除一个元素的上一个元素”，必须要先用 parentNode 获取其父元素。</p>
+<p>这样的设计是符合面向对象的基本原则的。还记得我们在 JavaScript 对象部分讲的对象基本特征吗？“拥有哪些子元素”是父元素的一种状态，所以修改状态，应该是父元素的行为。这个设计我认为是 DOM API 中好的部分。</p>
+<p>到此为止，Node 提供的 API 已经可以很方便（大概吧）地对树进行增、删、遍历等操作了。</p>
+<p>除此之外，Node 还提供了一些高级 API，我们来认识一下它们。</p>
+<ul>
+<li>compareDocumentPosition 是一个用于比较两个节点中关系的函数。</li>
+<li>contains 检查一个节点是否包含另一个节点的函数。</li>
+<li>isEqualNode 检查两个节点是否完全相同。</li>
+<li>isSameNode 检查两个节点是否是同一个节点，实际上在 JavaScript 中可以用“===”。</li>
+<li>cloneNode 复制一个节点，如果传入参数 true，则会连同子元素做深拷贝。</li>
+</ul>
+<p>DOM 标准规定了节点必须从文档的 create 方法创建出来，不能够使用原生的 JavaScript 的 new 运算。于是 document 对象有这些方法。</p>
+<ul>
+<li>createElement</li>
+<li>createTextNode</li>
+<li>createCDATASection</li>
+<li>createComment</li>
+<li>createProcessingInstruction</li>
+<li>createDocumentFragment</li>
+<li>createDocumentType</li>
+<li>上面的这些方法都是用于创建对应的节点类型。你可以自己尝试一下。</li>
+</ul>
+<h3 id="Element-与-Attribute"><a href="#Element-与-Attribute" class="headerlink" title="Element 与 Attribute"></a>Element 与 Attribute</h3><p>Node 提供了树形结构上节点相关的操作。而大部分时候，我们比较关注的是元素。Element 表示元素，它是 Node 的子类。</p>
+<p>元素对应了 HTML 中的标签，它既有子节点，又有属性。所以 Element 子类中，有一系列操作属性的方法。</p>
+<p>我们需要注意，对 DOM 而言，Attribute 和 Property 是完全不同的含义，只有特性场景下，两者才会互相关联（这里在后面我会详细讲解，今天的文章里我就不展开了）。</p>
+<p>首先，我们可以把元素的 Attribute 当作字符串来看待，这样就有以下的 API：</p>
+<ul>
+<li>getAttribute</li>
+<li>setAttribute</li>
+<li>removeAttribute</li>
+<li>hasAttribute</li>
+</ul>
+<p>如果你追求极致的性能，还可以把 Attribute 当作节点：</p>
+<ul>
+<li>getAttributeNode</li>
+<li>setAttributeNode</li>
+</ul>
+<p>此外，如果你喜欢 property 一样的访问 attribute，还可以使用 attributes 对象，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.attributes.class = “a”</span><br><span class="line"><span class="comment">// 等效于</span></span><br><span class="line"><span class="built_in">document</span>.body.setAttribute(“<span class="class"><span class="keyword">class</span>”, “<span class="title">a</span>”)。</span></span><br></pre></td></tr></table></figure>
 
-<p>&emsp;&emsp;以前和你疾驰在西部的时候那得多狂野，在瓦伦丁酒吧那次枪战，可谓是一举成名啊杀的人可以排满整个瓦伦丁的铁路，抢的马可以堆满我们营地的那片草原了瓦伦丁的邮局甚至都不敢贴我们俩的悬赏名单，觊觎我们项上人头的赏金猎人可以从黑水镇排到安妮斯堡，可就是没人敢过来惹咱俩，毕竟你的死亡之眼可不是徒有虚名的，甚至于到了罗兹，咱们还特意跑回去瓦伦丁的银行，和比尔、凯伦、蓝尼他们狠狠地抢了一波，想起来那倒是痛快，毕竟谁能想到这居然是这段时间乃至以后最成功的一次抢银行，后来被赶到了罗兹，却被那该死的格雷家族和布雷斯维特家族利用，我们是谁？单凭神枪手—亚瑟摩根，你的项上人头就值 5000 美金，更何况还有我在，结果那自然是罗兹镇的格雷家族横尸遍野以及那让他们引以为傲的布雷斯维特庄园被烧成灰烬，</p>
-<p>&emsp;&emsp;但是逃亡的日子也总是不好过，尤其是西恩死后和小杰克被抢走后，那日子愈发的紧张了不过我们起码到了个不错的居所，你曾经的居所，一个可以遮风挡雨的地方，从黑水镇以后达奇确实是变了，大家也都变得紧张起来当小杰克回来时，他那句：这是我经历过最快乐的时光了，着实刺疼你和约翰看得出约翰和你都露出难堪的脸色，一群亡命之徒带着一个孩子，算什么亡命之徒，对吧你们想要着最为平静的生活，而达奇却依旧在幻想他的美好世界，直到被削了的脑袋的基兰被送回营地时，我们才意识到我们结下的梁子和麻烦有多少</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4WvT.jpg" width=100%/>
+<h3 id="查找元素"><a href="#查找元素" class="headerlink" title="查找元素"></a>查找元素</h3><p>document 节点提供了查找元素的能力。比如有下面的几种。</p>
+<ul>
+<li>querySelector</li>
+<li>querySelectorAll</li>
+<li>getElementById</li>
+<li>getElementsByName</li>
+<li>getElementsByTagName</li>
+<li>getElementsByClassName</li>
+</ul>
+<p>我们需要注意，getElementById、getElementsByName、getElementsByTagName、getElementsByClassName，这几个 API 的性能高于 querySelector。</p>
+<p>而 getElementsByName、getElementsByTagName、getElementsByClassName 获取的集合并非数组，而是一个能够动态更新的集合。</p>
+<p>我们看一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> collection = <span class="built_in">document</span>.getElementsByClassName(<span class="string">&#x27;winter&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(collection.length);</span><br><span class="line"><span class="keyword">var</span> winter = <span class="built_in">document</span>.createElement(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">winter.setAttribute(<span class="string">&#x27;class&#x27;</span>, <span class="string">&#x27;winter&#x27;</span>);</span><br><span class="line"><span class="built_in">document</span>.documentElement.appendChild(winter)<span class="built_in">console</span>.log(collection.length);</span><br></pre></td></tr></table></figure>
 
-<p>&emsp;&emsp;可那达奇被那该死的勃朗特洗了脑，被忽悠着抢了座分文不值的驿站，而后我们又在抢银行时被那平克顿侦探截了胡，何西亚和蓝尼就这样永久离开了我们。再然后你就和我们这群人就这样走散了而等到你们回来时，你的脸色就不太好了。而自打你从医生那回来，你就告诉我，你最近时常能梦到一匹鹿，在静谧的森林里的一头鹿</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4gCq.jpg" width=100%/>
+<p>在这段代码中，我们先获取了页面的 className 为 winter 的元素集合，不出意外的话，应该是空。</p>
+<p>我们通过 console.log 可以看到集合的大小为 0。之后我们添加了一个 class 为 winter 的 div，这时候我们再看集合，可以发现，集合中出现了新添加的元素。</p>
+<p>这说明浏览器内部是有高速的索引机制，来动态更新这样的集合的。所以，尽管 querySelector 系列的 API 非常强大，我们还是应该尽量使用 getElement 系列的 API。</p>
+<h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><p>前面已经提到过，通过 Node 的相关属性，我们可以用 JavaScript 遍历整个树。实际上，DOM API 中还提供了 NodeIterator 和 TreeWalker 来遍历树。</p>
+<p>比起直接用属性来遍历，NodeIterator 和 TreeWalker 提供了过滤功能，还可以把属性节点也包含在遍历之内。</p>
+<p>NodeIterator 的基本用法示例如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> iterator = <span class="built_in">document</span>.createNodeIterator(<span class="built_in">document</span>.body, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT, <span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line"><span class="keyword">var</span> node;</span><br><span class="line"><span class="keyword">while</span> ((node = iterator.nextNode())) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>&emsp;&emsp;我知道的，我早该知道，是肺结核，那该死的唐斯一家，那该死的放债人，尤其是那该死的西部幻想家，这他妈都做了多少事，总是不切实际地让我们干着干那，你这身体无论如何都会吃不消的。我说再去西部狂野一把，去狩猎，去抢银行，可是你却说算了算了，帮派还有那么多不安稳的人接着帮达奇干起了的肮脏的勾当，你还是相信着他的美梦，只是没那么蠢了后来你终于醒了看来是被那该死的唐斯太太给劝醒了也不知道该不该谢谢这位唐斯太太最后的那段时间，你简直换了个人，但又还是那个亚瑟以往对达奇言听计从的亚瑟背着他救出了约翰、飞鹰，以往视金钱如命的亚瑟居然散尽家财帮助其他人</p>
-<p>&emsp;&emsp;后来你还告诉我，你认识了一名老兵，一名和你很像的老兵，看清了生死；那印第安人的首领——落雨，是为数不多想帮你减轻痛苦的人，是他告诉了你人生的意义，他才是那位真正有远识的人在去和达奇见最后一面时，你告诉我，你因没有救下飞鹰而后悔，你甚至后悔没有告诉玛丽你的事情，你没有安排好所有人，只能把他们的命运托给沙迪夫人和我，</p>
-<p>&emsp;&emsp;我想你是想好好和他们道个别的，但总是少那么个机会毕竟西部的世界总是那么狂野，狂野到没有坐下来好好休息、聊天的时间听你说你喜欢能看见太阳的地方，查尔斯还特意选了个好位置给你呢，这下你可有时间坐下来好好休息了可这西部啊，少了你，就少了点味道少了那味道，我都不知道该干些什么了你知道吗，在你离开之后，帮派也散了。皮尔逊那家伙去当了个商店老板，这个脑袋少根筋的家伙居然还把我们的合照挂在了墙头，也不怕其他人闻起来，不知道这个自恋的家伙追到他喜欢的姑娘没？莎迪夫人还是老样子，雷厉风行，她说：像她这种人，在屋子被烧掉后，就注定没有归宿。于是一个人在狂野的西部当起了赏金猎人，虽然她的枪法很烂而且整个人还是鲁莽，但我还是希望她能活久一点，毕竟她骑马去打听迈卡消息的时候，我居然看到了一丝你的身影</p>
-<p>&emsp;&emsp;还记得那个被你赶走的放债人吗，那家伙最后一笔债放给一个叫做亚瑟的人。一路上听见的都是“亚瑟死了”，真他妈的难听。就是这样一个斯文败类又弱不禁风的德国人最后还是被平克顿侦探抓住了。只是没想到，这家伙即使是被折磨致死都不肯说出我们的下落，果然人就不能看那该死的行为，你看那杀千刀迈卡不就是一个 25 仔？噢，</p>
-<p>&emsp;&emsp;对了，怎么能忘了约翰·马斯顿这家伙？这家伙，正如你所说的：be a god damn man，这个开头被狼啃坏脑子的人居然真得开始了农场主的生活。虽然还是那幅牛仔样，还是那个一言不合就拔枪的人。说起来你还真狡猾，居然把全部东西给了马斯顿，你的帽子，枪，照片，日记甚至是戒指。不过也好，倘若是留给我那就是压箱底的宝物了，我可不像那马斯顿，拿起你的日记继续写着他的生活，甚至还拿起你的戒指在黑水镇的胡中心向阿比盖尔求起了婚，天晓得这对老夫老妻有多幸福。如果那天你逃出来了，是不是会拿着这枚戒指跑去找玛丽。不过，你应该不敢，在爱人这方面，你可比马斯顿逊色多了</p>
-<img data-src="https://s1.ax1x.com/2020/09/18/wh4R2V.jpg" width=100%/>
+<p>这个 API 的设计非常老派，这么讲的原因主要有两点，一是循环并没有类似“hasNext”这样的方法，而是直接以 nextNode 返回 null 来标志结束，二是第二个参数是掩码，这两个设计都是传统 C 语言里比较常见的用法。</p>
+<p>放到今天看，这个迭代器无法匹配 JavaScript 的迭代器语法，而且 JavaScript 位运算并不高效，掩码的设计就徒增复杂性了。</p>
+<p>这里请你注意一下这个例子中的处理方法，通常掩码型参数，我们都是用按位或运算来叠加。而针对这种返回 null 表示结束的迭代器，我使用了在 while 循环条件中赋值，来保证循环次数和调用 next 次数严格一致（但这样写可能违反了某些编码规范）。</p>
+<p>我们再来看一下 TreeWalker 的用法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> walker = <span class="built_in">document</span>.createTreeWalker(<span class="built_in">document</span>.body, NodeFilter.SHOW_ELEMENT, <span class="literal">null</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">var</span> node;</span><br><span class="line"><span class="keyword">while</span>(node = walker.nextNode())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.tagName === <span class="string">&quot;p&quot;</span>)</span><br><span class="line">        node.nextSibling();</span><br><span class="line">    <span class="built_in">console</span>.log(node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>&emsp;&emsp;对了，说起马斯顿，这家伙居然不听阿比盖尔的劝和莎迪去找迈卡报仇了，带着你的帽子和你的枪。不得不说，这家伙功夫还是不到家啊，你喝醉酒的枪法都比清醒时的他强，甚至在最后差点被迈卡所杀，好在达奇那老糊涂总算是清醒了一次大家都过得很好，该成家立业都成家立业，即使是大叔和查尔斯在外流浪的人也都留在了马斯顿的身边经营着那新建的农场。如果你肯定会喜欢这种生活，毕竟你和马斯顿曾经在瓦伦丁一起赶过羊呢！玛丽，她说着和你永远不相见，却还是偷偷跑去你的墓旁哭泣，她大概是再也不会遇到一个那么傻的神枪手了，</p>
-<p>&emsp;&emsp;我至今还是无法回忆起你“血仇，血债，血偿”那条路，那条路上的你总是想起最后那段时间他们所说的话，但总得还是那句——“做你能做的”。那句对达奇说的：i gave you all i had，是我见过最无奈的话了我可太不同意查尔斯那句话了：“知道自己的死期比很多人幸运。”但我又太同意这句话了，西恩，何西亚，蓝尼甚至连话都没说就被这狂野的西部杀了，措手不及。于是在最后的时刻你尽力自己所能救了他们，也救了自己。至少在最后，你会说：in the end，i did it 最后我还是选择留在了之前有你的瓦伦丁镇，毕竟只有那时候，大家还是有退路，而你还是那个意气风发的神枪手</p>
+<p>比起 NodeIterator，TreeWalker 多了在 DOM 树上自由移动当前节点的能力，一般来说，这种 API 用于“跳过”某些节点，或者重复遍历某些节点。</p>
+<p>总的来说，我个人不太喜欢 TreeWalker 和 NodeIterator 这两个 API，建议需要遍历 DOM 的时候，直接使用递归和 Node 的属性。</p>
+<h3 id="Range"><a href="#Range" class="headerlink" title="Range"></a>Range</h3><p>Range API 是一个比较专业的领域，如果不做富文本编辑类的业务，不需要太深入。这里我们就仅介绍概念和给出基本用法的示例，你只要掌握即可。</p>
+<p>Range API 表示一个 HTML 上的范围，这个范围是以文字为最小单位的，所以 Range 不一定包含完整的节点，它可能是 Text 节点中的一段，也可以是头尾两个 Text 的一部分加上中间的元素。</p>
+<p>我们通过 Range API 可以比节点 API 更精确地操作 DOM 树，凡是 节点 API 能做到的，Range API 都可以做到，而且可以做到更高性能，但是 Range API 使用起来比较麻烦，所以在实际项目中，并不常用，只有做底层框架和富文本编辑对它有强需求。</p>
+<p>创建 Range 一般是通过设置它的起止来实现，我们可以看一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> range = <span class="keyword">new</span> Range(),</span><br><span class="line">  firstText = p.childNodes[<span class="number">1</span>],</span><br><span class="line">  secondText = em.firstChild;</span><br><span class="line">range.setStart(firstText, <span class="number">9</span>); <span class="comment">// do not forget the leading space</span></span><br><span class="line">range.setEnd(secondText, <span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+
+<p>此外，通过 Range 也可以从用户选中区域创建，这样的 Range 用于处理用户选中区域:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> range = <span class="built_in">document</span>.getSelection().getRangeAt(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>更改 Range 选中区段内容的方式主要是取出和插入，分别由 extractContents 和 insertNode 来实现。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fragment = range.extractContents();</span><br><span class="line">range.insertNode(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;aaaa&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>最后我们看一个完整的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> range = <span class="keyword">new</span> Range(),</span><br><span class="line">  firstText = p.childNodes[<span class="number">1</span>],</span><br><span class="line">  secondText = em.firstChild;</span><br><span class="line">range.setStart(firstText, <span class="number">9</span>); <span class="comment">// do not forget the leading space</span></span><br><span class="line">range.setEnd(secondText, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fragment = range.extractContents();</span><br><span class="line">range.insertNode(<span class="built_in">document</span>.createTextNode(<span class="string">&quot;aaaa&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>这个例子展示了如何使用 range 来取出元素和在特定位置添加新元素。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在今天的文章中，我们一起了解了 DOM API 的内容。DOM API 大致会包含 4 个部分。</p>
+<ul>
+<li>节点：DOM 树形结构中的节点相关 API。</li>
+<li>事件：触发和监听事件相关 API。</li>
+<li>Range：操作文字范围相关 API。</li>
+<li>遍历：遍历 DOM 需要的 API。</li>
+</ul>
+<p>DOM API 中还提供了 NodeIterator 和 TreeWalker 来遍历树。比起直接用属性来遍历，NodeIterator 和 TreeWalker 提供了过滤功能，还可以把属性节点也包含在遍历之内。</p>
+<p>除此之外，我们还谈到了 Range 的一些基础知识点，这里你掌握即可。</p>
+<h3 id="补充阅读：命名空间"><a href="#补充阅读：命名空间" class="headerlink" title="补充阅读：命名空间"></a>补充阅读：命名空间</h3><p>我们本课介绍的所有 API，特意忽略了命名空间。</p>
+<p>在 HTML 场景中，需要考虑命名空间的场景不多。最主要的场景是 SVG。创建元素和属性相关的 API 都有带命名空间的版本：</p>
+<ul>
+<li>document<ul>
+<li>createElementNS</li>
+<li>createAttributeNS</li>
+</ul>
+</li>
+<li>Element<ul>
+<li>getAttributeNS</li>
+<li>setAttributeNS</li>
+<li>getAttributeNodeNS</li>
+<li>setAttributeNodeNS</li>
+<li>removeAttributeNS</li>
+<li>hasAttributeNS</li>
+<li>attributes.setNamedItemNS</li>
+<li>attributes.getNamedItemNS</li>
+<li>attributes.removeNamedItemNS</li>
+</ul>
+</li>
+</ul>
+<p>若要创建 Document 或者 Doctype，也必须要考虑命名空间问题。DOM 要求从 document.implementation 来创建。</p>
+<ul>
+<li>document.implementation.createDocument</li>
+<li>document.implementation.createDocumentType</li>
+</ul>
+<p>除此之外，还提供了一个快捷方式，你也可以动手尝试一下。</p>
+<ul>
+<li>document.implementation.createHTMLDocument</li>
+</ul>
 
       
     </div>
@@ -301,7 +445,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/47/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><span class="page-number current">48</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/49/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/47/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><span class="page-number current">48</span><a class="page-number" href="/page/49/">49</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/49/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -369,7 +513,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

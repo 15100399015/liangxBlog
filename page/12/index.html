@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">泛用语言分类方法</a>
+            <a href="/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">Navigator对象和Screen对象</a>
         </h2>
 
         <div class="post-meta">
@@ -217,16 +217,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-11-17 09:39:40" itemprop="dateCreated datePublished" datetime="2020-11-17T09:39:40+08:00">2020-11-17</time>
+              <time title="创建时间：2020-11-25 13:01:04 / 修改时间：13:12:26" itemprop="dateCreated datePublished" datetime="2020-11-25T13:01:04+08:00">2020-11-25</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-24 16:35:52" itemprop="dateModified" datetime="2020-11-24T16:35:52+08:00">2020-11-24</time>
-              </span>
 
           
   
@@ -237,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/17/%E6%B3%9B%E7%94%A8%E8%AF%AD%E8%A8%80%E5%88%86%E7%B1%BB%E6%96%B9%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/25/Navigator%E5%AF%B9%E8%B1%A1%E5%92%8CScreen%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -253,27 +247,73 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>从这节课开始我们进入到重学 JavaScript 的内容，在所有的重学系列的课程中，我们都是回假设大家已经对，JavaScript，Css，html 有了一定的了解，而我们重学的过程其实是在帮助我们在这些过去的知识里面建立一个新的秩序，也就是建立知识体系的过程，重学 JavaScript 部分，将会带着大家以 JavaScript 的语法为线索，从细到粗的跟大家完成学习一遍 JavaScript 的语言知识，第一节课我们回先讲一点编程语言的基本知识</p>
-<h3 id="语言分类"><a href="#语言分类" class="headerlink" title="语言分类"></a>语言分类</h3><ul>
-<li><p>自然语言</p>
-<p>  自然语言（Natural Language）就是人类讲的语言，比如汉语、英语和法语。这类语言不是人为设计（虽然有人试图强加一些规则）而是自然进化的。</p>
-</li>
-<li><p>形式语言</p>
-<p>  形式语言（Formal Language）是为了特定应用而人为设计的语言。例如数学家用的数字和运算符号、化学家用的分子式等。编程语言也是一种形式语言，是专门设计用来表达计算过程的形式语言。形式语言有严格的语法（Syntax）规则，例如，3+3=6是一个语法正确的数学等式，而3=+6$则不是，H2O是一个正确的分子式，而2Zz则不是。语法规则是由关于符号（Token）和结构（Structure）的规则所组成的。Token的概念相当于自然语言中的单词和标点、数学式中的数和运算符、化学分子式中的元素名和数字。关于Token的规则称为词法（Lexical）规则，而关于语句结构的规则称为语法（Grammar）规则。</p>
-</li>
-</ul>
-<h3 id="形式语言的表示方法"><a href="#形式语言的表示方法" class="headerlink" title="形式语言的表示方法"></a>形式语言的表示方法</h3><p>一个形式语言可以通过多种方法来限定自身，比如：</p>
+          <h1 id="Navigator-对象，Screen-对象。"><a href="#Navigator-对象，Screen-对象。" class="headerlink" title="Navigator 对象，Screen 对象。"></a>Navigator 对象，Screen 对象。</h1><p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的 Navigator 对象。脚本通过这个属性了解用户的环境信息。</p>
+<h2 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h2><h3 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h3><p><code>navigator.userAgent</code>属性返回浏览器的 User Agent 字符串，表示浏览器的厂商和版本信息。</p>
+<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">navigator.userAgent;</span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
+<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.userAgent.toLowerCase();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.test(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.test(ua);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h3><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是 Plugin 实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.plugins.length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].name);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].filename);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].description);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].version);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h3><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">navigator.platform;</span><br><span class="line"><span class="comment">// &quot;Linux x86_64&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h3><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.onLine; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
+<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;offline&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;offline&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;online&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;online&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h3><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.language; <span class="comment">// &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.languages; <span class="comment">// [&quot;en-US&quot;, &quot;en&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-TW&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
+<h3 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h3><p><code>Navigator.geolocation</code>属性返回一个 Geolocation 对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
+<p>Geolocation 对象提供下面三个方法。</p>
 <ul>
-<li>枚举出各个字串（只适用于有限字串集合）。-</li>
-<li>通过形式文法来产生（参见<strong>乔姆斯基谱系</strong>）。</li>
-<li>通过正则表达式来产生。</li>
-<li>通过某种自动机来识别，比如图灵机、有限状态自动机。</li>
+<li>Geolocation.getCurrentPosition()：得到用户的当前位置</li>
+<li>Geolocation.watchPosition()：监听用户位置变化</li>
+<li>Geolocation.clearWatch()：取消<code>watchPosition()</code>方法指定的监听函数</li>
 </ul>
-<h3 id="形式语言编程方面的应用"><a href="#形式语言编程方面的应用" class="headerlink" title="形式语言编程方面的应用"></a>形式语言编程方面的应用</h3><p>主要：语法（编程语言和编译器）<br>编译器通常有两个不同的部分组成。</p>
-<p>一个词法分析器，由一个像lex的工具形成。识别编程语言的语法标记。例如：标识符或关键字，在一个简单的语言表达形式中，通常是正则表达式工具。在最基本的概念，</p>
-<p>一个解析器由一个类似Yacc的解析生成器构成。试图判断源程序是否有效。当然，编译器做的不仅仅是解析源代码，他们通常把它翻译成一些可执行格式。因此，一个解析器通常输出多是或否的回答，一个典型的抽象语法树，这是由编译器后续阶段用于最终生成机器代码，包含直接运行在硬件执行，或一些中间代码需要虚拟机执行。</p>
-<h3 id="乔姆斯基谱系"><a href="#乔姆斯基谱系" class="headerlink" title="乔姆斯基谱系"></a>乔姆斯基谱系</h3><p>乔姆斯基体系是由诺·乔姆斯基于1956年提出的，是刻画形式文法表达能力的一个分类谱系。</p>
-<p>太深奥看不懂，以后再说，，，，</p>
+<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
+<h3 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h3><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.cookieEnabled; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
+<h2 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h2><h3 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h3><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.javaEnabled(); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h3><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据，详见《XMLHttpRequest 对象》一章。</p>
+<h2 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h2><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。</p>
+<p>该对象有下面的属性。</p>
+<ul>
+<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
+<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
+<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
+<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
+<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供 24 位色彩。</li>
+<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，colorDepth 表示应用程序的颜色深度，pixelDepth 表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
+<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>表示颠倒的竖放。</li>
+</ul>
+<p>下面是<code>Screen.orientation</code>的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.orientation;</span><br><span class="line"><span class="comment">// &#123; angle: 0, type: &quot;landscape-primary&quot;, onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.screen.width &gt;= <span class="number">1024</span> &amp;&amp; <span class="built_in">window</span>.screen.height &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (screen.width &lt;= <span class="number">800</span> &amp;&amp; screen.height &lt;= <span class="number">600</span>) &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;small.html&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">&quot;wide.html&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -292,7 +332,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -360,7 +400,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

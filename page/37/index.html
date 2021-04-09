@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">数据结构总结</a>
+            <a href="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">贪心算法</a>
         </h2>
 
         <div class="post-meta">
@@ -218,14 +218,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-10-15 09:56:00" itemprop="dateCreated datePublished" datetime="2020-10-15T09:56:00+08:00">2020-10-15</time>
+              <time title="创建时间：2020-11-05 15:03:24" itemprop="dateCreated datePublished" datetime="2020-11-05T15:03:24+08:00">2020-11-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-10 10:51:24" itemprop="dateModified" datetime="2020-11-10T10:51:24+08:00">2020-11-10</time>
+                <time title="修改时间：2020-11-07 21:24:26" itemprop="dateModified" datetime="2020-11-07T21:24:26+08:00">2020-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
                 </span>
             </span>
 
@@ -246,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/05/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -262,16 +262,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="数据结构总结"><a href="#数据结构总结" class="headerlink" title="数据结构总结"></a>数据结构总结</h3><h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>几乎所有的编程语言都原生支持数组，因为数组是最简单的内存数据结构，数组是一种线性结构，用于储存多个类型相同的元素，元素允许重复，数组内的每个元素都对应一个唯一的下标值(元素在数组中的位置值)，我们可以在数组的任意位置添加删除元素，查询的时候我们可以通过元素的下标值获取元素，通过下标访问内部元素的时候效率很高。但是在数组内部增加或删除元素的时候效率很低，因为这种操作会使数组内的其他元素发生位移(下标值的改变)，数组的的长度一般是在数组定义的时候就已经固定了，当数组内的元素到达数组的最大长度时，再次向数组插入元素的时候你可能需要新建一个更大长度的数组，将现有数组中的元素以及待添加的元素添加到新数组中，数组在创建的时候会申请一整块的内存中间，对内存的不够灵活，JavaScript 中的数组和其他编程语言中的数组还有些不同，JavaScript 中的数组中可以存储不同类型的元素，JavaScript 中的数组长度是动态变化的</p>
-<blockquote>
-<p>百科定义: 数组（Array）是有序的元素序列。 若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按有序的形式组织起来的一种形式。 这些有序排列的同类数据元素的集合称为数组。</p>
-</blockquote>
-<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>虽然有了数组，然而在某些情况下我们更加需要一种能在添加或删除元素时进行更多的控制的数据结构，这时我们可能就需要用到栈了, 栈是一种遵从<strong>后进先出</strong>原则的有序集合，新添加或待删除的元素都保存在栈的同一端，另一端叫做栈底，新元素都靠近栈顶,旧元素都接近栈底，在现实生活中也能发现很多栈的例子餐厅里叠放的盘子，栈也被用在编程语言的遍历器和内存中保存变量，方法调用等，也被用于浏览器历史记录(浏览器的返回按钮)</p>
-<blockquote>
-<p>百科定义: 栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
-</blockquote>
-<h4 id="队列和双端队列"><a href="#队列和双端队列" class="headerlink" title="队列和双端队列"></a>队列和双端队列</h4><p>队列是一种特殊的线性表，特殊之处在于它只允许在表的前端进行删除操作，而在表的后端进行插入操作，和栈一样，队列是一种操作受限的线性表，进行插入操作的端成为队尾，进行删除操作的成为队头。</p>
-<h4 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h4><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><h4 id="字典和散列表"><a href="#字典和散列表" class="headerlink" title="字典和散列表"></a>字典和散列表</h4><h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><h4 id="二叉堆和堆排序"><a href="#二叉堆和堆排序" class="headerlink" title="二叉堆和堆排序"></a>二叉堆和堆排序</h4><h4 id="图"><a href="#图" class="headerlink" title="图"></a>图</h4>
+          <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>所谓贪心算法是指：在对问题求解的时候，总是做出在当前看来最好的选择，也就是说，不从整体最优上加以考虑，他所做出的进士某种意义上的局部最优解</p>
+<p>贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择，必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关，</p>
+<p>所有对采用的贪心策略一定要仔细分析其是否满足无后效性</p>
+<h3 id="贪心算法的基本思路"><a href="#贪心算法的基本思路" class="headerlink" title="贪心算法的基本思路"></a>贪心算法的基本思路</h3><ol>
+<li>建立数学模型来描述问题</li>
+<li>把求解的问题分成若干子问题</li>
+<li>对每一个子问题求解，知道子问题的局部最优解</li>
+<li>把子问题的局部最优解合成原来问题的一个解</li>
+</ol>
+<h3 id="贪心算法适用的问题"><a href="#贪心算法适用的问题" class="headerlink" title="贪心算法适用的问题"></a>贪心算法适用的问题</h3><p>贪心策略适用的前提是：局部最优策略能导致产生全局最优解。 实际上，贪心算法适用的情况很少。一般，对一个问题分析是否适用于贪心算法，可以先选择该问题下的几个实际数据进行分析，就可做出判断。</p>
+<h3 id="贪心算法的实现框架"><a href="#贪心算法的实现框架" class="headerlink" title="贪心算法的实现框架"></a>贪心算法的实现框架</h3><p>从问题的某一初始解出发；</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x； 能朝给定总目标前进一步</span></span><br><span class="line"><span class="keyword">while</span> (x) &#123;</span><br><span class="line">     <span class="comment">//利用可行的决策，求出可行解的一个解元素；</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由所有解元素组合成问题的一个可行解；</p>
+<h3 id="贪心算法的选择"><a href="#贪心算法的选择" class="headerlink" title="贪心算法的选择"></a>贪心算法的选择</h3><p>因为用贪心算法只能通过解局部最优解的策略来达到全局最优解，因此，一定要注意判断问题是否适合采用贪心算法策略，找到的解是否一定是问题的最优解。</p>
+
       
     </div>
 
@@ -289,7 +295,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/36/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><span class="page-number current">37</span><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/38/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -357,7 +363,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

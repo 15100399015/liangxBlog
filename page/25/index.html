@@ -194,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://blog.1950ys.top/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -208,7 +208,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" class="post-title-link" itemprop="url">什么是图灵完备？</a>
+            <a href="/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/" class="post-title-link" itemprop="url">人类将成为人工智能的宠物？</a>
         </h2>
 
         <div class="post-meta">
@@ -217,17 +217,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-11-09 09:27:39 / 修改时间：17:51:31" itemprop="dateCreated datePublished" datetime="2020-11-09T09:27:39+08:00">2020-11-09</time>
+              <time title="创建时间：2020-11-09 17:30:01" itemprop="dateCreated datePublished" datetime="2020-11-09T17:30:01+08:00">2020-11-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-10 10:48:31" itemprop="dateModified" datetime="2020-11-10T10:48:31+08:00">2020-11-10</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9B%BE%E7%81%B5/" itemprop="url" rel="index"><span itemprop="name">图灵</span></a>
+                  <a href="/categories/%E5%A4%A7%E8%AF%9D%E8%AF%B4/" itemprop="url" rel="index"><span itemprop="name">大话说</span></a>
                 </span>
             </span>
 
@@ -240,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%EF%BC%9F/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/%E4%BA%BA%E7%B1%BB%E5%B0%86%E6%88%90%E4%B8%BA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%9A%84%E5%AE%A0%E7%89%A9%EF%BC%9F/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -256,76 +262,31 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这是一篇旨在帮助理解图灵机及相关概念是什么，而非证明其正确性的回答，它包含以下内容：</p>
-<ol>
-<li>什么是图灵机</li>
-<li>图灵机可以解决什么问题</li>
-<li>什么是图灵完备</li>
-<li>直观理解图灵完备——Brainfuck 语言</li>
-</ol>
-<hr>
-<h3 id="什么是图灵机"><a href="#什么是图灵机" class="headerlink" title="什么是图灵机"></a>什么是图灵机</h3><p>图灵机（Turing Machine）是图灵在 1936 年发表的 “On Computable Numbers, with an Application to the Entscheidungsproblem”（《论可计算数及其在判定性问题上的应用》）中提出的 <strong>数学模型</strong>。既然是数学模型，它就并非一个实体概念，而是架空的一个想法。在书中图灵描述了它是什么，并且证明了，只要图灵机可以被实现，就可以用来解决任何可计算问题</p>
-<p>图灵机的结构包括以下几个部分：</p>
-<ol>
-<li>一条无限长的纸带（tape），纸带被分成一个个相邻的格子（square），每个格子都可以写上至多一个字符（symbol）。</li>
-<li>一个字符表（alphabet），即字符的集合，它包含纸带上可能出现的所有字符。其中包含一个特殊的空白字符（blank），意思是此格子没有任何字符。</li>
-<li>一个读写头（head），可理解为指向其中一个格子的指针。它可以读取/擦除/写入当前格子的内容，此外也可以每次向左/右移动一个格子。</li>
-<li>一个状态寄存器（state register），它追踪着每一步运算过程中，整个机器所处的状态（运行/终止）。当这个状态从运行变为终止，则运算结束，机器停机并交回控制权。如果你了解有限状态机，它便对应着有限状态机里的状态。</li>
-<li>一个有限的指令集（instructions table），它记录着读写头在特定情况下应该执行的行为。可以想象读写头随身有一本操作指南，里面记录着很多条类似于“当你身处编号 53 的格子并看到其内容为 0 时，擦除，改写为 1，并向右移一格。此外，令下一状态为运行。”这样的命令。其实某种意义上，这个指令集就对应着程序员所写下的程序了。</li>
-</ol>
-<p><img data-src="https://pic1.zhimg.com/80/v2-6d57f9001041416d43e886f14fd43f84_720w.jpg?source=1940ef5c"></p>
-<p>在计算开始前，纸带可以是完全空白，也可以在某些格子里预先就有写上部分字符作为输入。运算开始时，读写头从某一位置开始，严格按照此刻的配置（configuration），即：</p>
-<ul>
-<li>当前所处位置</li>
-<li>当前格子内容</li>
-</ul>
-<p>来一步步的对照着指令集去进行操作，直到状态变为停止，运算结束。而后纸带上留下的信息，即字符的序列（比如类似“…011001…”）便作为输出，由人来解码为自然语言。</p>
-<p>要重申一下，以上只是图灵机模型的内容，而非具体的实现。所谓的纸带和读写头都只是图灵提出的抽象概念。为便于理解打一个比方。算盘虽然不是图灵机（因为它没有无限长的纸带，即无限的存储空间），但它的行为与图灵机一致。每一串算珠都是纸带上的一格，一串算珠上展示的数字便记录着当前格中的字符（可以是空白，可以是 12345 ）。人类的手即是读写头，可以更改每串算珠的状态。算盘的运行遵循人脑中的算法，当算法结束，算盘停机。</p>
-<hr>
-<h3 id="图灵机可以解决什么问题"><a href="#图灵机可以解决什么问题" class="headerlink" title="图灵机可以解决什么问题"></a>图灵机可以解决什么问题</h3><p>在文章中，图灵所做的事是证明了， <strong>假设</strong>上述模型里所说的功能都能被以某种形式物理实现，<strong>那么</strong>任意可计算问题都可以被解决。这里所说的可计算问题，涉及到计算理论（Computation Theory）的概念。这个领域的概念很繁杂，先简单梳理一下。在计算机领域，或者说自动机领域，我们研究的一切问题都是计算问题（Computational Problem）。它泛指一切与计算相关的问题。</p>
-<p>计算问题的一些举例：</p>
-<ul>
-<li>给定一个正整数 n，判断它是否是质数</li>
-<li>给定一个 01 序列，把它们按位取反</li>
-<li>给定一个字符串，判断某个字符是否存在，及查找存在位置</li>
-<li>给定一个逻辑蕴含的命题，求它的逆否命题</li>
-</ul>
-<p>非计算问题的例子：</p>
-<ul>
-<li>今晚吃什么</li>
-<li>为什么太阳从东边升起</li>
-</ul>
-<p>计算问题有的可以解决，有的不可解决。这就引出了计算问题的可计算性（Computability）。它可以被理解为“是否存在一个算法，能解决在任何输入下的此计算问题”。如上面的问题 1，我们当然可以找到一个算法来解决判断任意正整数 n 是否为质数的问题（比如从 2 遍历到 n-1，看 n 是否可以整除它）。所以，问题 1 就是可计算的。</p>
-<p>也有一些不可计算的计算问题，比如著名的停机问题（Halting Problem）。它的表述是这样的：给定一段程序的描述和该程序的一个有效输入，运行此程序，那么程序最终是会终止，还是会死循环下去？</p>
-<p>这个问题很绕人，有点像那个著名的理发师悖论，但它确实是一个计算问题。更具体的，它是一个不可判定问题（Undecidable Problem）。即不存在一个<strong>通用</strong>算法，可以在任意输入下解决此问题。图灵在文章里很优雅的用反证法推翻了假设“假设有这么一个算法可以解决任何停机问题”，从而证明了这样的算法并不存在。具体证明过程网上的资料非常丰富，我就不再花篇幅了。</p>
-<p>回到这一节的主题。简而言之，对于一个问题，对于任意输入，只要人类可以保证算出结果（不管花多少时间），那么图灵机就可以保证算出结果（不管花多少时间）。</p>
-<hr>
-<h3 id="什么是图灵完备"><a href="#什么是图灵完备" class="headerlink" title="什么是图灵完备"></a>什么是图灵完备</h3><p>图灵完备性（Turing Completeness）是针对一套数据操作规则而言的概念。数据操作规则可以是一门编程语言，也可以是计算机里具体实现了的指令集。当这套规则可以实现图灵机模型里的全部功能时，就称它具有图灵完备性。直白一点说，图灵完备性就是我给你一工具箱的东西，包括无限内存、if/else 控制流、while 循环……那么你现在图灵完备了吗？</p>
-<p>概念本身倒是非常直观，但整件事似乎还是让人云里雾里。我曾经一直不懂的就是为什么图灵给出的那个命题是正确的。换句话说，凭什么有了纸带以及其他的那一套东西，就可以自信解决任意可计算问题呢？尽管我不能通读他的那篇论文里的证明，但是通过一门叫做 Brainfuck 的编程语言，还是可以获得一些直觉。</p>
-<h3 id="直观理解图灵完备——Brainfuck-语言"><a href="#直观理解图灵完备——Brainfuck-语言" class="headerlink" title="直观理解图灵完备——Brainfuck 语言"></a>直观理解图灵完备——Brainfuck 语言</h3><p>如今主流的编程语言（C++，Java，Python，以及等等等等）都是图灵完备的语言。关于语言优劣之争也只是在其封装、优化等方面，以及因为这些区别而产生的“不同语言适用于不同情况”的争执。如果我们回到最底层，就会发现它们可以实现的功能其实完全一样，并且本质上就是一个图灵机。</p>
-<p>在 1993 年，Urban Müller 发明了 Brainfuck 语言。这门语言可以说是编程语言界的 helloworld 了——它一共只含有 8 个有效字符，每个有效字符就是一条指令。语言虽然极致轻量，它却是一门图灵完备的编程语言。如果能理解它的工作原理，那么对于理解图灵机是有很大帮助的。</p>
-<p>先贴上一段 BF 的代码，体验一下它的画风：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">++++++++[&gt;++++[&gt;++&gt;+++&gt;+++&gt;+&lt;&lt;&lt;&lt;-]&gt;+&gt;+&gt;-&gt;&gt;+[&lt;]&lt;-]&gt;&gt;.&gt;---.+++++++..+++.&gt;&gt;.&lt;-.&lt;.+++</span><br><span class="line">.------.--------.&gt;&gt;+.&gt;++.</span><br></pre></td></tr></table></figure>
-
-<p>这个程序编译运行后，控制台打印 “Hello World!”。</p>
-<p>BF 的工作机制与图灵机高度一致。首先它存储数据的方式是一个不限长的一维整数数组，里面的数值全部初始化为 0。此外，有一数据指针，每一时刻都指向数组的某一任意元素。指针可以向左/右移动，也可以读取/修改当前值。</p>
-<p>语言里的 8 个有效字符分别是：</p>
-<ul>
-<li><code>&gt;</code>：指针向右移动一格</li>
-<li><code>&lt;</code>：指针向左移动一格</li>
-<li><code>+</code>：使指针当前格数值加一</li>
-<li><code>-</code>：使指针当前格数值减一</li>
-<li><code>.</code>：把当前格数值按 ASCII 表输出到终端</li>
-<li><code>,</code>：从终端接受一 byte 的数据，存储其 ASCII 数值到当前格</li>
-<li><code>[</code>：当指针当前值为 0 时，程序跳转至与之对应的 <code>]</code> 之后；否则程序正常执行</li>
-<li><code>]</code>：程序跳转回与之对应的 <code>[</code> 处</li>
-</ul>
-<p>有了这些工具，我们可以很快做出一个计算乘法的程序。因为 ASCII 表中 ‘A’ 对应的值为 65，可以使用 5 * 13 算出 65 并输出得到字符 ‘A’。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+++++</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">&gt;+++++++++++++</span><br><span class="line">&lt;-</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">&gt;.</span><br></pre></td></tr></table></figure>
-
-<p>把指针初始处的格子命名为 cell 0，cell 0 右边的那个格子命名为 cell 1。那么第一句将其递增 5 次变为 5。然后，循环执行“右移指针，递增 13 次， 左移指针，递减 1 次”。当 cell 0 的值最终被递减为 0 的时候，循环结束。此时 cell 1 的值执行了 5 次“递增 13 次”的操作，即 65。指针右移至 cell 1，输出此格子，则在终端会看到 ‘A’。</p>
-<p><img data-src="https://pic3.zhimg.com/80/v2-6dc2cf6ed68844fa4fdc8a555dba3576_720w.jpg?source=1940ef5c"></p>
-<p>我写这个例子的目的是演示只用图灵机的模型，就可以确实计算出乘法的结果。那么自然更加复杂的计算也可以被拆解成图灵机操作（尽管可能非常琐碎）。此外，这个语言因为简洁，也是第一次练习写编译器的一个非常好的选择。</p>
+          <p>前面几篇文章从图灵说到图灵机，再到人工智能，其实对于人工智能有很多话题。其中包括对人工智能的定义、人工智能技术实现、人工智能是使用场景和范围、人工智能是否会取代人类甚至屠杀人类等等。今天我们就“人工智能是否会取代人类？”这个很有争议性话题进行解读，希望大家对人工智能有更多的思考维度。</p>
+<p>现实版钢铁侠的马斯克（特斯拉 CEO），2017 年在社交平台回怼 Facebook 创始人扎克伯格，原因是扎克伯格不认为人工智能是末日，马斯克回怼：他对人工智能的理解很有限。</p>
+<p>马斯克多次在不同场合表示自己对人工智能发展的担忧，认为工人智能是人类文明的最大威胁，甚至发出警告：人工智能可能引发第三次世界大战。</p>
+<h1 id="一、人工智能威胁论"><a href="#一、人工智能威胁论" class="headerlink" title="一、人工智能威胁论"></a>一、人工智能威胁论</h1><p>2016 年阿尔法狗战胜了世界围棋冠军李世石，一时间整个世界哗然，围棋一直被冠以人类智力游戏的最后一高地，就这样突然被占领。 人工智能经过几十年的发展，特别在近几年大数据的共同发展，已经取得了不少的进展，人工智能在很多方面远超了人类。</p>
+<p>在全世界范围内，很多科技大佬表示对人工智能的担心，上面已经提到了特斯拉 CEO 马斯克，还有今年（2018 年）刚去世的著名物理学家，天文学家霍金也提出对人工智能的担心：“我真的害怕人工智能取代人类，成为新的物种。”、“我们已经拥有原始形式的人工智能，但我认为人工智能的完全发展会导致人类的终结”等等言论。</p>
+<p>对于普通民众来讲，很多人担心人工智能抢了自己的工作而丢了饭碗。在第一次工业期间，由于蒸汽机的发明，机器代替了人工在英国掀起了捣毁纺织机械为手段的工人罢工。但是其实机器大规模使用不但没有减少工作岗位，反而是增多了。</p>
+<h1 id="二、人工智能有意识吗？"><a href="#二、人工智能有意识吗？" class="headerlink" title="二、人工智能有意识吗？"></a>二、人工智能有意识吗？</h1><p>计算机在非离散数学计算、存储等方面已经远超于人类，也真是因为计算机，因为信息互联网给人类带来了巨大的便利，更创造了超之前几千年之和的财富。从最广义的角度看，传统软件也应属于人工智能的范畴：实际上很多早期的计算机科学家，比如图灵，就是以人工智能为动力展开对计算机科学的研究。从这个意义上来看，人工智能是一种为人类工作的工具或机器。</p>
+<p>如果人工智能只是一种可以代替人类工作的机器，它的出现并不足以让人们恐惧。 终极问题是：<strong>人工智能会有人一样，甚至超出人类的意识吗？</strong></p>
+<p>现在机器（人工智能）是被人类奴役着，如果人工智能得到长足发展后，在未来，人类奴役机器的剧情将得到反转，未来，人类才是那个被“奴役”的物种！这种情节我们在很多的电影中都看到过。</p>
+<p>从现在的人工智能发展水平来看，现在的人工智能其实还非常初级，只能算做弱人工智能，其实在我们有生之年估计看不到超级人工智能的存在。</p>
+<h1 id="三、人工智能是生命-3-0？"><a href="#三、人工智能是生命-3-0？" class="headerlink" title="三、人工智能是生命 3.0？"></a>三、人工智能是生命 3.0？</h1><p>最近在看人工智能专家，麻省理工终身教授泰格马克的《生命 3.0》，这本书题目是生命，但是其实一本讲人工智能的书，作者对人工智能的发展、人类的终极命运将会是什么，进行了预测，脑洞非常大。</p>
+<p>我们现在思考人工智能，动不动就担心机器会不会有人类的意识，人类的喜怒哀乐，情感都是因为意识。机器会自动驾驶，会人脸识别，会翻译等只不过是一种机械运动而已。但是实际上，图灵和现代生物学家都认为，人在做事的时候，本质上也是机械的，也就是可以用图灵机来进行表达，只是我们还没有找到表达的算法而已。</p>
+<p>在我们都在担心意识问题的时候，泰格马克教授从生命的角度进行了解读。他把生命分成了三个阶段：生命 1.0、生命 2.0 和生命 3.0</p>
+<p>生命是什么？这个问题争议很大，就像意识一样难以定义。</p>
+<blockquote>
+<p>泰格马克对生命进行了广阔的定义：生命是一个能够进行复制和保持自我复杂性的过程。</p>
+</blockquote>
+<p>1，生命 1.0 的有生之年都无法重新设计自己的硬件和软件，二者由基因 DNA 来决定，只有进化才能带来改变，而进行则需要许多代才能有很小的改变，因此生命 1.0 的进化是非常非常非常缓慢的，生命 1.0 典型的是细菌。</p>
+<p>2，生命 2.0 则能够重新设计自身大部分的软件，比如人类，人类可以学习复杂的新技能、语言、知识和职业技能，并且能够从认知上更新自己的目标，自己对世界的认识。</p>
+<p>3，生命 3.0 现在在地球上还没有出现，他不仅能够最大限度的重新设计自己的软件，还是重新设计自己的硬件，而不需要等待许多代进行缓慢的进化。</p>
+<p>当然，我们会问，那其他的动物算生命几点 0 呢？如果细菌是 1.0，人类是 2.0，老鼠可以看做 1.1，虽然它们可以学习许多知识，但是不足以进化出语言，所以许多的东西死亡就会消失，不能积累传承。</p>
+<p>那么问题来了，生命 3.0 什么时候出现？出现后，作为生命 2.0 的人类怎么共存呢？ 不知道大家有没有一个感觉？人工智能技术，特别是语音识别技术就是在近 5 年才突然爆发的，其实人工智的能力增长是指数级的，是爆发式的。超级人工智能的出现也许就需要一个契机，一个突破，比如量子计算机，他的出现肯定是爆发式的，突然出现的。</p>
+<p>如果有一天人类造出了超级人工智能，即生命 3.0，就可能触发一场智能革命，将人类远远甩在后面，就像我们人类对比细菌一样，甚至更大。 如果这场智能革命由某一小撮人类控制，那他们讲可能在短短几年内控制整个世界。 如果人类没有控制这场智能革命，那么，人工智能可能以更快的速度控制世界。 因为生命 3.0 比我们高一个维度，人类将成为人工智能的宠物。</p>
+<h1 id="说在最后"><a href="#说在最后" class="headerlink" title="说在最后"></a>说在最后</h1><p>有个图灵机、人工智能的话题差不多写完了，这些话题太大，很难写。在看了《生命 3.0》这本书，对人工智能有了更多的理解和想法，其实心情既兴奋也很担忧。在我们所做的宇宙，从宇宙大爆发那一刻开始，各种参数其实已经决定了整个宇宙发展的过程。图灵的结论告诉我们，即使未来是注定的，我们也没有一种算法去预测它，除非模拟它运行一遍。但是，要想模拟这个宇宙的运行，需要的计算量必然超出了这个宇宙自身的所有资源。运行这个宇宙的唯一方式，就是运行这个宇宙本身，或者参与其中才能知道最终的答案！</p>
+<p>除非有麦克斯韦妖修改宇宙大爆炸的时候的参数，生命 3.0，超级人工智能一定会把人类甩在后面，而不仅仅是取代，人类将成为人工智能的宠物。</p>
 
       
     </div>
@@ -344,7 +305,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/49/">49</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/57/">57</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -412,7 +373,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">57</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
